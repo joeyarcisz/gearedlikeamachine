@@ -6,12 +6,15 @@ export default function WhyChooseUs() {
     <section className="py-20 sm:py-28 bg-black">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <ScrollFadeIn>
-          <div className="text-center mb-12">
+          <div className="mb-12">
+            <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
+              The Engine Room
+            </p>
             <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
-              Why Choose Us
+              What Sets Us Apart
             </h2>
-            <p className="text-muted text-base sm:text-lg max-w-xl mx-auto">
-              Built different. Engineered for results.
+            <p className="text-muted text-base sm:text-lg max-w-xl">
+              Built different. Engineered for outcomes.
             </p>
           </div>
         </ScrollFadeIn>

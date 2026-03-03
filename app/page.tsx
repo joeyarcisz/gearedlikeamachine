@@ -4,7 +4,7 @@ import ServicesTicker from "@/components/ServicesTicker";
 import Showreel from "@/components/Showreel";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import FeaturedWork from "@/components/FeaturedWork";
-import Stats from "@/components/Stats";
+
 import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -50,30 +50,28 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <ServicesTicker />
         <Showreel />
-        <PortfolioGrid />
-        <FeaturedWork />
 
         {/* Divider 1 — gear motion video */}
         <GearMotionStrip video="/gear-motion-1.mp4" side="left" />
         <TextureDividerMobile />
-
-        <Stats />
 
         <div className="relative overflow-hidden">
           <SideTexture src="/texture-5.jpg" side="left" />
           <Services />
         </div>
 
-        <div className="relative overflow-hidden">
-          <SideTexture src="/texture-6.jpg" side="right" />
-          <Process />
-        </div>
+        <PortfolioGrid />
+        <FeaturedWork />
 
         {/* Divider 2 — gear motion video */}
         <GearMotionStrip video="/gear-motion-2.mp4" side="right" />
         <TextureDividerMobile />
+
+        <div className="relative overflow-hidden">
+          <SideTexture src="/texture-6.jpg" side="right" />
+          <Process />
+        </div>
 
         <div className="relative overflow-hidden">
           <div
@@ -101,6 +99,7 @@ export default function Home() {
         <TextureDividerMobile />
 
         <CTA />
+        <ServicesTicker />
       </main>
       <Footer />
     </>

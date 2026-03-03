@@ -3,31 +3,33 @@ export const siteConfig = {
   tagline: "Engineered to Move Audiences",
   description:
     "For more than two decades, brands and organizations of every scale have trusted us to create high-impact still and motion content. Based in Texas, working globally.",
-  location: "Texas",
-  availability: "Working Globally",
+  location: "Based in Texas",
+  availability: "Available Worldwide",
   email: "hello@gearedlikeamachine.com",
   phone: "(682) 229-7699",
 };
 
 export const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Services", href: "#services" },
-  { label: "Process", href: "#process" },
+  { label: "Work", href: "#portfolio" },
+  { label: "Capabilities", href: "#services" },
+  { label: "Blueprint", href: "#process" },
   { label: "Rentals", href: "/rentals" },
   { label: "Contact", href: "#contact" },
 ];
 
 export const tickerServices = [
-  "Brand Films",
-  "Commercials",
-  "Social Media",
-  "Documentaries",
-  "Music Videos",
-  "Live Events",
-  "Corporate Video",
-  "Content Strategy",
-  "Post-Production",
+  "Narrative Films",
+  "Commercial Production",
+  "Short-Form Content",
+  "Documentary Series",
+  "Performance Creative",
+  "Live Event Coverage",
+  "Product Demos",
+  "Campaign Strategy",
+  "Color Science",
+  "Editorial",
+  "Sound Design",
 ];
 
 export const productionSpecs = [
@@ -131,88 +133,92 @@ export const stats = [
 export const services = [
   {
     icon: "social-media",
-    title: "Social Media Content",
+    number: "01",
+    title: "Short-Form & Social",
     description:
-      "Scroll-stopping vertical and horizontal content engineered for engagement. Reels, TikToks, YouTube Shorts — all shot in cinema quality.",
+      "Platform-native vertical and horizontal content built to stop the scroll. Reels, TikToks, YouTube Shorts — all captured at cinema-grade quality with formats engineered for each algorithm.",
   },
   {
     icon: "brand-film",
-    title: "Brand Films & Commercials",
+    number: "02",
+    title: "Narrative & Commercial",
     description:
-      "Cinematic storytelling that builds brand equity. From concept to final cut, we produce films that resonate with your audience and drive action.",
+      "Story-driven brand films and high-impact commercials from script to screen. We build narratives that move audiences and convert viewers into loyal customers.",
   },
   {
     icon: "longform",
-    title: "Longform Content",
+    number: "03",
+    title: "Documentary & Series",
     description:
-      "Documentaries, episodic series, and corporate features. We handle complex narratives with professional-grade production from start to finish.",
+      "Multi-episode series, documentaries, and long-form corporate features. We manage complex storylines across extended production timelines with precision.",
   },
   {
     icon: "strategy",
-    title: "Paid Media & Strategy",
+    number: "04",
+    title: "Performance Creative",
     description:
-      "Video content built for performance. We create ad-ready assets optimized for every platform, backed by data-driven creative strategy.",
+      "Ad-ready video assets built for ROI. Platform-optimized creative backed by data-driven strategy across paid social, display, CTV, and programmatic channels.",
   },
 ];
 
 export const processSteps = [
   {
     step: 1,
-    title: "Discovery",
+    title: "Intake",
     description:
-      "We learn your brand, goals, audience, and vision. This is where we align on the creative direction and set the project scope.",
-    deliverable: "Creative Brief",
+      "We study your brand, map your objectives, and lock in the scope. Every project starts with a deep-dive into what you need and who you're trying to reach.",
+    deliverable: "Project Scope",
   },
   {
     step: 2,
-    title: "Strategy",
+    title: "Architect",
     description:
-      "We develop the concept, script, storyboard, and production plan. Every detail is mapped before we roll cameras.",
-    deliverable: "Production Plan",
+      "Concept, script, storyboard, shot list, and production logistics — all engineered before a single camera rolls. No guesswork.",
+    deliverable: "Creative Deck",
   },
   {
     step: 3,
-    title: "Production",
+    title: "Capture",
     description:
-      "Lights, camera, action. Our vetted crew handles everything on set — directing, cinematography, lighting, and audio.",
-    deliverable: "Raw Footage",
+      "Our vetted operators execute on set — directing, cinematography, lighting, sound. Every department runs like a well-oiled machine.",
+    deliverable: "Principal Photography",
   },
   {
     step: 4,
-    title: "Post-Production",
+    title: "Refine",
     description:
-      "Editing, color grading, sound design, motion graphics, and VFX. We polish every frame to cinema-grade quality.",
-    deliverable: "Final Cut",
+      "Editorial, color science, sound design, motion graphics, and VFX. Every frame is machined to spec before final approval.",
+    deliverable: "Master Files",
   },
   {
     step: 5,
-    title: "Delivery",
+    title: "Deploy",
     description:
-      "Exports optimized for every platform — web, social, broadcast. We hand off all assets and support your launch strategy.",
-    deliverable: "Launch-Ready Assets",
+      "Platform-optimized exports for web, social, broadcast, and retail. We deliver the assets and support your go-to-market rollout.",
+    deliverable: "Platform-Ready Assets",
   },
 ];
 
 export const whyChooseUs = [
   {
-    title: "Vetted Industry Pros",
+    title: "Operator Network",
     description:
-      "We work with a large roster of vetted industry professionals. We're not stuck with one crew — we bring the team best fit to execute your project at the highest level.",
+      "A deep bench of vetted industry operators. We're not locked into one crew — we assemble the exact team your project demands, every time.",
   },
   {
-    title: "Any Format, Any Scale",
+    title: "Format Agnostic",
     description:
-      "Our rental department inventory includes camera packages that can handle nearly any capture specs your project requires. No format is out of reach.",
+      "Our gear inventory spans every major camera system and capture format. Whatever the spec sheet says, we've got a package ready to roll.",
   },
   {
-    title: "Built to Scale",
+    title: "Elastic Operations",
     description:
-      "We throttle up and down as scope and needs change. Our foot is always on the clutch and ready to shift at a moment's notice.",
+      "We throttle up and down as scope shifts. One-day social shoot or six-week campaign — the machine scales to match.",
   },
   {
-    title: "Strategy-First Approach",
+    title: "Outcome-Driven",
     description:
-      "Every frame serves a purpose. We don't just make pretty videos — we engineer content that drives measurable results.",
+      "Every frame is engineered with intent. We don't just produce content — we build assets that move metrics and drive measurable business outcomes.",
   },
 ];
 
@@ -260,7 +266,7 @@ export const faqItems = [
   {
     question: "What is your production process?",
     answer:
-      "Our 5-step process covers Discovery, Strategy, Production, Post-Production, and Delivery. We start with understanding your goals, develop a creative brief and production plan, execute the shoot with our in-house crew, handle all post-production, and deliver optimized assets for every platform.",
+      "Our 5-phase blueprint covers Intake, Architect, Capture, Refine, and Deploy. We start by scoping your objectives, build a creative deck and production plan, execute the shoot with our vetted operators, handle all post-production, and deliver platform-optimized assets.",
   },
   {
     question: "How long does a typical project take?",
@@ -289,9 +295,9 @@ export const socialLinks = [
 export const dashboardNavLinks = [
   { icon: "grid", label: "Command Grid", target: "#top" },
   { icon: "play", label: "Live Feed", target: "#showreel" },
-  { icon: "camera", label: "Portfolio", target: "#portfolio" },
+  { icon: "camera", label: "Production Log", target: "#portfolio" },
   { icon: "bars", label: "Capabilities", target: "#services" },
-  { icon: "timeline", label: "Pipeline", target: "#process" },
+  { icon: "timeline", label: "Blueprint", target: "#process" },
   { icon: "wrench", label: "Gear Rentals", target: "/rentals" },
   { icon: "calculator", label: "Scope Tool", target: "/scope" },
 ];
