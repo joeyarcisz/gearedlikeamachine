@@ -60,7 +60,7 @@ export const portfolioItems = [
     title: "U.S. Polo Assn.",
     category: "Global Campaign",
     thumbnail: "/portfolio-uspa.gif",
-    videoUrl: "#",
+    videoUrl: "/work/us-polo-assn",
   },
   {
     title: "Power Digital",

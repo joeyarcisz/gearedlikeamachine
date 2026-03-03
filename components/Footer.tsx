@@ -17,8 +17,7 @@ export default function Footer() {
               Geared Like A Machine
             </Link>
             <p className="text-muted text-sm leading-relaxed mb-4">
-              {siteConfig.tagline}. A powerful, well-oiled production company based in{" "}
-              {siteConfig.location}.
+              {siteConfig.tagline}. A powerful, well-oiled production company based in Dallas, Texas.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((link) => (

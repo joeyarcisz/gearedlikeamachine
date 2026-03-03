@@ -67,7 +67,7 @@ export default function Stats() {
     <section className="py-16 sm:py-20 bg-navy/50 border-y border-card-border">
       <div
         ref={ref}
-        className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4"
+        className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4"
       >
         {stats.map((stat) => (
           <div key={stat.label} className="text-center">

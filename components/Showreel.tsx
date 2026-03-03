@@ -17,20 +17,22 @@ export default function Showreel() {
             </p>
           </div>
         </ScrollFadeIn>
+      </div>
 
-        <ScrollFadeIn delay={200}>
-          {/* Vimeo Embed */}
-          <div className="relative aspect-video bg-navy border border-card-border overflow-hidden mb-10 grayscale">
-            <iframe
-              src="https://player.vimeo.com/video/1153853483?h=0&title=0&byline=0&portrait=0"
-              className="absolute inset-0 w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </ScrollFadeIn>
+      {/* Vimeo Embed — full width */}
+      <ScrollFadeIn delay={200}>
+        <div className="relative aspect-video bg-navy border-y border-card-border overflow-hidden mb-10 grayscale">
+          <iframe
+            src="https://player.vimeo.com/video/1153853483?h=0&title=0&byline=0&portrait=0"
+            className="absolute inset-0 w-full h-full"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      </ScrollFadeIn>
 
-        {/* Production Specs */}
+      {/* Production Specs */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <ScrollFadeIn delay={400}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {productionSpecs.map((spec) => (
