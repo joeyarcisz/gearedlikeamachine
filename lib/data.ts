@@ -2,9 +2,9 @@ export const siteConfig = {
   name: "Geared Like A Machine",
   tagline: "Engineered to Move Audiences",
   description:
-    "Dallas-Fort Worth's premier video production company. We craft cinematic brand films, commercials, and content that drives results.",
-  location: "Dallas-Fort Worth, TX",
-  availability: "Available Nationwide",
+    "For more than two decades, brands and organizations of every scale have trusted us to create high-impact still and motion content. Based in Texas, working globally.",
+  location: "Texas",
+  availability: "Working Globally",
   email: "hello@gearedlikeamachine.com",
   phone: "(469) 555-0192",
 };
@@ -30,7 +30,7 @@ export const tickerServices = [
 ];
 
 export const productionSpecs = [
-  { label: "4K+ Resolution", icon: "resolution" },
+  { label: "No Capture Limits", icon: "resolution" },
   { label: "Cinema Grade", icon: "cinema-grade" },
   { label: "Dolby Audio", icon: "dolby-audio" },
   { label: "DaVinci Color", icon: "color-grade" },
@@ -38,38 +38,38 @@ export const productionSpecs = [
 
 export const portfolioItems = [
   {
-    title: "Urban Pulse Campaign",
+    title: "Tige Boats",
     category: "Brand Film",
-    thumbnail: "/portfolio-1.jpg",
-    videoUrl: "#",
-  },
-  {
-    title: "Skyline Motors Launch",
-    category: "Commercial",
     thumbnail: "/portfolio-2.jpg",
     videoUrl: "#",
   },
   {
-    title: "Neon Nights Series",
-    category: "Social Media",
+    title: "Agazul Tequila",
+    category: "Commercial",
+    thumbnail: "/portfolio-1.jpg",
+    videoUrl: "#",
+  },
+  {
+    title: "SpaceX",
+    category: "Product Demo",
     thumbnail: "/portfolio-3.jpg",
     videoUrl: "#",
   },
   {
-    title: "Foundation Stories",
-    category: "Documentary",
+    title: "U.S. Polo Assn.",
+    category: "Global Campaign",
     thumbnail: "/portfolio-4.jpg",
     videoUrl: "#",
   },
   {
-    title: "Volt Energy Rebrand",
-    category: "Brand Film",
+    title: "Power Digital",
+    category: "Brand Content",
     thumbnail: "/portfolio-5.jpg",
     videoUrl: "#",
   },
   {
-    title: "Atlas Fitness Promo",
-    category: "Commercial",
+    title: "Cardboard Spaceship",
+    category: "Creative Production",
     thumbnail: "/portfolio-6.jpg",
     videoUrl: "#",
   },
@@ -78,47 +78,47 @@ export const portfolioItems = [
 export const featuredWork = [
   {
     number: "01",
-    title: "Urban Pulse Campaign",
+    title: "U.S. Polo Assn.",
     description:
-      "A cinematic brand film capturing the energy of downtown Dallas for a lifestyle brand. Shot over 3 days with a full crew, drone coverage, and DaVinci color grade.",
-    category: "Brand Film",
+      "Global campaign spanning over 100 countries. Full-scale brand films, product photography, and seasonal content built for international reach across broadcast, digital, and retail.",
+    category: "Global Campaign",
     image: "/featured-1.jpg",
   },
   {
     number: "02",
-    title: "Skyline Motors Launch",
+    title: "SpaceX Starlink",
     description:
-      "High-octane commercial for a luxury automotive dealership. Dynamic tracking shots, moody lighting, and a driving soundtrack that matches the horsepower.",
-    category: "Commercial",
+      "Product demonstration content for one of the most defining innovations in modern technology. Precision capture showcasing Starlink hardware and deployment at scale.",
+    category: "Product Demo",
   },
   {
     number: "03",
-    title: "Neon Nights Series",
+    title: "Tige Boats",
     description:
-      "A 12-part social media content series for a nightlife brand. Vertical and horizontal cuts optimized for Instagram Reels and TikTok.",
-    category: "Social Media",
+      "Cinematic brand films and lifestyle content capturing performance watercraft on the water. Dynamic tracking shots, aerial coverage, and athlete-driven storytelling.",
+    category: "Brand Film",
   },
   {
     number: "04",
-    title: "Foundation Stories",
+    title: "JFK: The Unspoken Speech",
     description:
-      "Long-form documentary following three nonprofit founders in DFW. Intimate interviews, verité footage, and a compelling narrative arc.",
+      "A preserved piece of American history. Documentary production bringing an untold story to life with archival footage, intimate interviews, and a compelling narrative arc.",
     category: "Documentary",
   },
   {
     number: "05",
-    title: "Volt Energy Rebrand",
+    title: "Super Bowl — Troy Aikman",
     description:
-      "Complete visual rebrand for an energy drink company. Product shots, athlete endorsements, and a campaign-ready hero video.",
-    category: "Brand Film",
+      "Super Bowl advertising featuring NFL legend Troy Aikman. High-visibility commercial production built for the biggest stage in broadcast media.",
+    category: "Commercial",
   },
 ];
 
 export const stats = [
   { value: 150, suffix: "+", label: "Projects Completed" },
   { value: 80, suffix: "+", label: "Clients Served" },
-  { value: 8, suffix: "+", label: "Years Experience" },
-  { value: 100, suffix: "%", label: "Client Satisfaction" },
+  { value: 20, suffix: "+", label: "Years Experience" },
+  { value: 100, suffix: "+", label: "Countries Reached" },
 ];
 
 export const services = [
@@ -167,7 +167,7 @@ export const processSteps = [
     step: 3,
     title: "Production",
     description:
-      "Lights, camera, action. Our in-house crew handles everything on set — directing, cinematography, lighting, and audio.",
+      "Lights, camera, action. Our vetted crew handles everything on set — directing, cinematography, lighting, and audio.",
     deliverable: "Raw Footage",
   },
   {
@@ -188,19 +188,19 @@ export const processSteps = [
 
 export const whyChooseUs = [
   {
-    title: "Full In-House Production",
+    title: "Vetted Industry Pros",
     description:
-      "No outsourcing, no freelancers rotating in and out. Our dedicated team handles every project from concept to delivery.",
+      "We work with a large roster of vetted industry professionals. We're not stuck with one crew — we bring the team best fit to execute your project at the highest level.",
   },
   {
-    title: "Cinema-Grade Quality",
+    title: "No Capture Limits",
     description:
-      "We shoot on professional cinema cameras with premium lenses, lighting, and audio — the same gear used on major productions.",
+      "Our rental department inventory includes camera packages that can handle nearly any capture specs your project requires. No format is out of reach.",
   },
   {
-    title: "Fast Turnaround",
+    title: "Built to Scale",
     description:
-      "We move at the speed of business. Efficient workflows and clear communication mean your content is ready when you need it.",
+      "We throttle up and down as scope and needs change. Our foot is always on the clutch and ready to shift at a moment's notice.",
   },
   {
     title: "Strategy-First Approach",
@@ -210,9 +210,9 @@ export const whyChooseUs = [
 ];
 
 export const whyChooseUsStats = [
-  "4K+ Production Standard",
+  "No Capture Limits",
   "24hr Response Time",
-  "100% In-House Team",
+  "Global Reach",
 ];
 
 export const testimonials = [

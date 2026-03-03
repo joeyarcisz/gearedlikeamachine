@@ -13,7 +13,7 @@ export default function Footer() {
               Geared Like A Machine
             </h3>
             <p className="text-muted text-sm leading-relaxed mb-4">
-              {siteConfig.tagline}. Cinema-grade video production based in{" "}
+              {siteConfig.tagline}. A powerful, well-oiled production company based in{" "}
               {siteConfig.location}.
             </p>
             <div className="flex gap-3">
@@ -91,7 +91,7 @@ export default function Footer() {
             reserved.
           </p>
           <p className="uppercase tracking-widest">
-            Engineered in Dallas-Fort Worth
+            Engineered in Texas
           </p>
         </div>
       </div>

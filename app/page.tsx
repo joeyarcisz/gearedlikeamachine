@@ -9,7 +9,7 @@ import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Testimonials from "@/components/Testimonials";
-import FAQ from "@/components/FAQ";
+
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { MechanicalDivider } from "@/components/icons";
@@ -39,7 +39,6 @@ export default function Home() {
         </div>
         <WhyChooseUs />
         <Testimonials />
-        <FAQ />
         <div className="bg-black py-6">
           <div className="max-w-4xl mx-auto px-4">
             <MechanicalDivider className="w-full h-10 text-steel" />
