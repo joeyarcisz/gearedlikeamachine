@@ -142,3 +142,81 @@ body::after {
 ::-webkit-scrollbar-thumb:hover {
   background: #E0E0E0;
 }
+
+/* Print styles for Scope & Estimate PDF */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  body::after {
+    display: none !important;
+  }
+
+  /* Hide everything that isn't the print estimate */
+  nav,
+  footer,
+  button,
+  .no-print {
+    display: none !important;
+    position: static !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* The print:hidden Tailwind class hides the on-screen estimate */
+  [class*="print\:hidden"] {
+    display: none !important;
+  }
+
+  /* Show the print-optimized estimate */
+  .print-estimate {
+    display: block !important;
+    position: static !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .print-estimate h1,
+  .print-estimate h2,
+  .print-estimate h3,
+  .print-estimate td,
+  .print-estimate th,
+  .print-estimate p,
+  .print-estimate span {
+    color: black !important;
+  }
+
+  .print-estimate .text-gray-800 {
+    color: #1f2937 !important;
+  }
+
+  .print-estimate .text-gray-900 {
+    color: #111827 !important;
+  }
+
+  .print-estimate .text-gray-700 {
+    color: #374151 !important;
+  }
+
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+}
