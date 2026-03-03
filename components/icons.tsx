@@ -294,7 +294,96 @@ export function MechanicalDivider(props: IconProps) {
 }
 
 /* ──────────────────────────────────────────────
-   6. LOOKUP MAPS
+   6. NAVIGATION ICONS (dashboard sidebar)
+   ────────────────────────────────────────────── */
+
+/** 2×2 grid — Command Grid / Home */
+export function IconGrid(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  );
+}
+
+/** Play circle — Live Feed / Showreel */
+export function IconPlay(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Camera — Portfolio */
+export function IconCamera(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
+  );
+}
+
+/** Horizontal bars — Capabilities */
+export function IconBars(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="4" y1="12" x2="16" y2="12" />
+      <line x1="4" y1="18" x2="12" y2="18" />
+    </svg>
+  );
+}
+
+/** Timeline — Pipeline / Process */
+export function IconTimeline(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <line x1="12" y1="2" x2="12" y2="22" />
+      <circle cx="12" cy="5" r="2" fill="currentColor" stroke="none" />
+      <line x1="14" y1="5" x2="20" y2="5" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
+      <line x1="10" y1="12" x2="4" y2="12" />
+      <circle cx="12" cy="19" r="2" fill="currentColor" stroke="none" />
+      <line x1="14" y1="19" x2="20" y2="19" />
+    </svg>
+  );
+}
+
+/** Wrench — Gear Rentals */
+export function IconWrench(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+    </svg>
+  );
+}
+
+/** Calculator — Scope Tool */
+export function IconCalculator(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <line x1="8" y1="6" x2="16" y2="6" />
+      <line x1="8" y1="10" x2="8" y2="10.01" />
+      <line x1="12" y1="10" x2="12" y2="10.01" />
+      <line x1="16" y1="10" x2="16" y2="10.01" />
+      <line x1="8" y1="14" x2="8" y2="14.01" />
+      <line x1="12" y1="14" x2="12" y2="14.01" />
+      <line x1="16" y1="14" x2="16" y2="14.01" />
+      <line x1="8" y1="18" x2="8" y2="18.01" />
+      <line x1="12" y1="18" x2="16" y2="18" />
+    </svg>
+  );
+}
+
+/* ──────────────────────────────────────────────
+   7. LOOKUP MAPS
    ────────────────────────────────────────────── */
 
 export const serviceIcons: Record<string, (props: IconProps) => React.JSX.Element> = {
@@ -316,4 +405,14 @@ export const socialIcons: Record<string, (props: IconProps) => React.JSX.Element
   "youtube": IconYouTube,
   "vimeo": IconVimeo,
   "linkedin": IconLinkedIn,
+};
+
+export const navIcons: Record<string, (props: IconProps) => React.JSX.Element> = {
+  "grid": IconGrid,
+  "play": IconPlay,
+  "camera": IconCamera,
+  "bars": IconBars,
+  "timeline": IconTimeline,
+  "wrench": IconWrench,
+  "calculator": IconCalculator,
 };

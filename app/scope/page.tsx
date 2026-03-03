@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import ScopeNavbar from "@/components/scope/ScopeNavbar";
-import ScopeFooter from "@/components/scope/ScopeFooter";
 import ScopeWizard from "@/components/scope/ScopeWizard";
 
 export const metadata: Metadata = {
@@ -15,15 +13,16 @@ export const metadata: Metadata = {
 
 export default function ScopePage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="no-print">
-        <ScopeNavbar />
-      </div>
-      <main className="flex-1 pt-16 sm:pt-20">
-        <ScopeWizard />
-      </main>
-      <div className="no-print">
-        <ScopeFooter />
+    <div className="p-4">
+      <div className="dashboard-card" style={{ "--card-delay": "0ms" } as React.CSSProperties}>
+        <div className="dashboard-card-header no-print">
+          <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
+            Scope Tool — Instant Estimate
+          </span>
+        </div>
+        <div className="dashboard-card-body">
+          <ScopeWizard />
+        </div>
       </div>
     </div>
   );

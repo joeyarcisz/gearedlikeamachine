@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Rajdhani, Inter } from "next/font/google";
 import "./globals.css";
+import DashboardShell from "@/components/dashboard/DashboardShell";
 
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
@@ -78,7 +79,7 @@ export default function RootLayout({
       <body
         className={`${rajdhani.variable} ${inter.variable} antialiased`}
       >
-        {children}
+        <DashboardShell>{children}</DashboardShell>
       </body>
     </html>
   );

@@ -125,6 +125,213 @@ body::after {
   animation: spin-slow 25s linear infinite reverse;
 }
 
+/* ── Dashboard layout ── */
+.dashboard-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 48px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-sidebar {
+  grid-row: 1 / -1;
+  grid-column: 1;
+  overflow-y: auto;
+  border-right: 1px solid #2A2A2A;
+  background: #0A0A0A;
+}
+
+.dashboard-topbar {
+  grid-row: 1;
+  grid-column: 2;
+  border-bottom: 1px solid #2A2A2A;
+  background: #0A0A0A;
+}
+
+.dashboard-main {
+  grid-row: 2;
+  grid-column: 2;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.dashboard-card {
+  background: #0F0F0F;
+  border: 1px solid #2A2A2A;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.dashboard-card:hover {
+  border-color: #555;
+}
+
+.dashboard-card-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid #2A2A2A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboard-card-body {
+  padding: 14px;
+}
+
+/* Responsive dashboard breakpoints */
+@media (max-width: 1279px) {
+  .dashboard-shell {
+    grid-template-columns: 64px 1fr;
+  }
+  .dashboard-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .sidebar-label {
+    display: none;
+  }
+  .dashboard-sidebar {
+    align-items: center;
+  }
+  .dashboard-sidebar nav {
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dashboard-sidebar nav a,
+  .dashboard-sidebar nav button {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .dashboard-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 48px 1fr;
+  }
+  .dashboard-sidebar {
+    display: none;
+  }
+  .dashboard-sidebar.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 100;
+    grid-row: auto;
+    grid-column: auto;
+  }
+  /* Restore labels in mobile slide-out overlay */
+  .dashboard-sidebar.open .sidebar-label {
+    display: initial;
+  }
+  .dashboard-sidebar.open nav {
+    align-items: stretch;
+  }
+  .dashboard-sidebar.open nav a,
+  .dashboard-sidebar.open nav button {
+    width: auto;
+    height: auto;
+    justify-content: flex-start;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .dashboard-topbar {
+    grid-column: 1;
+  }
+  .dashboard-main {
+    grid-column: 1;
+  }
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar backdrop for mobile overlay */
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .sidebar-backdrop.open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 99;
+  }
+}
+
+/* Pulse dot animation for status indicators */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Fill bar animation for process panel progress */
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--fill-width, 100%);
+  }
+}
+
+.animate-fill-bar {
+  animation: fill-bar 1.5s ease-out forwards;
+}
+
+/* Staggered entrance animations for dashboard cards */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dashboard-card {
+  animation: card-enter 0.5s ease-out forwards;
+  animation-delay: var(--card-delay, 0ms);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -163,12 +370,25 @@ body::after {
   nav,
   footer,
   button,
-  .no-print {
+  .no-print,
+  .dashboard-sidebar,
+  .dashboard-topbar {
     display: none !important;
     position: static !important;
     visibility: hidden !important;
     height: 0 !important;
     overflow: hidden !important;
+  }
+
+  .dashboard-shell {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .dashboard-main {
+    overflow: visible !important;
+    height: auto !important;
   }
 
   /* The print:hidden Tailwind class hides the on-screen estimate */

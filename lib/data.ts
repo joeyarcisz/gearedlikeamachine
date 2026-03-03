@@ -6,7 +6,7 @@ export const siteConfig = {
   location: "Texas",
   availability: "Working Globally",
   email: "hello@gearedlikeamachine.com",
-  phone: "(469) 555-0192",
+  phone: "(682) 229-7699",
 };
 
 export const navLinks = [
@@ -31,10 +31,10 @@ export const tickerServices = [
 ];
 
 export const productionSpecs = [
-  { label: "No Capture Limits", icon: "resolution" },
-  { label: "Cinema Grade", icon: "cinema-grade" },
-  { label: "Dolby Audio", icon: "dolby-audio" },
-  { label: "DaVinci Color", icon: "color-grade" },
+  { label: "Any Format, Any Scale", icon: "resolution" },
+  { label: "RED & ARRI Arsenal", icon: "cinema-grade" },
+  { label: "Broadcast Audio Rigs", icon: "dolby-audio" },
+  { label: "Full Color Pipeline", icon: "color-grade" },
 ];
 
 export const portfolioItems = [
@@ -116,8 +116,8 @@ export const featuredWork = [
 ];
 
 export const stats = [
-  { value: 150, suffix: "+", label: "Projects Completed" },
-  { value: 80, suffix: "+", label: "Clients Served" },
+  { value: 200, suffix: "+", label: "Productions Delivered" },
+  { value: 100, suffix: "'s", label: "of Terabytes" },
   { value: 20, suffix: "+", label: "Years Experience" },
   { value: 100, suffix: "+", label: "Countries Reached" },
 ];
@@ -194,7 +194,7 @@ export const whyChooseUs = [
       "We work with a large roster of vetted industry professionals. We're not stuck with one crew — we bring the team best fit to execute your project at the highest level.",
   },
   {
-    title: "No Capture Limits",
+    title: "Any Format, Any Scale",
     description:
       "Our rental department inventory includes camera packages that can handle nearly any capture specs your project requires. No format is out of reach.",
   },
@@ -211,7 +211,7 @@ export const whyChooseUs = [
 ];
 
 export const whyChooseUsStats = [
-  "No Capture Limits",
+  "Any Format, Any Scale",
   "24hr Response Time",
   "Global Reach",
 ];
@@ -278,4 +278,50 @@ export const socialLinks = [
   { label: "YouTube", href: "https://youtube.com", icon: "youtube" },
   { label: "Vimeo", href: "https://vimeo.com", icon: "vimeo" },
   { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
+];
+
+export const dashboardNavLinks = [
+  { icon: "grid", label: "Command Grid", target: "#top" },
+  { icon: "play", label: "Live Feed", target: "#showreel" },
+  { icon: "camera", label: "Portfolio", target: "#portfolio" },
+  { icon: "bars", label: "Capabilities", target: "#services" },
+  { icon: "timeline", label: "Pipeline", target: "#process" },
+  { icon: "wrench", label: "Gear Rentals", target: "/rentals" },
+  { icon: "calculator", label: "Scope Tool", target: "/scope" },
+];
+
+export const activityTimestamps = [
+  {
+    time: "2 days ago",
+    label: "Brand Film Delivered",
+    detail: "U.S. Polo Assn. — Global Campaign Final Cut",
+    image: "/dashboard/interview-1.jpg",
+  },
+  {
+    time: "5 days ago",
+    label: "Client Testimonial",
+    detail: `"Transformed our brand story into a cinematic experience." — Marcus Rivera, Skyline Motors`,
+  },
+  {
+    time: "1 week ago",
+    label: "New Project Kicked Off",
+    detail: "SpaceX Starlink — Product Demo Series",
+    image: "/dashboard/interview-2.jpg",
+  },
+  {
+    time: "2 weeks ago",
+    label: "Post-Production Complete",
+    detail: "Tige Boats — Lifestyle Campaign Color Graded",
+  },
+  {
+    time: "3 weeks ago",
+    label: "Equipment Deployed",
+    detail: "RED V-Raptor + Aputure Storm package shipped to set",
+    image: "/dashboard/interview-3.png",
+  },
+  {
+    time: "1 month ago",
+    label: "Client Testimonial",
+    detail: `"Hollywood team on call. Drove real results." — Sarah Chen, Volt Energy`,
+  },
 ];
