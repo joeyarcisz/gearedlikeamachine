@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
         await resend.emails.send({
           from: "Scope Tool <noreply@gearedlikeamachine.com>",
-          to: "hello@gearedlikeamachine.com",
+          to: "joeyarcisz@me.com",
           subject: `New Scope Lead: ${company}`,
           html: `
             <div style="font-family: sans-serif; max-width: 500px;">
