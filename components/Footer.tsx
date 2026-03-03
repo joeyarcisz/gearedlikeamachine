@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { siteConfig, navLinks, socialLinks } from "@/lib/data";
 import { GearPlayLogo, socialIcons } from "./icons";
 
@@ -8,10 +9,13 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-10">
           {/* Logo + tagline */}
           <div>
-            <h3 className="flex items-center gap-2 font-[family-name:var(--font-heading)] text-lg font-bold tracking-[0.2em] uppercase mb-3">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-[family-name:var(--font-heading)] text-lg font-bold tracking-[0.2em] uppercase mb-3"
+            >
               <GearPlayLogo className="w-7 h-7 text-steel" />
               Geared Like A Machine
-            </h3>
+            </Link>
             <p className="text-muted text-sm leading-relaxed mb-4">
               {siteConfig.tagline}. A powerful, well-oiled production company based in{" "}
               {siteConfig.location}.
@@ -43,12 +47,21 @@ export default function Footer() {
             <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-muted text-sm hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link
+                      href={link.href}
+                      className="text-muted text-sm hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-muted text-sm hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
