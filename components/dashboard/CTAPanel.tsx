@@ -15,7 +15,7 @@ export default function CTAPanel() {
 
       <div className="relative z-10 p-5 flex flex-col items-center justify-center text-center h-full min-h-[180px]">
         <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold uppercase tracking-wide mb-2 text-white">
-          Start Your Project
+          Start The Ignition
         </h3>
         <p className="text-muted text-xs mb-4 max-w-[200px]">
           Tell us about your vision and we&apos;ll engineer the solution.

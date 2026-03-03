@@ -59,7 +59,7 @@ export default function Navbar() {
               href="#contact"
               className="bg-steel text-black px-5 py-2 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors duration-200"
             >
-              Start Your Project
+              Start The Ignition
             </a>
           </div>
 
@@ -123,7 +123,7 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
             className="inline-block bg-steel text-black px-5 py-2 text-sm uppercase tracking-widest font-semibold mt-2"
           >
-            Start Your Project
+            Start The Ignition
           </a>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ScopeWizard from "@/components/scope/ScopeWizard";
+import DashboardShell from "@/components/dashboard/DashboardShell";
 
 export const metadata: Metadata = {
   title: "Scope & Instant Estimate | Geared Like A Machine",
@@ -13,17 +14,19 @@ export const metadata: Metadata = {
 
 export default function ScopePage() {
   return (
-    <div className="p-4">
-      <div className="dashboard-card" style={{ "--card-delay": "0ms" } as React.CSSProperties}>
-        <div className="dashboard-card-header no-print">
-          <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-            Scope Tool — Instant Estimate
-          </span>
-        </div>
-        <div className="dashboard-card-body">
-          <ScopeWizard />
+    <DashboardShell>
+      <div className="p-4">
+        <div className="dashboard-card" style={{ "--card-delay": "0ms" } as React.CSSProperties}>
+          <div className="dashboard-card-header no-print">
+            <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
+              Scope Tool — Instant Estimate
+            </span>
+          </div>
+          <div className="dashboard-card-body">
+            <ScopeWizard />
+          </div>
         </div>
       </div>
-    </div>
+    </DashboardShell>
   );
 }

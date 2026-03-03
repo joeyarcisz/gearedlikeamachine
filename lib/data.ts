@@ -32,8 +32,8 @@ export const tickerServices = [
 
 export const productionSpecs = [
   { label: "Any Format, Any Scale", icon: "resolution" },
-  { label: "RED & ARRI Arsenal", icon: "cinema-grade" },
-  { label: "Broadcast Audio Rigs", icon: "dolby-audio" },
+  { label: "Digital Cinema Arsenal", icon: "cinema-grade" },
+  { label: "Brand Tune Ups", icon: "dolby-audio" },
   { label: "Full Color Pipeline", icon: "color-grade" },
 ];
 
@@ -47,32 +47,38 @@ export const portfolioItems = [
   {
     title: "Agazul Tequila",
     category: "Commercial",
-    thumbnail: "/portfolio-1.jpg",
+    thumbnail: "/portfolio-agazul.gif",
     videoUrl: "#",
   },
   {
     title: "SpaceX",
     category: "Product Demo",
-    thumbnail: "/portfolio-3.jpg",
+    thumbnail: "/portfolio-spacex.jpg",
     videoUrl: "#",
   },
   {
     title: "U.S. Polo Assn.",
     category: "Global Campaign",
-    thumbnail: "/portfolio-4.jpg",
+    thumbnail: "/portfolio-uspa.gif",
     videoUrl: "#",
   },
   {
     title: "Power Digital",
     category: "Brand Content",
-    thumbnail: "/portfolio-5.jpg",
+    thumbnail: "/portfolio-power-digital.png",
     videoUrl: "#",
   },
   {
     title: "Cardboard Spaceship",
     category: "Creative Production",
-    thumbnail: "/portfolio-6.jpg",
+    thumbnail: "/portfolio-cardboard-spaceship.gif",
     videoUrl: "#",
+  },
+  {
+    title: "Chevrolet",
+    category: "Commercial",
+    thumbnail: "/chevrolet/chevy8.gif",
+    videoUrl: "/work/chevrolet",
   },
 ];
 
