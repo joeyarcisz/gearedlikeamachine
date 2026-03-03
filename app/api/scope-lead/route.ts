@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         const resend = new Resend(resendApiKey);
 
         await resend.emails.send({
-          from: "Scope Tool <onboarding@resend.dev>",
+          from: "Scope Tool <noreply@gearedlikeamachine.com>",
           to: "hello@gearedlikeamachine.com",
           subject: `New Scope Lead: ${company}`,
           html: `
