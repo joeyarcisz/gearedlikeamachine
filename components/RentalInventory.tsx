@@ -3,6 +3,20 @@
 import { useState, useMemo } from "react";
 import { inventory, categories } from "@/lib/inventory";
 
+function getRentalDays(pickup: string, returnDate: string): number {
+  if (!pickup || !returnDate) return 1;
+  const start = new Date(pickup + "T00:00:00");
+  const end = new Date(returnDate + "T00:00:00");
+  const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  return diff > 0 ? diff : 1;
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return "";
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
 export default function RentalInventory() {
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
@@ -10,6 +24,10 @@ export default function RentalInventory() {
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(
     new Set()
   );
+  const [pickupDate, setPickupDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
+
+  const rentalDays = getRentalDays(pickupDate, returnDate);
 
   const filtered = inventory.filter(
     (item) =>
@@ -69,8 +87,16 @@ export default function RentalInventory() {
 
   const total = selectedItems.reduce((sum, i) => sum + i.rate, 0);
 
+  const grandTotal = total * rentalDays;
+
   function buildMailto() {
     const lines: string[] = ["Equipment Rental Inquiry", ""];
+    if (pickupDate && returnDate) {
+      lines.push(`Pickup: ${formatDate(pickupDate)}`);
+      lines.push(`Return: ${formatDate(returnDate)}`);
+      lines.push(`Duration: ${rentalDays} day${rentalDays !== 1 ? "s" : ""}`);
+      lines.push("");
+    }
     for (const cat of Object.keys(groupedSelected).sort()) {
       lines.push(`── ${cat} ──`);
       for (const item of groupedSelected[cat]) {
@@ -78,7 +104,10 @@ export default function RentalInventory() {
       }
       lines.push("");
     }
-    lines.push(`Total: $${total}/day`);
+    lines.push(`Daily Rate: $${total}/day`);
+    if (rentalDays > 1) {
+      lines.push(`${rentalDays} Days Total: $${grandTotal}`);
+    }
     const subject = encodeURIComponent("Equipment Rental Inquiry");
     const body = encodeURIComponent(lines.join("\n"));
     return `mailto:hello@gearedlikeamachine.com?subject=${subject}&body=${body}`;
@@ -115,10 +144,24 @@ export default function RentalInventory() {
               </div>
             ))}
 
-          <div className="border-t border-steel pt-4 mt-8 flex justify-between items-center">
-            <span className="font-[family-name:var(--font-heading)] text-lg sm:text-xl font-bold uppercase tracking-tight text-white">
-              Total: ${total} /day
-            </span>
+          <div className="border-t border-steel pt-4 mt-8 space-y-2">
+            {pickupDate && returnDate && (
+              <div className="flex justify-between text-sm text-muted">
+                <span>{formatDate(pickupDate)} &rarr; {formatDate(returnDate)}</span>
+                <span>{rentalDays} day{rentalDays !== 1 ? "s" : ""}</span>
+              </div>
+            )}
+            <div className="flex justify-between items-center">
+              <span className="font-[family-name:var(--font-heading)] text-lg sm:text-xl font-bold uppercase tracking-tight text-white">
+                {rentalDays > 1 ? (
+                  <>
+                    ${total}/day &times; {rentalDays} days = ${grandTotal}
+                  </>
+                ) : (
+                  <>Total: ${total} /day</>
+                )}
+              </span>
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -150,8 +193,8 @@ export default function RentalInventory() {
   return (
     <section className="py-16 sm:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Search */}
-        <div className="mb-8">
+        {/* Search + Date pickers */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <input
             type="text"
             placeholder="Search equipment..."
@@ -159,6 +202,32 @@ export default function RentalInventory() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full sm:w-80 bg-navy/50 border border-card-border text-white placeholder:text-muted px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-steel/50 transition-colors"
           />
+          <div className="flex gap-3">
+            <div>
+              <label className="block text-muted text-[10px] uppercase tracking-widest mb-1">
+                Pickup
+              </label>
+              <input
+                type="date"
+                value={pickupDate}
+                onChange={(e) => setPickupDate(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+                className="bg-navy/50 border border-card-border text-white px-3 py-2.5 text-sm focus:outline-none focus:border-steel/50 transition-colors [color-scheme:dark]"
+              />
+            </div>
+            <div>
+              <label className="block text-muted text-[10px] uppercase tracking-widest mb-1">
+                Return
+              </label>
+              <input
+                type="date"
+                value={returnDate}
+                onChange={(e) => setReturnDate(e.target.value)}
+                min={pickupDate || new Date().toISOString().split("T")[0]}
+                className="bg-navy/50 border border-card-border text-white px-3 py-2.5 text-sm focus:outline-none focus:border-steel/50 transition-colors [color-scheme:dark]"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Results count */}
@@ -273,10 +342,15 @@ export default function RentalInventory() {
       {selectedIds.size > 0 && (
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-card-border bg-navy/95 backdrop-blur-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-            <span className="text-sm text-white">
+            <div className="text-sm text-white">
               <span className="font-semibold">{selectedIds.size}</span>{" "}
               {selectedIds.size === 1 ? "item" : "items"} selected
-            </span>
+              {rentalDays > 1 && (
+                <span className="text-steel ml-3">
+                  {rentalDays} days &middot; ${grandTotal}
+                </span>
+              )}
+            </div>
             <button
               onClick={() => setShowQuote(true)}
               className="bg-steel text-black px-6 py-2.5 text-xs uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors duration-200"
