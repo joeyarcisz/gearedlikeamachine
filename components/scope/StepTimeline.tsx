@@ -6,12 +6,25 @@ interface Props {
   onChange: (data: StepTimelineData) => void;
 }
 
+function getPlaceholderDates() {
+  const now = new Date();
+  const startMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const endMonth = new Date(now.getFullYear(), now.getMonth() + 3, 1);
+  const fmt = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return { start: `e.g. Mid-${fmt(startMonth)}`, end: `e.g. End of ${fmt(endMonth)}` };
+}
+
 export default function StepTimeline({ data, onChange }: Props) {
+  const placeholders = getPlaceholderDates();
   return (
     <div className="space-y-10">
-      <h2 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-widest">
-        Timeline
-      </h2>
+      <div>
+        <h2 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-widest">
+          Timeline
+        </h2>
+        <p className="text-muted text-xs mt-2">All fields on this step are optional.</p>
+      </div>
 
       {/* Dates */}
       <div className="space-y-4 max-w-lg">
@@ -23,7 +36,7 @@ export default function StepTimeline({ data, onChange }: Props) {
             type="text"
             value={data.startDate}
             onChange={(e) => onChange({ ...data, startDate: e.target.value })}
-            placeholder="e.g. Mid-April 2026"
+            placeholder={placeholders.start}
             className="w-full bg-navy/50 border border-card-border text-white text-sm px-4 py-3 placeholder:text-muted/50 focus:outline-none focus:border-steel transition-colors"
           />
         </div>
@@ -36,7 +49,7 @@ export default function StepTimeline({ data, onChange }: Props) {
             type="text"
             value={data.deliveryDate}
             onChange={(e) => onChange({ ...data, deliveryDate: e.target.value })}
-            placeholder="e.g. End of May 2026"
+            placeholder={placeholders.end}
             className="w-full bg-navy/50 border border-card-border text-white text-sm px-4 py-3 placeholder:text-muted/50 focus:outline-none focus:border-steel transition-colors"
           />
         </div>

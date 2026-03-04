@@ -167,6 +167,9 @@ export default function ScopeWizard() {
   }
 
   function handleStartOver() {
+    if (!window.confirm("Are you sure you want to start over? Your current estimate will be lost.")) {
+      return;
+    }
     setStep(1);
     setShowEstimate(false);
     setEstimate(null);

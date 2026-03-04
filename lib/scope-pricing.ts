@@ -237,7 +237,7 @@ export const MUSIC_TIERS: { value: MusicLicenseTier; label: string; perVideo: nu
 ];
 
 export const URGENCY_TIERS: { value: UrgencyTier; label: string; multiplier: number; description: string }[] = [
-  { value: "flexible", label: "Flexible", multiplier: 1.0, description: "No rush — we'll schedule at availability" },
+  { value: "flexible", label: "Flexible (-5%)", multiplier: 0.95, description: "No rush — we'll schedule at availability" },
   { value: "standard", label: "Standard", multiplier: 1.0, description: "Typical production timeline" },
   { value: "expedited", label: "Expedited (+15%)", multiplier: 1.15, description: "Faster turnaround, priority scheduling" },
   { value: "rush", label: "Rush (+30%)", multiplier: 1.30, description: "Immediate priority, compressed timeline" },

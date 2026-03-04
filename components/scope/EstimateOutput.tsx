@@ -65,7 +65,7 @@ export default function EstimateOutput({ summary, estimate, onStartOver }: Props
         </h2>
 
         <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-          <table className="w-full text-sm min-w-[500px]">
+          <table className="w-full text-sm min-w-[400px]">
             <thead>
               <tr className="border-b border-card-border text-left">
                 <th className="text-xs uppercase tracking-widest text-muted font-normal pb-3 pr-4">
@@ -97,13 +97,13 @@ export default function EstimateOutput({ summary, estimate, onStartOver }: Props
             <span className="text-white">{formatCurrency(estimate.subtotal)}</span>
           </div>
 
-          {estimate.urgencyPremium > 0 && (
+          {estimate.urgencyPremium !== 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-muted">
-                Urgency Premium ({Math.round((estimate.urgencyMultiplier - 1) * 100)}%)
+                {estimate.urgencyPremium < 0 ? "Flexible Discount" : "Urgency Premium"} ({Math.round((estimate.urgencyMultiplier - 1) * 100)}%)
               </span>
               <span className="text-white">
-                +{formatCurrency(estimate.urgencyPremium)}
+                {estimate.urgencyPremium < 0 ? "" : "+"}{formatCurrency(estimate.urgencyPremium)}
               </span>
             </div>
           )}
@@ -130,6 +130,17 @@ export default function EstimateOutput({ summary, estimate, onStartOver }: Props
           </div>
         </div>
       </div>
+
+      {/* Warnings */}
+      {estimate.warnings.length > 0 && (
+        <div className="border border-yellow-600/40 bg-yellow-900/10 p-4 space-y-2">
+          {estimate.warnings.map((w, i) => (
+            <p key={i} className="text-xs text-yellow-400 leading-relaxed">
+              &#9888; {w}
+            </p>
+          ))}
+        </div>
+      )}
 
       {/* Disclaimer */}
       <div className="border border-card-border bg-navy/30 p-4">

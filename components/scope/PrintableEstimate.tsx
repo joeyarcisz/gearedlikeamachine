@@ -104,12 +104,12 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
           <span>Subtotal</span>
           <span>{formatCurrency(estimate.subtotal)}</span>
         </div>
-        {estimate.urgencyPremium > 0 && (
+        {estimate.urgencyPremium !== 0 && (
           <div className="flex justify-between text-sm">
             <span>
-              Urgency Premium ({Math.round((estimate.urgencyMultiplier - 1) * 100)}%)
+              {estimate.urgencyPremium < 0 ? "Flexible Discount" : "Urgency Premium"} ({Math.round((estimate.urgencyMultiplier - 1) * 100)}%)
             </span>
-            <span>+{formatCurrency(estimate.urgencyPremium)}</span>
+            <span>{estimate.urgencyPremium < 0 ? "" : "+"}{formatCurrency(estimate.urgencyPremium)}</span>
           </div>
         )}
         <div className="flex justify-between text-sm">
@@ -125,6 +125,15 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
           <span className="font-semibold">{formatCurrency(estimate.deposit)}</span>
         </div>
       </div>
+
+      {/* Warnings */}
+      {estimate.warnings.length > 0 && (
+        <div className="mt-4 border border-gray-400 p-3 space-y-1">
+          {estimate.warnings.map((w, i) => (
+            <p key={i} className="text-xs text-gray-800">&#9888; {w}</p>
+          ))}
+        </div>
+      )}
 
       {/* Footer */}
       <div className="mt-8 pt-4 border-t border-gray-400 text-xs text-gray-700">

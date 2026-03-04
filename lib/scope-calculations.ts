@@ -40,8 +40,11 @@ function fmt(name: string): string {
   return name;
 }
 
+const MAX_EDIT_DAYS = 120;
+
 export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   const items: LineItem[] = [];
+  const warnings: string[] = [];
   const format: ScopeFormat = input.projectType.scopeFormat ?? "single";
   const { videoCount, duration, cutdownsPerVideo } = input.deliverables;
   const { shootDays, locations, crewRoles, gear, specializedGear } = input.production;
@@ -126,9 +129,11 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   const totalFinishedMinutes = minutesPerVideo * videoCount;
   const editTier = EDITING_TIERS.find((t) => t.value === input.postProduction.editingComplexity);
   if (editTier) {
-    // Cap edit days at 120 (roughly 6 months of editing) to keep estimates reasonable
     const rawEditDays = Math.ceil(totalFinishedMinutes * editTier.daysPerMinute);
-    const editDays = Math.max(1, Math.min(120, rawEditDays));
+    const editDays = Math.max(1, Math.min(MAX_EDIT_DAYS, rawEditDays));
+    if (rawEditDays > MAX_EDIT_DAYS) {
+      warnings.push(`Editing days were capped at ${MAX_EDIT_DAYS} (calculated ${rawEditDays}). The actual cost for this scope may be higher — contact us for a custom quote.`);
+    }
     items.push({
       name: `Editing — ${editTier.label}`,
       category: "Post-Production",
@@ -308,5 +313,6 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
     contingency,
     total,
     deposit,
+    warnings,
   };
 }

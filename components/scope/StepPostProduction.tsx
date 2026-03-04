@@ -55,9 +55,12 @@ function TierSelector<T extends string>({
 export default function StepPostProduction({ data, onChange }: Props) {
   return (
     <div className="space-y-8">
-      <h2 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-widest">
-        Post-Production
-      </h2>
+      <div>
+        <h2 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-widest">
+          Post-Production
+        </h2>
+        <p className="text-muted text-xs mt-2">Adjust tiers to match your project needs. Defaults are pre-selected.</p>
+      </div>
 
       <TierSelector
         label="Editing Complexity"

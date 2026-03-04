@@ -30,15 +30,21 @@ export default function LeadGate({ onSubmit }: LeadGateProps) {
       jobTitle: jobTitle.trim(),
     };
 
-    // Fire email to owner (non-blocking — proceed regardless)
     try {
-      await fetch("/api/scope-lead", {
+      const res = await fetch("/api/scope-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lead),
       });
+      if (!res.ok) {
+        setError("Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
     } catch {
-      // Proceed regardless of email delivery
+      setError("Network error. Please check your connection and try again.");
+      setSubmitting(false);
+      return;
     }
 
     onSubmit(lead);

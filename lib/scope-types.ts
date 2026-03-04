@@ -203,6 +203,7 @@ export interface EstimateBreakdown {
   contingency: number;
   total: number;
   deposit: number;
+  warnings: string[];
 }
 
 export interface ScopeSummary {

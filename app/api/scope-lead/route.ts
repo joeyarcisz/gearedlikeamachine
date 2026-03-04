@@ -72,7 +72,7 @@ export async function POST(request: Request) {
               </div>
 
               <p style="font-size: 15px; line-height: 1.6;">
-                Hey ${escapeHtml(jobTitle.split(" ")[0] === jobTitle ? "" : "")}there,
+                Hey there,
               </p>
 
               <p style="font-size: 15px; line-height: 1.6;">
