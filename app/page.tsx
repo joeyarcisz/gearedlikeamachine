@@ -84,6 +84,7 @@ export default function Home() {
 
         <div className="relative overflow-hidden">
           <SideTexture src="/texture-5.jpg" side="left" />
+          <SideTexture src="/red-raptor-x.png" side="right" />
           <Services />
         </div>
 
