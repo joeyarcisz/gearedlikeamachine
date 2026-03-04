@@ -42,9 +42,9 @@ export const productionSpecs = [
 export const portfolioItems = [
   {
     title: "Tige Boats",
-    category: "Brand Film",
-    thumbnail: "/portfolio-2.jpg",
-    videoUrl: "#",
+    category: "Marine / Watersports",
+    thumbnail: "/tige/ultre.gif",
+    videoUrl: "/work/tige-boats",
   },
   {
     title: "Agazul Tequila",
@@ -74,7 +74,7 @@ export const portfolioItems = [
     title: "Cardboard Spaceship",
     category: "Creative Production",
     thumbnail: "/portfolio-cardboard-spaceship.gif",
-    videoUrl: "#",
+    videoUrl: "/work/cardboard-spaceship",
   },
   {
     title: "Chevrolet",

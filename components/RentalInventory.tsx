@@ -4,23 +4,35 @@ import { useState, useMemo } from "react";
 import { inventory, categories } from "@/lib/inventory";
 
 export default function RentalInventory() {
-  const [activeCategory, setActiveCategory] = useState<string>("All");
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [showQuote, setShowQuote] = useState(false);
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(
+    new Set()
+  );
 
-  const filtered = inventory.filter((item) => {
-    const matchesCategory =
-      activeCategory === "All" || item.category === activeCategory;
-    const matchesSearch =
-      search === "" || item.item.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filtered = inventory.filter(
+    (item) =>
+      search === "" || item.item.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const filteredIds = useMemo(() => new Set(filtered.map((i) => i.id)), [filtered]);
+  const groupedFiltered = useMemo(() => {
+    const groups: Record<string, typeof filtered> = {};
+    for (const item of filtered) {
+      if (!groups[item.category]) groups[item.category] = [];
+      groups[item.category].push(item);
+    }
+    return groups;
+  }, [filtered]);
 
-  const allFilteredSelected =
-    filtered.length > 0 && filtered.every((i) => selectedIds.has(i.id));
+  function toggleCategory(cat: string) {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  }
 
   function toggleItem(id: number) {
     setSelectedIds((prev) => {
@@ -31,13 +43,14 @@ export default function RentalInventory() {
     });
   }
 
-  function toggleAll() {
+  function toggleCategoryItems(cat: string) {
+    const catItems = groupedFiltered[cat] || [];
+    const allSelected = catItems.every((i) => selectedIds.has(i.id));
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (allFilteredSelected) {
-        for (const id of filteredIds) next.delete(id);
-      } else {
-        for (const id of filteredIds) next.add(id);
+      for (const item of catItems) {
+        if (allSelected) next.delete(item.id);
+        else next.add(item.id);
       }
       return next;
     });
@@ -130,26 +143,13 @@ export default function RentalInventory() {
     );
   }
 
+  const displayCategories = search
+    ? Object.keys(groupedFiltered).sort()
+    : [...categories].sort();
+
   return (
     <section className="py-16 sm:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Category Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
-          {["All", ...categories].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`shrink-0 px-4 py-2 text-xs uppercase tracking-widest font-semibold border transition-colors duration-200 ${
-                activeCategory === cat
-                  ? "bg-steel text-black border-steel"
-                  : "bg-navy/50 text-muted border-card-border hover:text-white hover:border-steel/50"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
         {/* Search */}
         <div className="mb-8">
           <input
@@ -162,71 +162,110 @@ export default function RentalInventory() {
         </div>
 
         {/* Results count */}
-        <p className="text-muted text-xs uppercase tracking-widest mb-4">
+        <p className="text-muted text-xs uppercase tracking-widest mb-6">
           {filtered.length} {filtered.length === 1 ? "item" : "items"}
         </p>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-card-border">
-                <th className="py-3 pr-2 w-10">
-                  <input
-                    type="checkbox"
-                    checked={allFilteredSelected}
-                    onChange={toggleAll}
-                    className="accent-steel w-4 h-4 cursor-pointer"
-                  />
-                </th>
-                <th className="font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-chrome font-semibold py-3 pr-4">
-                  Item
-                </th>
-                <th className="font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-chrome font-semibold py-3 pr-4 hidden sm:table-cell">
-                  Category
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((item, i) => (
-                <tr
-                  key={item.id}
-                  onClick={() => toggleItem(item.id)}
-                  className={`border-b border-card-border cursor-pointer transition-colors duration-100 ${
-                    selectedIds.has(item.id)
-                      ? "bg-steel/10"
-                      : i % 2 === 0
-                        ? "bg-navy/30"
-                        : ""
-                  } hover:bg-steel/5`}
+        {/* Collapsible category sections */}
+        <div className="space-y-[1px]">
+          {displayCategories.map((cat) => {
+            const items = groupedFiltered[cat] || [];
+            if (items.length === 0) return null;
+            const isCollapsed = collapsedCategories.has(cat);
+            const selectedCount = items.filter((i) =>
+              selectedIds.has(i.id)
+            ).length;
+            const allSelected =
+              items.length > 0 && items.every((i) => selectedIds.has(i.id));
+
+            return (
+              <div key={cat} className="border border-card-border">
+                {/* Category header */}
+                <button
+                  onClick={() => toggleCategory(cat)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-navy/50 hover:bg-navy/80 transition-colors duration-200 cursor-pointer"
                 >
-                  <td className="py-3 pr-2 w-10">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`text-muted text-xs transition-transform duration-200 ${
+                        isCollapsed ? "" : "rotate-90"
+                      }`}
+                    >
+                      &#9654;
+                    </span>
+                    <span className="font-[family-name:var(--font-heading)] text-sm uppercase tracking-widest text-white font-semibold">
+                      {cat}
+                    </span>
+                    <span className="text-muted text-xs">
+                      {items.length}{" "}
+                      {items.length === 1 ? "item" : "items"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {selectedCount > 0 && (
+                      <span className="text-steel text-xs font-semibold">
+                        {selectedCount} selected
+                      </span>
+                    )}
                     <input
                       type="checkbox"
-                      checked={selectedIds.has(item.id)}
-                      onChange={() => toggleItem(item.id)}
+                      checked={allSelected}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        toggleCategoryItems(cat);
+                      }}
                       onClick={(e) => e.stopPropagation()}
                       className="accent-steel w-4 h-4 cursor-pointer"
                     />
-                  </td>
-                  <td className="py-3 pr-4 text-sm text-white">{item.item}</td>
-                  <td className="py-3 pr-4 text-sm text-muted hidden sm:table-cell">
-                    {item.category}
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="py-12 text-center text-muted text-sm"
-                  >
-                    No equipment found matching your search.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                  </div>
+                </button>
+
+                {/* Category items */}
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    isCollapsed ? "max-h-0" : "max-h-[2000px]"
+                  }`}
+                >
+                  <table className="w-full text-left">
+                    <tbody>
+                      {items.map((item, i) => (
+                        <tr
+                          key={item.id}
+                          onClick={() => toggleItem(item.id)}
+                          className={`border-t border-card-border cursor-pointer transition-colors duration-100 ${
+                            selectedIds.has(item.id)
+                              ? "bg-steel/10"
+                              : i % 2 === 0
+                                ? "bg-navy/30"
+                                : ""
+                          } hover:bg-steel/5`}
+                        >
+                          <td className="py-3 pl-10 pr-2 w-10">
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.has(item.id)}
+                              onChange={() => toggleItem(item.id)}
+                              onClick={(e) => e.stopPropagation()}
+                              className="accent-steel w-4 h-4 cursor-pointer"
+                            />
+                          </td>
+                          <td className="py-3 pr-4 text-sm text-white">
+                            {item.item}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })}
+
+          {filtered.length === 0 && (
+            <p className="py-12 text-center text-muted text-sm">
+              No equipment found matching your search.
+            </p>
+          )}
         </div>
       </div>
 

@@ -44,6 +44,32 @@ function SideTexture({ src, side, invert = true }: { src: string; side: "left" |
   );
 }
 
+function SideVideoTexture({ src, side }: { src: string; side: "left" | "right" }) {
+  return (
+    <div
+      className={`hidden lg:block absolute top-1/2 -translate-y-1/2 ${side === "left" ? "left-0" : "right-0"} w-[320px] xl:w-[450px] h-[90%] pointer-events-none`}
+      style={{
+        maskImage: side === "left"
+          ? "linear-gradient(to right, black 20%, transparent 75%)"
+          : "linear-gradient(to left, black 20%, transparent 75%)",
+        WebkitMaskImage: side === "left"
+          ? "linear-gradient(to right, black 20%, transparent 75%)"
+          : "linear-gradient(to left, black 20%, transparent 75%)",
+      }}
+    >
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="w-full h-full object-cover grayscale opacity-20"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <>
@@ -61,8 +87,14 @@ export default function Home() {
           <Services />
         </div>
 
-        <PortfolioGrid />
-        <FeaturedWork />
+        <div className="relative overflow-hidden">
+          <SideVideoTexture src="/camera-gear-2.mp4" side="right" />
+          <PortfolioGrid />
+        </div>
+        <div className="relative overflow-hidden">
+          <SideVideoTexture src="/camera-gear-3.mp4" side="left" />
+          <FeaturedWork />
+        </div>
 
         {/* Divider 2 — gear motion video */}
         <GearMotionStrip video="/gear-motion-2.mp4" side="right" />
@@ -74,23 +106,8 @@ export default function Home() {
         </div>
 
         <div className="relative overflow-hidden">
-          <div
-            className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-0 w-[220px] xl:w-[300px] h-[80%] pointer-events-none"
-            style={{
-              maskImage: "linear-gradient(to right, black 20%, transparent 75%)",
-              WebkitMaskImage: "linear-gradient(to right, black 20%, transparent 75%)",
-            }}
-          >
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover grayscale opacity-20"
-            >
-              <source src="/gears-texture.mp4" type="video/mp4" />
-            </video>
-          </div>
+          <SideVideoTexture src="/gears-texture.mp4" side="left" />
+          <SideVideoTexture src="/camera-gear-4.mp4" side="right" />
           <WhyChooseUs />
         </div>
 
@@ -98,7 +115,10 @@ export default function Home() {
         <GearMotionStrip video="/gear-motion-3.mp4" side="left" />
         <TextureDividerMobile />
 
-        <CTA />
+        <div className="relative overflow-hidden">
+          <SideVideoTexture src="/camera-gear-5.mp4" side="right" />
+          <CTA />
+        </div>
         <ServicesTicker />
       </main>
       <Footer />
