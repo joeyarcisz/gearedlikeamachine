@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import RentalInventory from "@/components/RentalInventory";
-import { siteConfig } from "@/lib/data";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 
 export const metadata: Metadata = {
@@ -51,24 +50,6 @@ export default function RentalsPage() {
           </div>
         </div>
 
-        {/* CTA card */}
-        <div className="dashboard-card" style={{ "--card-delay": "200ms" } as React.CSSProperties}>
-          <div className="dashboard-card-body py-10 text-center">
-            <h2 className="font-[family-name:var(--font-heading)] text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white mb-4">
-              Need Gear for Your Next Shoot?
-            </h2>
-            <p className="text-muted text-sm sm:text-base mb-6 leading-relaxed max-w-xl mx-auto">
-              Reach out to reserve equipment or build a custom package for your
-              production. We&apos;ll put together exactly what you need.
-            </p>
-            <a
-              href={`mailto:${siteConfig.email}?subject=Equipment%20Rental%20Inquiry`}
-              className="inline-block bg-steel text-black px-8 py-3 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors duration-200"
-            >
-              Inquire About Rentals
-            </a>
-          </div>
-        </div>
       </div>
     </DashboardShell>
   );
