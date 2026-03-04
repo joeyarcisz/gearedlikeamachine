@@ -5,7 +5,7 @@ import USPAGallery from "./USPAGallery";
 export const metadata: Metadata = {
   title: "U.S. Polo Assn. | Geared Like A Machine",
   description:
-    "U.S. Polo Assn. global campaign production gallery by Geared Like A Machine. Brand films, product photography, and seasonal content across 100+ countries.",
+    "Since 2018, Geared Like A Machine has captured high-impact global motion assets for U.S. Polo Assn. seasonal campaigns distributed across 190+ countries.",
 };
 
 export default function USPAPage() {
@@ -23,7 +23,7 @@ export default function USPAPage() {
               U.S. Polo Assn.
             </h1>
             <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto mb-4 leading-relaxed">
-              Full-scale brand films, product photography, and seasonal content built for international reach across broadcast, digital, and retail in 100+ countries.
+              Since 2018, we&apos;ve worked with U.S. Polo Assn. and Genius House Media, capturing high-impact global motion assets for the brand&apos;s seasonal campaigns. The official brand of the United States Polo Association has a presence in over 190 countries and USPA distributes these assets to all of them.
             </p>
             <a
               href="/#portfolio"
