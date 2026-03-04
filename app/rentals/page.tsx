@@ -30,10 +30,15 @@ export default function RentalsPage() {
             <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase text-white mb-4">
               Equipment Rentals
             </h1>
-            <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-4">
               Our rental department carries cameras, lenses, lighting, drones,
               grip, audio, monitoring, power, and support gear — everything you
               need to execute at the highest level.
+            </p>
+            <p className="text-chrome text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+              Build your gear list by checking the boxes next to the items you
+              need. When you&apos;re done, click Submit at the bottom of the
+              page and we&apos;ll send you a quote for your selected package.
             </p>
           </div>
         </div>
