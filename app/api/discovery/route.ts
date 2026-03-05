@@ -110,6 +110,70 @@ export async function POST(request: Request) {
       }
     }
 
+    // Upsert contact into CRM
+    try {
+      const { prisma } = await import("@/lib/prisma");
+      const { logActivity } = await import("@/lib/activity");
+
+      const discoveryNote = [
+        `Discovery form submission`,
+        company ? `Company: ${company}` : null,
+        projectType ? `Project type: ${projectType}` : null,
+        budget ? `Budget: ${budget}` : null,
+        timeline ? `Timeline: ${timeline}` : null,
+        `Description: ${description}`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const existing = await prisma.contact.findUnique({
+        where: { email },
+      });
+
+      if (existing) {
+        const updatedNotes = existing.notes
+          ? `${existing.notes}\n\n---\n${discoveryNote}`
+          : discoveryNote;
+
+        await prisma.contact.update({
+          where: { email },
+          data: {
+            lastContact: new Date(),
+            notes: updatedNotes,
+          },
+        });
+
+        await logActivity({
+          type: "updated",
+          description: `Discovery form resubmitted`,
+          contactId: existing.id,
+          metadata: { source: "discovery_form", projectType, budget, timeline },
+        });
+      } else {
+        const contact = await prisma.contact.create({
+          data: {
+            name,
+            email,
+            company: company || null,
+            stage: "lead",
+            lastContact: new Date(),
+            nextAction: "Follow up on discovery submission",
+            notes: discoveryNote,
+          },
+        });
+
+        await logActivity({
+          type: "created",
+          description: `Contact created from discovery form`,
+          contactId: contact.id,
+          metadata: { source: "discovery_form", projectType, budget, timeline },
+        });
+      }
+    } catch (crmError) {
+      console.error("Failed to upsert CRM contact from discovery:", crmError);
+      // Don't fail the request — form submission still counts
+    }
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(

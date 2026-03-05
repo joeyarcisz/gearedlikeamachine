@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ActivityType {
+  note
+  email_sent
+  call
+  meeting
+  stage_change
+  created
+  updated
+}
+
+enum ContactStage {
+  lead
+  qualifying
+  active_contact
+  active_conversation
+  client_account
+  client_past
+  inactive_contact
+}
+
+enum OpportunityStage {
+  lead
+  qualification
+  proposal
+  negotiation
+  waiting_client_feedback
+  nurture_reactivation
+  won
+  lost
+  deferred
+}
+
+model Contact {
+  id            String       @id @default(cuid())
+  name          String
+  company       String?
+  email         String?      @unique
+  phone         String?
+  stage         ContactStage @default(lead)
+  lastContact   DateTime?
+  nextAction    String?
+  notes         String?
+  sourceFiles   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  opportunities Opportunity[]
+  activities    Activity[]
+}
+
+model Opportunity {
+  id                 String           @id @default(cuid())
+  title              String
+  company            String?
+  stage              OpportunityStage @default(lead)
+  estimatedValueLow  Int?
+  estimatedValueHigh Int?
+  lastTouch          DateTime?
+  nextAction         String?
+  owner              String?
+  priority           String?
+  notes              String?
+  contactId          String?
+  contact            Contact?         @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  activities         Activity[]
+}
+
+model Activity {
+  id            String       @id @default(cuid())
+  type          ActivityType
+  description   String
+  metadata      Json?
+  contactId     String?
+  contact       Contact?     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
