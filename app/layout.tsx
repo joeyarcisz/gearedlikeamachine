@@ -14,6 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gearedlikeamachine.com"),
   title: "Geared Like A Machine | Video Production & Equipment Rentals",
   description:
     "Engineered to Move Audiences. Cinema-grade video production, equipment rentals, and content creation for brands that demand results. Based in Texas, working globally.",
@@ -30,16 +31,18 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Geared Like A Machine | Video Production & Equipment Rentals",
     description:
-      "Engineered to Move Audiences. Cinema-grade video production and professional equipment rentals for brands that demand results.",
+      "Engineered to Move Audiences. Cinema-grade video production and professional equipment rentals for brands that demand results. Based in Dallas-Fort Worth, Texas.",
     type: "website",
     locale: "en_US",
     siteName: "Geared Like A Machine",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Geared Like A Machine — Video Production & Equipment Rentals" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Geared Like A Machine | Video Production & Equipment Rentals",
     description:
-      "Engineered to Move Audiences. Cinema-grade video production and professional equipment rentals.",
+      "Engineered to Move Audiences. Cinema-grade video production and professional equipment rentals. Dallas-Fort Worth, TX.",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -63,9 +66,13 @@ export default function RootLayout({
               "@type": "LocalBusiness",
               name: "Geared Like A Machine",
               description:
-                "Video production company and equipment rental house specializing in brand films, commercials, and social media content. Based in Texas, working globally.",
+                "Video production company and equipment rental house specializing in brand films, commercials, and social media content. Based in Dallas-Fort Worth, Texas. Working globally.",
+              telephone: "(682) 229-7699",
+              email: "hello@gearedlikeamachine.com",
+              url: "https://gearedlikeamachine.com",
               address: {
                 "@type": "PostalAddress",
+                addressLocality: "Dallas-Fort Worth",
                 addressRegion: "TX",
                 addressCountry: "US",
               },

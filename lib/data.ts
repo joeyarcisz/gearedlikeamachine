@@ -50,13 +50,13 @@ export const portfolioItems = [
     title: "Agazul Tequila",
     category: "Commercial",
     thumbnail: "/portfolio-agazul.gif",
-    videoUrl: "#",
+    videoUrl: "/work/agazul-tequila",
   },
   {
-    title: "SpaceX",
+    title: "SpaceX Starlink",
     category: "Product Demo",
     thumbnail: "/portfolio-spacex.jpg",
-    videoUrl: "#",
+    videoUrl: "/work/spacex-starlink",
   },
   {
     title: "U.S. Polo Assn.",
@@ -68,7 +68,7 @@ export const portfolioItems = [
     title: "Power Digital",
     category: "Brand Content",
     thumbnail: "/portfolio-power-digital.png",
-    videoUrl: "#",
+    videoUrl: "/work/power-digital",
   },
   {
     title: "Cardboard Spaceship",
@@ -81,6 +81,12 @@ export const portfolioItems = [
     category: "Commercial",
     thumbnail: "/chevrolet/chevy8.gif",
     videoUrl: "/work/chevrolet",
+  },
+  {
+    title: "Coca-Cola",
+    category: "Commercial",
+    thumbnail: "/coca-cola/santa-1.jpg",
+    videoUrl: "/work/coca-cola",
   },
 ];
 
@@ -228,28 +234,9 @@ export const whyChooseUsStats = [
   "Global Reach",
 ];
 
-export const testimonials = [
-  {
-    quote:
-      "Geared Like A Machine transformed our brand story into a cinematic experience. The team's attention to detail and creative vision exceeded every expectation.",
-    name: "Marcus Rivera",
-    title: "CMO",
-    company: "Skyline Motors",
-  },
-  {
-    quote:
-      "Working with this crew felt like having a Hollywood team on call. They understood our vision from day one and delivered content that drove real results.",
-    name: "Sarah Chen",
-    title: "Brand Director",
-    company: "Volt Energy",
-  },
-  {
-    quote:
-      "From pre-production to final delivery, everything was seamless. Our social media engagement increased 340% after launching the content they produced.",
-    name: "David Okafor",
-    title: "Founder",
-    company: "Atlas Fitness",
-  },
+export const testimonials: { quote: string; name: string; title: string; company: string }[] = [
+  // Real client testimonials will be added as they come in.
+  // Use the Google Review Engine workflow to collect these after completed projects.
 ];
 
 export const faqItems = [
@@ -261,7 +248,7 @@ export const faqItems = [
   {
     question: "How much does a video production project cost?",
     answer:
-      "Project costs vary based on scope, duration, and complexity. We offer packages starting from social media content shoots to full-scale commercial productions. Contact us for a custom quote tailored to your specific needs and budget.",
+      "Project costs vary based on scope, duration, and complexity — from single-day social media shoots to multi-week commercial campaigns. Use our Scope Tool for an instant ballpark estimate, or submit a Discovery Form and we'll follow up within 24 hours with a detailed quote.",
   },
   {
     question: "What is your production process?",
@@ -281,15 +268,13 @@ export const faqItems = [
   {
     question: "What equipment do you use?",
     answer:
-      "We shoot on professional cinema cameras (RED, ARRI, Blackmagic) with premium lenses, professional lighting kits, and broadcast-quality audio equipment. Post-production is handled in DaVinci Resolve for color grading and Adobe Premiere Pro for editing.",
+      "We shoot on professional cinema cameras including RED V-Raptor 8K, RED Komodo-X 6K, Sony FX3, and Nikon ZR systems paired with premium cine lenses, professional lighting, and broadcast-quality audio. Post-production is handled in DaVinci Resolve for color grading and Adobe Premiere Pro for editing.",
   },
 ];
 
-export const socialLinks = [
-  { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
-  { label: "YouTube", href: "https://youtube.com", icon: "youtube" },
-  { label: "Vimeo", href: "https://vimeo.com", icon: "vimeo" },
-  { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
+export const socialLinks: { label: string; href: string; icon: string }[] = [
+  // Add real GLAM social profile URLs when accounts are created.
+  // Example: { label: "Instagram", href: "https://instagram.com/gearedlikeamachine", icon: "instagram" },
 ];
 
 export const dashboardNavLinks = [
@@ -304,36 +289,20 @@ export const dashboardNavLinks = [
 
 export const activityTimestamps = [
   {
-    time: "2 days ago",
+    time: "Recent",
     label: "Brand Film Delivered",
     detail: "U.S. Polo Assn. — Global Campaign Final Cut",
     image: "/dashboard/interview-1.jpg",
   },
   {
-    time: "5 days ago",
-    label: "Client Testimonial",
-    detail: `"Transformed our brand story into a cinematic experience." — Marcus Rivera, Skyline Motors`,
-  },
-  {
-    time: "1 week ago",
-    label: "New Project Kicked Off",
-    detail: "SpaceX Starlink — Product Demo Series",
-    image: "/dashboard/interview-2.jpg",
-  },
-  {
-    time: "2 weeks ago",
-    label: "Post-Production Complete",
+    time: "Recent",
+    label: "Production Complete",
     detail: "Tige Boats — Lifestyle Campaign Color Graded",
   },
   {
-    time: "3 weeks ago",
+    time: "Recent",
     label: "Equipment Deployed",
     detail: "RED V-Raptor + Aputure Storm package shipped to set",
     image: "/dashboard/interview-3.png",
-  },
-  {
-    time: "1 month ago",
-    label: "Client Testimonial",
-    detail: `"Hollywood team on call. Drove real results." — Sarah Chen, Volt Energy`,
   },
 ];

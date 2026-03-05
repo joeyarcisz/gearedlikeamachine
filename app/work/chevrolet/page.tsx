@@ -34,6 +34,11 @@ export default function ChevroletPage() {
             <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight uppercase text-white mb-4">
               Chevrolet
             </h1>
+            <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto mb-4 leading-relaxed">
+              Commercial production for Chevrolet. High-energy campaign content
+              capturing vehicles, lifestyle, and brand moments built for
+              broadcast and digital distribution.
+            </p>
             <a
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
