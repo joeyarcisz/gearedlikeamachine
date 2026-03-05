@@ -29,7 +29,7 @@ export default function FeaturedWork() {
             {featuredWork.map((item, i) => (
               <a
                 key={item.number}
-                href="#contact"
+                href={item.href}
                 className="group shrink-0 w-[300px] sm:w-[360px] bg-navy/30 border border-card-border hover:border-steel/40 transition-all duration-300"
               >
                 {/* Image area */}

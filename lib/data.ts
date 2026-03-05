@@ -92,6 +92,7 @@ export const featuredWork = [
       "Global campaign spanning over 100 countries. Full-scale brand films, product photography, and seasonal content built for international reach across broadcast, digital, and retail.",
     category: "Global Campaign",
     image: "/featured-1.jpg",
+    href: "/work/us-polo-assn",
   },
   {
     number: "02",
@@ -99,6 +100,8 @@ export const featuredWork = [
     description:
       "Product demonstration content for one of the most defining innovations in modern technology. Precision capture showcasing Starlink hardware and deployment at scale.",
     category: "Product Demo",
+    image: "/starlink/featured.jpg",
+    href: "/work/spacex-starlink",
   },
   {
     number: "03",
@@ -106,6 +109,8 @@ export const featuredWork = [
     description:
       "Cinematic brand films and lifestyle content capturing performance watercraft on the water. Dynamic tracking shots, aerial coverage, and athlete-driven storytelling.",
     category: "Brand Film",
+    image: "/tige/zx-lake-morning.jpeg",
+    href: "/work/tige-boats",
   },
   {
     number: "04",
@@ -113,6 +118,8 @@ export const featuredWork = [
     description:
       "A preserved piece of American history. Documentary production bringing an untold story to life with archival footage, intimate interviews, and a compelling narrative arc.",
     category: "Documentary",
+    image: "/jfk/featured.jpg",
+    href: "/work/jfk-unspoken-speech",
   },
   {
     number: "05",
@@ -120,6 +127,7 @@ export const featuredWork = [
     description:
       "Super Bowl advertising featuring NFL legend Troy Aikman. High-visibility commercial production built for the biggest stage in broadcast media.",
     category: "Commercial",
+    href: "/work/troy-aikman",
   },
 ];
 
