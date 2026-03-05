@@ -71,12 +71,6 @@ export const portfolioItems = [
     videoUrl: "/work/power-digital",
   },
   {
-    title: "Cardboard Spaceship",
-    category: "Creative Production",
-    thumbnail: "/portfolio-cardboard-spaceship.gif",
-    videoUrl: "/work/cardboard-spaceship",
-  },
-  {
     title: "Chevrolet",
     category: "Commercial",
     thumbnail: "/chevrolet/chevy8.gif",
