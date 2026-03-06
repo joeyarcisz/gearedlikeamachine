@@ -104,6 +104,49 @@ export default function ScopeCalculator() {
     });
   }
 
+  function buildMailto() {
+    const lines: string[] = ["Production Scope Estimate", ""];
+
+    if (projectType) {
+      const label = PROJECT_TYPES.find((t) => t.key === projectType)?.label;
+      lines.push(`Project Type: ${label}`);
+    }
+
+    lines.push(`Shoot Days: ${shootDays}`);
+
+    if (crewSize) {
+      const crew = CREW_OPTIONS.find((c) => c.key === crewSize);
+      lines.push(`Crew Size: ${crew?.label} (${crew?.sub})`);
+    }
+
+    lines.push(`Locations: ${locations >= 5 ? "5+" : locations}`);
+
+    if (deliverables.size > 0) {
+      const labels = Array.from(deliverables)
+        .map((d) => DELIVERABLE_OPTIONS.find((o) => o.key === d)?.label)
+        .filter(Boolean);
+      lines.push(`Deliverables: ${labels.join(", ")}`);
+    }
+
+    if (postLevel) {
+      const post = POST_OPTIONS.find((p) => p.key === postLevel);
+      lines.push(`Post-Production: ${post?.label} (${post?.sub})`);
+    }
+
+    if (estimate) {
+      lines.push("");
+      lines.push(`Estimated Range: $${fmt(estimate.low)} \u2013 $${fmt(estimate.high)}`);
+    }
+
+    lines.push("");
+    lines.push("---");
+    lines.push("Generated via gearedlikeamachine.com/scope");
+
+    const subject = encodeURIComponent("Production Scope Estimate");
+    const body = encodeURIComponent(lines.join("\n"));
+    return `mailto:hello@gearedlikeamachine.com?subject=${subject}&body=${body}`;
+  }
+
   const estimate = useMemo(() => {
     if (!projectType || !crewSize || !postLevel) return null;
 
@@ -121,7 +164,7 @@ export default function ScopeCalculator() {
 
   return (
     <>
-      <div className={`space-y-10 ${estimate ? "pb-24 sm:pb-0" : ""}`}>
+      <div className="space-y-10">
         {/* Project Type */}
         <div>
           <label className="block text-xs uppercase tracking-widest text-muted mb-4 font-[family-name:var(--font-heading)] font-semibold">
@@ -297,23 +340,35 @@ export default function ScopeCalculator() {
               your estimate.
             </p>
           )}
-          {estimate && (
-            <div className="flex flex-col sm:flex-row gap-3 mt-6">
-              <a
-                href="/discovery"
-                className="inline-block text-center bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors"
-              >
-                Start a Conversation
-              </a>
-              <a
-                href="mailto:hello@gearedlikeamachine.com"
-                className="inline-block text-center border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
-              >
-                Email This Scope
-              </a>
-            </div>
-          )}
         </div>
+      </div>
+
+      {/* ── Ready to Move Forward CTA ── */}
+      <div className={`mt-16 pt-16 border-t border-card-border text-center ${estimate ? "pb-24 sm:pb-0" : ""}`}>
+        <h3 className="font-[family-name:var(--font-heading)] text-2xl sm:text-3xl font-bold uppercase tracking-wider mb-4">
+          Ready to Move Forward?
+        </h3>
+        <p className="text-muted text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">
+          Your estimate is a starting point. Send your scope to our team and
+          we&apos;ll refine it into a production-ready plan within 24 hours.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href={buildMailto()}
+            className="bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors"
+          >
+            Send My Scope
+          </a>
+          <a
+            href="tel:+16822297699"
+            className="border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
+          >
+            Call Us: (682) 229-7699
+          </a>
+        </div>
+        <p className="text-muted text-xs mt-6">
+          No commitment. No obligation. Just a clear plan.
+        </p>
       </div>
 
       {/* Mobile Sticky Estimate */}
