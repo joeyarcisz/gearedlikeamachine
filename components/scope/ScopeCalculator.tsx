@@ -175,7 +175,7 @@ export default function ScopeCalculator() {
               <button
                 key={t.key}
                 onClick={() => setProjectType(t.key)}
-                className={`px-4 py-2.5 text-sm tracking-wide border transition-all duration-200 cursor-pointer ${
+                className={`px-4 py-3 min-h-[44px] text-sm tracking-wide border transition-all duration-200 cursor-pointer ${
                   projectType === t.key
                     ? "bg-steel text-black border-steel font-semibold"
                     : "border-card-border text-chrome hover:border-steel/50 hover:text-white"
@@ -196,7 +196,7 @@ export default function ScopeCalculator() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setShootDays((d) => Math.max(1, d - 1))}
-                className="w-10 h-10 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
+                className="w-11 h-11 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
               >
                 &minus;
               </button>
@@ -205,7 +205,7 @@ export default function ScopeCalculator() {
               </span>
               <button
                 onClick={() => setShootDays((d) => Math.min(10, d + 1))}
-                className="w-10 h-10 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
+                className="w-11 h-11 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
               >
                 +
               </button>
@@ -219,7 +219,7 @@ export default function ScopeCalculator() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setLocations((l) => Math.max(1, l - 1))}
-                className="w-10 h-10 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
+                className="w-11 h-11 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
               >
                 &minus;
               </button>
@@ -228,7 +228,7 @@ export default function ScopeCalculator() {
               </span>
               <button
                 onClick={() => setLocations((l) => Math.min(5, l + 1))}
-                className="w-10 h-10 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
+                className="w-11 h-11 border border-card-border text-chrome hover:border-steel/50 hover:text-white transition-colors flex items-center justify-center text-lg cursor-pointer"
               >
                 +
               </button>
@@ -277,7 +277,7 @@ export default function ScopeCalculator() {
               <button
                 key={d.key}
                 onClick={() => toggleDeliverable(d.key)}
-                className={`px-4 py-2.5 text-sm tracking-wide border transition-all duration-200 cursor-pointer ${
+                className={`px-4 py-3 min-h-[44px] text-sm tracking-wide border transition-all duration-200 cursor-pointer ${
                   deliverables.has(d.key)
                     ? "bg-steel text-black border-steel font-semibold"
                     : "border-card-border text-chrome hover:border-steel/50 hover:text-white"
@@ -329,7 +329,7 @@ export default function ScopeCalculator() {
           <p className="text-xs uppercase tracking-widest text-muted mb-2 font-[family-name:var(--font-heading)]">
             Estimated Range
           </p>
-          <p className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold text-steel">
+          <p className="font-[family-name:var(--font-heading)] text-2xl sm:text-4xl md:text-5xl font-bold text-steel">
             {estimate
               ? `$${fmt(estimate.low)} \u2013 $${fmt(estimate.high)}`
               : "$\u2014 \u2013 $\u2014"}
@@ -355,13 +355,13 @@ export default function ScopeCalculator() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
             href={buildMailto()}
-            className="bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors"
+            className="w-full sm:w-auto text-center bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors"
           >
             Send My Scope
           </a>
           <a
             href="tel:+16822297699"
-            className="border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
+            className="w-full sm:w-auto text-center border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
           >
             Call Us: (682) 229-7699
           </a>
@@ -385,7 +385,7 @@ export default function ScopeCalculator() {
             </div>
             <a
               href="/discovery"
-              className="bg-steel text-black px-4 py-2 text-xs uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors shrink-0"
+              className="bg-steel text-black px-5 py-3 min-h-[44px] flex items-center text-xs uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors shrink-0"
             >
               Let&apos;s Talk
             </a>

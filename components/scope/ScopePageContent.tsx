@@ -60,7 +60,7 @@ export default function ScopePageContent() {
             <div className="flex flex-col sm:flex-row items-start gap-4">
               <button
                 onClick={scrollToCalculator}
-                className="group bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-all duration-300 flex items-center gap-2 cursor-pointer"
+                className="group w-full sm:w-auto bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 Run the Engine
                 <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
@@ -69,7 +69,7 @@ export default function ScopePageContent() {
               </button>
               <a
                 href="/discovery"
-                className="group border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-all duration-300"
+                className="group w-full sm:w-auto text-center border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-all duration-300"
               >
                 Prefer to Talk?
               </a>
@@ -81,7 +81,7 @@ export default function ScopePageContent() {
       {/* ── How It Works ── */}
       <section className="py-16 sm:py-20 border-y border-card-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
+          <div className="grid md:grid-cols-3 gap-8 md:gap-6">
             <div>
               <span className="font-[family-name:var(--font-heading)] text-5xl font-bold text-steel/20 block mb-3">
                 01
@@ -177,7 +177,7 @@ export default function ScopePageContent() {
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
             <div className="border border-card-border p-6 sm:p-8">
               <p className="text-xs uppercase tracking-widest text-muted mb-3 font-[family-name:var(--font-heading)]">
                 Targeted Campaigns
@@ -286,13 +286,13 @@ export default function ScopePageContent() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="/discovery"
-              className="bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors"
+              className="w-full sm:w-auto text-center bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors"
             >
               Discovery Form
             </a>
             <a
               href="mailto:hello@gearedlikeamachine.com"
-              className="border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
+              className="w-full sm:w-auto text-center border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
             >
               Email Us Direct
             </a>
