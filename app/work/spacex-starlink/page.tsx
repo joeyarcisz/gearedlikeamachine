@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 };
 
 const images = [
-  { src: "/starlink/hero.gif", alt: "Starlink satellite deployment" },
   { src: "/starlink/demo.gif", alt: "Starlink product demonstration" },
   { src: "/starlink/phone-app.jpg", alt: "Starlink app setup on iPhone" },
   { src: "/starlink/setup-1.jpg", alt: "Starlink production setup" },
@@ -43,6 +42,16 @@ export default function SpaceXStarlinkPage() {
             >
               &larr; Back to Portfolio
             </a>
+          </div>
+
+          {/* Hero Video */}
+          <div className="w-full aspect-video mb-[2px] overflow-hidden">
+            <iframe
+              src="https://player.vimeo.com/video/820936331?h=f8b917f794&title=0&byline=0&portrait=0"
+              className="w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+            />
           </div>
 
           {/* Gallery */}

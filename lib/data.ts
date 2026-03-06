@@ -122,14 +122,6 @@ export const featuredWork = [
     image: "/jfk/featured.jpg",
     href: "/work/jfk-unspoken-speech",
   },
-  {
-    number: "05",
-    title: "Super Bowl — Troy Aikman",
-    description:
-      "Super Bowl advertising featuring NFL legend Troy Aikman. High-visibility commercial production built for the biggest stage in broadcast media.",
-    category: "Commercial",
-    href: "/work/troy-aikman",
-  },
 ];
 
 export const stats = [

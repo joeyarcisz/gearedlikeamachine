@@ -12,24 +12,12 @@ export default function StarlinkGallery({ images }: { images: GalleryImage[] }) 
 
   return (
     <>
-      {/* Hero image — full width */}
-      <button
-        onClick={() => setLightbox(0)}
-        className="group relative w-full aspect-[21/9] overflow-hidden bg-navy mb-[2px] cursor-pointer"
-      >
-        <img
-          src={images[0].src}
-          alt={images[0].alt}
-          className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
-        />
-      </button>
-
-      {/* Grid — remaining images */}
+      {/* Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 gap-[2px]">
-        {images.slice(1).map((img, i) => (
+        {images.map((img, i) => (
           <button
             key={img.src}
-            onClick={() => setLightbox(i + 1)}
+            onClick={() => setLightbox(i)}
             className="group relative aspect-[4/3] overflow-hidden bg-navy cursor-pointer"
           >
             <img
