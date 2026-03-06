@@ -100,7 +100,7 @@ export default function StartHereModal({ open, onClose }: StartHereModalProps) {
         </button>
 
         {/* Heading */}
-        <h2 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-wide text-white mb-8 text-center">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-wider text-white mb-8 text-center">
           How do you want to get started?
         </h2>
 

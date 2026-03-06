@@ -11,7 +11,7 @@ export default function Services() {
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
               Capabilities
             </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider">
               What We Bring to the Table
             </h2>
           </div>
@@ -34,7 +34,7 @@ export default function Services() {
                       return Icon ? <Icon className="w-6 h-6" /> : service.icon;
                     })()}
                   </span>
-                  <h3 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-wide">
+                  <h3 className="font-[family-name:var(--font-heading)] text-xl sm:text-2xl font-bold uppercase tracking-wider">
                     {service.title}
                   </h3>
                 </div>

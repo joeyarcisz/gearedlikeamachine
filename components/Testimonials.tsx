@@ -7,7 +7,7 @@ export default function Testimonials() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <ScrollFadeIn>
           <div className="text-center mb-12">
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-4">
               Client Feedback
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl mx-auto">
@@ -29,7 +29,7 @@ export default function Testimonials() {
                   {t.quote}
                 </p>
                 <div className="border-t border-card-border pt-4">
-                  <p className="font-[family-name:var(--font-heading)] text-white font-semibold uppercase tracking-wide text-sm">
+                  <p className="font-[family-name:var(--font-heading)] text-white font-semibold uppercase tracking-wider text-sm">
                     {t.name}
                   </p>
                   <p className="text-muted text-xs uppercase tracking-widest">

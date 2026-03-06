@@ -87,7 +87,7 @@ export default function Hero() {
                 {siteConfig.location} — {siteConfig.availability}
               </p>
 
-              <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-wide leading-[0.95] mb-6">
+              <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-wider leading-[0.95] mb-6">
                 {siteConfig.tagline}
               </h1>
 

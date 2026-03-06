@@ -15,7 +15,7 @@ export default function Process() {
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
               The Blueprint
             </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider">
               How We Operate
             </h2>
           </div>
@@ -42,7 +42,7 @@ export default function Process() {
                           <span className="font-[family-name:var(--font-heading)] text-5xl font-bold text-steel/20 block mb-2">
                             {String(step.step).padStart(2, "0")}
                           </span>
-                          <h3 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide mb-3">
+                          <h3 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wider mb-3">
                             {step.title}
                           </h3>
                           <p className="text-muted text-sm leading-relaxed mb-3">
@@ -88,7 +88,7 @@ export default function Process() {
                           <span className="font-[family-name:var(--font-heading)] text-5xl font-bold text-steel/20 block mb-2">
                             {String(step.step).padStart(2, "0")}
                           </span>
-                          <h3 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide mb-3">
+                          <h3 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wider mb-3">
                             {step.title}
                           </h3>
                           <p className="text-muted text-sm leading-relaxed mb-3">
@@ -115,7 +115,7 @@ export default function Process() {
                 <span className="font-[family-name:var(--font-heading)] text-3xl font-bold text-steel/20 block mb-1">
                   {String(step.step).padStart(2, "0")}
                 </span>
-                <h3 className="font-[family-name:var(--font-heading)] text-lg font-bold uppercase tracking-wide mb-2">
+                <h3 className="font-[family-name:var(--font-heading)] text-lg font-bold uppercase tracking-wider mb-2">
                   {step.title}
                 </h3>
                 <p className="text-muted text-sm leading-relaxed mb-3">

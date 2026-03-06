@@ -25,7 +25,7 @@ export default function CTA() {
         <div className="absolute inset-0 bg-black/75" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <ScrollFadeIn>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-wide mb-6">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-wider mb-6">
               Put Us to Work
               <span className="text-steel">.</span>
             </h2>

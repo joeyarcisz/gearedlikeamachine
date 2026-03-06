@@ -12,7 +12,7 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <ScrollFadeIn>
           <div className="text-center mb-12">
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-4">
               FAQ
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl mx-auto">
@@ -31,7 +31,7 @@ export default function FAQ() {
                   }
                   className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-navy/20 transition-colors"
                 >
-                  <span className="font-[family-name:var(--font-heading)] text-base sm:text-lg font-semibold uppercase tracking-wide">
+                  <span className="font-[family-name:var(--font-heading)] text-base sm:text-lg font-semibold uppercase tracking-wider">
                     {item.question}
                   </span>
                   <span

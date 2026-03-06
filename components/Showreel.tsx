@@ -11,7 +11,7 @@ export default function Showreel() {
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
               Live Feed
             </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-4">
               The Reel
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl">

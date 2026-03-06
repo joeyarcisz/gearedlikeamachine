@@ -22,7 +22,7 @@ export default function PortfolioGrid() {
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
               Production Log
             </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-4">
               Recent Builds
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl">
@@ -56,12 +56,12 @@ export default function PortfolioGrid() {
                     <span className="text-steel text-[10px] sm:text-xs uppercase tracking-widest mb-1">
                       {item.category}
                     </span>
-                    <h3 className="font-[family-name:var(--font-heading)] text-base sm:text-lg font-bold uppercase tracking-wide">
+                    <h3 className="font-[family-name:var(--font-heading)] text-base sm:text-lg font-bold uppercase tracking-wider">
                       {item.title}
                     </h3>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent group-hover:opacity-0 transition-opacity duration-300">
-                    <h3 className="font-[family-name:var(--font-heading)] text-xs sm:text-sm font-semibold uppercase tracking-wide">
+                    <h3 className="font-[family-name:var(--font-heading)] text-xs sm:text-sm font-semibold uppercase tracking-wider">
                       {item.title}
                     </h3>
                   </div>
@@ -95,7 +95,7 @@ export default function PortfolioGrid() {
                     <span className="text-steel text-[9px] uppercase tracking-widest block mb-0.5">
                       {item.category}
                     </span>
-                    <h3 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-wide">
+                    <h3 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-wider">
                       {item.title}
                     </h3>
                   </div>

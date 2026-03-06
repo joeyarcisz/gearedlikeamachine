@@ -12,7 +12,7 @@ export default function FeaturedWork() {
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
               Case Files
             </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-4">
               Under the Hood
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl">
@@ -55,7 +55,7 @@ export default function FeaturedWork() {
                   <span className="text-steel text-[10px] uppercase tracking-widest mb-2 block">
                     {item.category}
                   </span>
-                  <h3 className="font-[family-name:var(--font-heading)] text-lg sm:text-xl font-bold uppercase tracking-wide mb-3">
+                  <h3 className="font-[family-name:var(--font-heading)] text-lg sm:text-xl font-bold uppercase tracking-wider mb-3">
                     {item.title}
                   </h3>
                   <p className="text-muted text-sm leading-relaxed line-clamp-3">

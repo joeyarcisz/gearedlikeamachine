@@ -10,7 +10,7 @@ export default function WhyChooseUs() {
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
               The Engine Room
             </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-4">
               What Sets Us Apart
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl">
@@ -23,7 +23,7 @@ export default function WhyChooseUs() {
           {whyChooseUs.map((item, i) => (
             <ScrollFadeIn key={item.title} delay={i * 100}>
               <div className="bg-navy/30 border border-card-border p-6 sm:p-8 h-full">
-                <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold uppercase tracking-wide mb-3 text-white">
+                <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold uppercase tracking-wider mb-3 text-white">
                   {item.title}
                 </h3>
                 <p className="text-muted text-sm sm:text-base leading-relaxed">

@@ -40,7 +40,7 @@ export default function AboutOperator() {
               <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
                 The Operator
               </p>
-              <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-6">
+              <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-6">
                 Joey Arcisz
               </h2>
               <div className="space-y-4 text-muted text-sm sm:text-base leading-relaxed">

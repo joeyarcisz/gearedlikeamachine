@@ -31,7 +31,7 @@ export default function ImageGalleryStrip() {
           <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
             Through the Lens
           </p>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider">
             On Set
           </h2>
         </ScrollFadeIn>
