@@ -8,6 +8,7 @@ import type {
 import {
   CREW_ROLES,
   CREW_PACKAGES,
+  CREW_DAY_RATES,
   GEAR_OPTIONS,
   GEAR_CATEGORY_LABELS,
   SPECIALIZED_GEAR,
@@ -170,13 +171,16 @@ export default function StepProduction({ data, onChange }: Props) {
             <button
               key={pkg}
               onClick={() => setCrewPackage(pkg)}
-              className={`p-3 border text-center text-sm transition-colors ${
+              className={`p-3 border text-left text-sm transition-colors ${
                 data.crewPackage === pkg
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
               }`}
             >
-              {CREW_PACKAGES[pkg].label}
+              <span className="block font-semibold">{CREW_PACKAGES[pkg].label}</span>
+              <span className={`block text-[10px] mt-0.5 ${data.crewPackage === pkg ? "text-black/60" : "text-muted/70"}`}>
+                {CREW_PACKAGES[pkg].roles.length} positions
+              </span>
             </button>
           ))}
         </div>
@@ -195,7 +199,7 @@ export default function StepProduction({ data, onChange }: Props) {
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
               }`}
             >
-              {role.label}
+              {role.label} <span className="opacity-70">${CREW_DAY_RATES[role.value].toLocaleString()}/day</span>
             </button>
           ))}
         </div>
@@ -215,13 +219,14 @@ export default function StepProduction({ data, onChange }: Props) {
                   <button
                     key={opt.value}
                     onClick={() => setGear(key, opt.value as GearSelections[typeof key])}
-                    className={`px-3 py-1.5 border text-xs transition-colors ${
+                    className={`px-3 py-2 border text-xs transition-colors text-left ${
                       data.gear[key] === opt.value
                         ? "bg-steel text-black border-steel font-semibold"
                         : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
                     }`}
                   >
-                    {opt.label}{opt.rate > 0 && <span className="hidden sm:inline"> (${opt.rate}/day)</span>}
+                    <span className="block">{opt.label}{opt.rate > 0 && <span className="opacity-70"> ${opt.rate}/day</span>}</span>
+                    {opt.description && <span className={`block text-[10px] mt-0.5 ${data.gear[key] === opt.value ? "text-black/60" : "text-muted/70"}`}>{opt.description}</span>}
                   </button>
                 ))}
               </div>
@@ -246,7 +251,7 @@ export default function StepProduction({ data, onChange }: Props) {
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
               }`}
             >
-              {sg.label}<span className="hidden sm:inline"> (${sg.rate}/day)</span>
+              {sg.label} <span className="opacity-70">${sg.rate}/day</span>
             </button>
           ))}
         </div>

@@ -108,55 +108,55 @@ export const CREW_PACKAGES: Record<CrewPackage, { label: string; roles: CrewRole
 };
 
 export const CREW_DAY_RATES: Record<CrewRole, number> = {
-  director: 1800,
+  director: 2000,
   dp: 1500,
-  "camera-op": 900,
-  "first-ac": 750,
+  "camera-op": 750,
+  "first-ac": 650,
   gaffer: 850,
-  "key-grip": 750,
-  "ge-swing": 500,
-  "sound-mixer": 1000,
+  "key-grip": 800,
+  "ge-swing": 450,
+  "sound-mixer": 850,
   "makeup-hair": 650,
-  pa: 350,
+  pa: 250,
   producer: 1200,
-  "teleprompter-op": 500,
-  "drone-op": 1200,
+  "teleprompter-op": 450,
+  "drone-op": 1500,
 };
 
 /* ── Gear ── */
 
 type GearKey = keyof GearSelections;
 
-export const GEAR_OPTIONS: Record<GearKey, { value: string; label: string; rate: number }[]> = {
+export const GEAR_OPTIONS: Record<GearKey, { value: string; label: string; rate: number; description: string }[]> = {
   camera: [
-    { value: "standard", label: "Standard", rate: 400 },
-    { value: "cinema", label: "Cinema", rate: 750 },
-    { value: "premium-cinema", label: "Premium Cinema", rate: 1200 },
+    { value: "standard", label: "Standard", rate: 300, description: "Mirrorless (FX3, Z cam)" },
+    { value: "cinema", label: "Cinema", rate: 550, description: "RED Komodo, ARRI Amira" },
+    { value: "premium-cinema", label: "Premium Cinema", rate: 900, description: "V-Raptor, Alexa Mini" },
   ],
   lenses: [
-    { value: "standard", label: "Standard", rate: 150 },
-    { value: "cinema-primes", label: "Cinema Primes", rate: 500 },
-    { value: "anamorphic", label: "Anamorphic", rate: 650 },
+    { value: "standard", label: "Standard", rate: 150, description: "Photo zooms" },
+    { value: "cinema-primes", label: "Cinema Primes", rate: 400, description: "Cine-glass prime set" },
+    { value: "anamorphic", label: "Anamorphic", rate: 600, description: "Anamorphic lens set" },
   ],
   lighting: [
-    { value: "basic", label: "Basic", rate: 200 },
-    { value: "standard", label: "Standard", rate: 500 },
-    { value: "full-production", label: "Full Production", rate: 1200 },
+    { value: "basic", label: "Basic", rate: 200, description: "2-3 LED panels" },
+    { value: "standard", label: "Standard", rate: 400, description: "4-6 lights + modifiers" },
+    { value: "full-production", label: "Full Production", rate: 1000, description: "Full lighting package + HMI" },
   ],
   audio: [
-    { value: "basic-lav", label: "Basic Lav", rate: 100 },
-    { value: "standard", label: "Standard", rate: 250 },
-    { value: "broadcast", label: "Broadcast", rate: 500 },
+    { value: "basic-lav", label: "Basic Lav", rate: 100, description: "Wireless lav kit" },
+    { value: "standard", label: "Standard", rate: 250, description: "Mixer + boom + wireless" },
+    { value: "broadcast", label: "Broadcast", rate: 500, description: "Multi-track, IFB, comms" },
   ],
   grip: [
-    { value: "none", label: "None", rate: 0 },
-    { value: "basic", label: "Basic", rate: 200 },
-    { value: "full-van", label: "Full Van", rate: 800 },
+    { value: "none", label: "None", rate: 0, description: "" },
+    { value: "basic", label: "Basic", rate: 200, description: "C-stands, flags, basic rigging" },
+    { value: "full-van", label: "Full Van", rate: 600, description: "Grip van + full package" },
   ],
   drone: [
-    { value: "none", label: "None", rate: 0 },
-    { value: "standard", label: "Standard", rate: 350 },
-    { value: "cinema-grade", label: "Cinema-Grade", rate: 2500 },
+    { value: "none", label: "None", rate: 0, description: "" },
+    { value: "standard", label: "Standard", rate: 350, description: "Mavic-class aircraft" },
+    { value: "cinema-grade", label: "Cinema-Grade", rate: 2500, description: "Inspire 3 / Alta (operated)" },
   ],
 };
 
@@ -170,11 +170,11 @@ export const GEAR_CATEGORY_LABELS: Record<GearKey, string> = {
 };
 
 export const SPECIALIZED_GEAR: { value: SpecializedGear; label: string; rate: number }[] = [
-  { value: "car-mount", label: "Car Mount", rate: 300 },
-  { value: "underwater", label: "Underwater Housing", rate: 100 },
-  { value: "crane", label: "Crane / Jib", rate: 350 },
-  { value: "dolly-track", label: "Dolly + Track", rate: 250 },
-  { value: "slider", label: "Slider", rate: 100 },
+  { value: "car-mount", label: "Car Mount", rate: 200 },
+  { value: "underwater", label: "Underwater Housing", rate: 500 },
+  { value: "crane", label: "Crane / Jib", rate: 300 },
+  { value: "dolly-track", label: "Dolly + Track", rate: 200 },
+  { value: "slider", label: "Slider", rate: 75 },
   { value: "easyrig", label: "Easyrig", rate: 175 },
   { value: "segway", label: "Segway", rate: 75 },
   { value: "monitor-15", label: '15" Monitor', rate: 100 },
@@ -184,11 +184,11 @@ export const SPECIALIZED_GEAR: { value: SpecializedGear; label: string; rate: nu
 /* ── Pre-Production ── */
 
 export const PRE_PRODUCTION_RATES: Record<string, Record<ScopeFormat, number>> = {
-  "Creative Strategy": { single: 500, series: 1000, campaign: 1500, retainer: 800 },
+  "Creative Strategy": { single: 750, series: 1200, campaign: 1800, retainer: 1000 },
   "Scripting": { single: 750, series: 1500, campaign: 2000, retainer: 1000 },
   "Storyboarding": { single: 500, series: 800, campaign: 1200, retainer: 600 },
-  "Production Planning": { single: 400, series: 750, campaign: 1000, retainer: 600 },
-  "Casting / Coordination": { single: 300, series: 500, campaign: 600, retainer: 400 },
+  "Production Planning": { single: 500, series: 900, campaign: 1200, retainer: 700 },
+  "Casting / Coordination": { single: 350, series: 500, campaign: 700, retainer: 400 },
 };
 
 // Location scouting is per-location
@@ -201,39 +201,39 @@ export const LOCATION_SCOUTING_RATES: Record<ScopeFormat, number> = {
 
 /* ── Post-Production ── */
 
-export const EDITING_TIERS: { value: EditingComplexity; label: string; dayRate: number; daysPerMinute: number }[] = [
-  { value: "straightforward", label: "Straightforward", dayRate: 600, daysPerMinute: 0.5 },
-  { value: "standard", label: "Standard", dayRate: 800, daysPerMinute: 1 },
-  { value: "complex", label: "Complex", dayRate: 1200, daysPerMinute: 1.5 },
-  { value: "premium", label: "Premium", dayRate: 1800, daysPerMinute: 2.5 },
+export const EDITING_TIERS: { value: EditingComplexity; label: string; dayRate: number; daysPerMinute: number; description: string }[] = [
+  { value: "straightforward", label: "Straightforward", dayRate: 500, daysPerMinute: 0.5, description: "Simple cuts, social content" },
+  { value: "standard", label: "Standard", dayRate: 800, daysPerMinute: 1, description: "Multi-cam, interviews, B-roll" },
+  { value: "complex", label: "Complex", dayRate: 1200, daysPerMinute: 1.5, description: "Heavy storytelling, VFX integration" },
+  { value: "premium", label: "Premium", dayRate: 1500, daysPerMinute: 2.5, description: "Broadcast, multi-format deliverables" },
 ];
 
-export const COLOR_TIERS: { value: ColorGradeTier; label: string; perVideo: number }[] = [
-  { value: "none", label: "None", perVideo: 0 },
-  { value: "basic", label: "Basic Color", perVideo: 400 },
-  { value: "cinematic", label: "Cinematic", perVideo: 800 },
-  { value: "film-emulation", label: "Film Emulation", perVideo: 1200 },
+export const COLOR_TIERS: { value: ColorGradeTier; label: string; perVideo: number; description: string }[] = [
+  { value: "none", label: "None", perVideo: 0, description: "" },
+  { value: "basic", label: "Basic Color", perVideo: 400, description: "Balanced, clean look" },
+  { value: "cinematic", label: "Cinematic", perVideo: 800, description: "Custom look, scene-by-scene" },
+  { value: "film-emulation", label: "Film Emulation", perVideo: 1200, description: "Film stock emulation, show-level" },
 ];
 
-export const SOUND_TIERS: { value: SoundDesignTier; label: string; perVideo: number }[] = [
-  { value: "none", label: "None", perVideo: 0 },
-  { value: "basic", label: "Basic Mix", perVideo: 300 },
-  { value: "full-design", label: "Full Design", perVideo: 750 },
-  { value: "broadcast", label: "Broadcast Mix", perVideo: 1200 },
+export const SOUND_TIERS: { value: SoundDesignTier; label: string; perVideo: number; description: string }[] = [
+  { value: "none", label: "None", perVideo: 0, description: "" },
+  { value: "basic", label: "Basic Mix", perVideo: 300, description: "Levels, noise reduction, mix" },
+  { value: "full-design", label: "Full Design", perVideo: 750, description: "SFX, foley, layered mix" },
+  { value: "broadcast", label: "Broadcast Mix", perVideo: 1200, description: "Broadcast-spec, loudness standards" },
 ];
 
-export const MOTION_TIERS: { value: MotionGraphicsTier; label: string; perVideo: number }[] = [
-  { value: "none", label: "None", perVideo: 0 },
-  { value: "lower-thirds", label: "Lower Thirds", perVideo: 400 },
-  { value: "moderate", label: "Moderate", perVideo: 1000 },
-  { value: "heavy", label: "Heavy Motion Design", perVideo: 2500 },
+export const MOTION_TIERS: { value: MotionGraphicsTier; label: string; perVideo: number; description: string }[] = [
+  { value: "none", label: "None", perVideo: 0, description: "" },
+  { value: "lower-thirds", label: "Lower Thirds", perVideo: 400, description: "Titles, name supers, end cards" },
+  { value: "moderate", label: "Moderate", perVideo: 1000, description: "Animated graphics, transitions" },
+  { value: "heavy", label: "Heavy Motion Design", perVideo: 2500, description: "Full motion design, 3D elements" },
 ];
 
-export const MUSIC_TIERS: { value: MusicLicenseTier; label: string; perVideo: number; isPerProject?: boolean }[] = [
-  { value: "none", label: "None", perVideo: 0 },
-  { value: "stock", label: "Stock Music", perVideo: 150 },
-  { value: "premium", label: "Premium License", perVideo: 500 },
-  { value: "custom-score", label: "Custom Score", perVideo: 3000, isPerProject: true },
+export const MUSIC_TIERS: { value: MusicLicenseTier; label: string; perVideo: number; isPerProject?: boolean; description: string }[] = [
+  { value: "none", label: "None", perVideo: 0, description: "" },
+  { value: "stock", label: "Stock Music", perVideo: 150, description: "Licensed library track" },
+  { value: "premium", label: "Premium License", perVideo: 500, description: "Exclusive or curated track" },
+  { value: "custom-score", label: "Custom Score", perVideo: 3000, isPerProject: true, description: "Original composition" },
 ];
 
 export const URGENCY_TIERS: { value: UrgencyTier; label: string; multiplier: number; description: string }[] = [
@@ -251,7 +251,7 @@ export const TALENT_DAY_RATE = 500;
 export const CAPTION_BASE_RATE = 200;
 export const CAPTION_ADDITIONAL_LANGUAGE_RATE = 150;
 export const CUTDOWN_RATE = 250;
-export const ADDITIONAL_REVISION_RATE = 200;
+export const ADDITIONAL_REVISION_RATE = 350;
 export const BASE_REVISION_ROUNDS = 2;
 export const CONTINGENCY_RATE = 0.10;
 export const DEPOSIT_RATE = 0.50;

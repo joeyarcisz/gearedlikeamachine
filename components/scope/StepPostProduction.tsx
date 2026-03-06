@@ -26,7 +26,7 @@ function TierSelector<T extends string>({
   onChange,
 }: {
   label: string;
-  options: { value: T; label: string }[];
+  options: { value: T; label: string; description?: string }[];
   value: T;
   onChange: (v: T) => void;
 }) {
@@ -38,13 +38,18 @@ function TierSelector<T extends string>({
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
-            className={`px-4 py-2 border text-xs transition-colors ${
+            className={`px-4 py-2 border text-xs transition-colors text-left ${
               value === opt.value
                 ? "bg-steel text-black border-steel font-semibold"
                 : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
             }`}
           >
-            {opt.label}
+            <span className="block">{opt.label}</span>
+            {opt.description && (
+              <span className={`block text-[10px] mt-0.5 ${value === opt.value ? "text-black/60" : "text-muted/70"}`}>
+                {opt.description}
+              </span>
+            )}
           </button>
         ))}
       </div>

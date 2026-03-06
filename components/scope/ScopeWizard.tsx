@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import type {
   LeadInfo,
   ScopeInput,
@@ -99,6 +99,23 @@ export default function ScopeWizard() {
 
   const [estimate, setEstimate] = useState<EstimateBreakdown | null>(null);
   const [summary, setSummary] = useState<ScopeSummary | null>(null);
+
+  // Live running estimate for the wizard
+  const liveEstimate = useMemo(() => {
+    if (projectType.projectType === null || projectType.scopeFormat === null) return null;
+    try {
+      const input: ScopeInput = {
+        projectType,
+        deliverables,
+        production,
+        postProduction,
+        timeline,
+      };
+      return calculateEstimate(input);
+    } catch {
+      return null;
+    }
+  }, [projectType, deliverables, production, postProduction, timeline]);
 
   // Check localStorage for returning visitors
   useEffect(() => {
@@ -237,6 +254,16 @@ export default function ScopeWizard() {
           <StepTimeline data={timeline} onChange={setTimeline} />
         )}
       </div>
+
+      {/* Live running estimate */}
+      {liveEstimate && step >= 2 && (
+        <div className="mt-10 bg-navy/50 border border-card-border p-4 flex items-center justify-between">
+          <span className="text-xs uppercase tracking-widest text-muted">Running Estimate</span>
+          <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-steel">
+            {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(liveEstimate.total)}
+          </span>
+        </div>
+      )}
 
       {/* Bottom nav repeat for long steps */}
       <div className="mt-12 pt-8 border-t border-card-border">
