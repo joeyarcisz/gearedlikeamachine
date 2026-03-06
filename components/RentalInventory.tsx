@@ -22,7 +22,7 @@ export default function RentalInventory() {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [showQuote, setShowQuote] = useState(false);
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(
-    new Set()
+    new Set(categories)
   );
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
