@@ -1,32 +1,54 @@
 import type { Metadata } from "next";
-import ScopeWizard from "@/components/scope/ScopeWizard";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ScopePageContent from "@/components/scope/ScopePageContent";
 
 export const metadata: Metadata = {
-  title: "Scope & Instant Estimate | Geared Like A Machine",
+  title:
+    "Production Scope Engine | Instant Video Production Estimate | Geared Like A Machine",
   description:
-    "Build your video production project scope and get an instant cost estimate. Free tool from Geared Like A Machine.",
-  robots: {
-    index: false,
-    follow: false,
+    "Get a ballpark video production estimate in under two minutes. Define your project type, crew, locations, and deliverables — the Scope Engine calculates your range instantly.",
+  openGraph: {
+    title: "Production Scope Engine — Geared Like A Machine",
+    description:
+      "Instant production estimates for commercials, brand films, and campaigns. Build your scope in under two minutes.",
+    type: "website",
+    siteName: "Geared Like A Machine",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Production Scope Engine",
+  applicationCategory: "BusinessApplication",
+  description:
+    "Get a ballpark video production estimate in under two minutes. Define your project type, crew, locations, and deliverables — the Scope Engine calculates your range instantly.",
+  url: "https://www.gearedlikeamachine.com/scope",
+  provider: {
+    "@type": "Organization",
+    name: "Geared Like A Machine",
+    url: "https://www.gearedlikeamachine.com",
+  },
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
   },
 };
 
 export default function ScopePage() {
   return (
-    <DashboardShell>
-      <div className="p-4">
-        <div className="dashboard-card" style={{ "--card-delay": "0ms" } as React.CSSProperties}>
-          <div className="dashboard-card-header no-print">
-            <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-              Scope Tool — Instant Estimate
-            </span>
-          </div>
-          <div className="dashboard-card-body">
-            <ScopeWizard />
-          </div>
-        </div>
-      </div>
-    </DashboardShell>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Navbar />
+      <main className="pt-20 bg-black min-h-screen">
+        <ScopePageContent />
+      </main>
+      <Footer />
+    </>
   );
 }

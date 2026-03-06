@@ -81,6 +81,14 @@ export default function ScopePageContent() {
       {/* ── How It Works ── */}
       <section className="py-16 sm:py-20 border-y border-card-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="mb-12">
+            <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
+              Process
+            </p>
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold uppercase tracking-wider">
+              How It Works
+            </h2>
+          </div>
           <div className="grid md:grid-cols-3 gap-8 md:gap-6">
             <div>
               <span className="font-[family-name:var(--font-heading)] text-5xl font-bold text-steel/20 block mb-3">
