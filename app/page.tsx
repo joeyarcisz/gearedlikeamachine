@@ -4,7 +4,8 @@ import ServicesTicker from "@/components/ServicesTicker";
 import Showreel from "@/components/Showreel";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import FeaturedWork from "@/components/FeaturedWork";
-
+import ImageGalleryStrip from "@/components/ImageGalleryStrip";
+import AboutOperator from "@/components/AboutOperator";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -97,6 +98,8 @@ export default function Home() {
           <FeaturedWork />
         </div>
 
+        <ImageGalleryStrip />
+
         {/* Divider 2 — gear motion video */}
         <GearMotionStrip video="/gear-motion-2.mp4" side="right" />
         <TextureDividerMobile />
@@ -105,6 +108,8 @@ export default function Home() {
           <SideTexture src="/texture-6.jpg" side="right" />
           <Process />
         </div>
+
+        <AboutOperator />
 
         <div className="relative overflow-hidden">
           <SideVideoTexture src="/gears-texture.mp4" side="left" />

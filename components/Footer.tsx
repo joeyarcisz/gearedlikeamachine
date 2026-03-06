@@ -4,8 +4,18 @@ import { GearPlayLogo, socialIcons } from "./icons";
 
 export default function Footer() {
   return (
-    <footer className="bg-black border-t border-card-border">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+    <footer className="relative bg-black border-t border-card-border overflow-hidden">
+      {/* Dallas skyline ambient background */}
+      <div
+        className="absolute inset-0 opacity-[0.07] pointer-events-none"
+        style={{
+          backgroundImage: "url('/dallas-skyline.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          filter: "grayscale(1)",
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16">
         <div className="grid md:grid-cols-3 gap-10">
           {/* Logo + tagline */}
           <div>
@@ -96,7 +106,7 @@ export default function Footer() {
       </div>
 
       {/* Copyright */}
-      <div className="border-t border-card-border py-6">
+      <div className="relative border-t border-card-border py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-muted text-xs">
           <p>
             &copy; {new Date().getFullYear()} Geared Like A Machine. All rights

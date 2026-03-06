@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 };
 
 const images = [
+  { src: "/agazul/anejo-profile.jpg", alt: "Agazul Tequila Anejo bottle profile in golden light" },
+  { src: "/agazul/bar-haze.jpg", alt: "Agazul Tequila bottle and crystal glass with bar haze" },
+  { src: "/agazul/blanco-grass.jpg", alt: "Agazul Tequila Blanco in natural grass setting" },
+  { src: "/agazul/blanco-product.jpg", alt: "Agazul Tequila Blanco product photography" },
   { src: "/agazul/bottle-grass.jpg", alt: "Agazul Tequila Blanco in grass" },
-  { src: "/agazul/bottle-bar.jpg", alt: "Agazul Tequila product photography" },
+  { src: "/agazul/bottle-bar.jpg", alt: "Agazul Tequila bar scene" },
 ];
 
 export default function AgazulTequilaPage() {

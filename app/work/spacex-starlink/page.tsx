@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 const images = [
   { src: "/starlink/hero.gif", alt: "Starlink satellite deployment" },
   { src: "/starlink/demo.gif", alt: "Starlink product demonstration" },
+  { src: "/starlink/phone-app.jpg", alt: "Starlink app setup on iPhone" },
   { src: "/starlink/setup-1.jpg", alt: "Starlink production setup" },
   { src: "/starlink/setup-2.jpg", alt: "Starlink field deployment" },
   { src: "/starlink/setup-3.jpg", alt: "Starlink on location" },

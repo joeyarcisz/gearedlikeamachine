@@ -1,5 +1,10 @@
+import Image from "next/image";
 import { processSteps } from "@/lib/data";
 import ScrollFadeIn from "./ScrollFadeIn";
+
+const stepImages: Record<number, { src: string; alt: string }> = {
+  2: { src: "/process/blueprint-hand.jpg", alt: "Hand drawing on architectural blueprints" },
+};
 
 export default function Process() {
   return (
@@ -47,13 +52,37 @@ export default function Process() {
                             {step.deliverable}
                           </span>
                         </div>
-                        {/* Empty right */}
-                        <div />
+                        {/* Image or empty right */}
+                        <div className="flex items-center justify-start pl-12">
+                          {stepImages[step.step] && (
+                            <div className="relative w-full aspect-[16/9] overflow-hidden border border-card-border">
+                              <Image
+                                src={stepImages[step.step].src}
+                                alt={stepImages[step.step].alt}
+                                fill
+                                className="object-cover opacity-60 hover:opacity-90 transition-opacity duration-500"
+                                sizes="400px"
+                              />
+                            </div>
+                          )}
+                        </div>
                       </>
                     ) : (
                       <>
-                        {/* Empty left */}
-                        <div />
+                        {/* Image or empty left */}
+                        <div className="flex items-center justify-end pr-12">
+                          {stepImages[step.step] && (
+                            <div className="relative w-full aspect-[16/9] overflow-hidden border border-card-border">
+                              <Image
+                                src={stepImages[step.step].src}
+                                alt={stepImages[step.step].alt}
+                                fill
+                                className="object-cover opacity-60 hover:opacity-90 transition-opacity duration-500"
+                                sizes="400px"
+                              />
+                            </div>
+                          )}
+                        </div>
                         {/* Content on right */}
                         <div className="pl-12">
                           <span className="font-[family-name:var(--font-heading)] text-5xl font-bold text-steel/20 block mb-2">
