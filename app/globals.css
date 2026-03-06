@@ -358,6 +358,128 @@ body::after {
   background: #E0E0E0;
 }
 
+/* ── Blog article typography ── */
+.blog-content {
+  font-family: var(--font-body), sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: #E0E0E0;
+}
+
+.blog-content h2 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #F0F0F0;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #2A2A2A;
+}
+
+.blog-content h3 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #E0E0E0;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content p {
+  margin-bottom: 1.25rem;
+  color: rgba(240, 240, 240, 0.8);
+}
+
+.blog-content strong {
+  color: #F0F0F0;
+  font-weight: 600;
+}
+
+.blog-content em {
+  color: rgba(240, 240, 240, 0.7);
+}
+
+.blog-content a {
+  color: #E0E0E0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #707070;
+  transition: text-decoration-color 0.2s;
+}
+
+.blog-content a:hover {
+  text-decoration-color: #E0E0E0;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+  color: rgba(240, 240, 240, 0.8);
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content ul li {
+  list-style-type: disc;
+}
+
+.blog-content ol li {
+  list-style-type: decimal;
+}
+
+.blog-content blockquote {
+  border-left: 3px solid #E0E0E0;
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  color: rgba(240, 240, 240, 0.65);
+  font-style: italic;
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid #2A2A2A;
+  margin: 2rem 0;
+}
+
+.blog-content code {
+  background: #131313;
+  border: 1px solid #2A2A2A;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.9em;
+  border-radius: 2px;
+}
+
+.blog-content pre {
+  background: #131313;
+  border: 1px solid #2A2A2A;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.blog-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border: 1px solid #2A2A2A;
+}
+
 /* Print styles for Scope & Estimate PDF */
 @media print {
   * {

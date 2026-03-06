@@ -1,0 +1,93 @@
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
+
+const BLOG_DIR = path.join(process.cwd(), "content/blog");
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  category: string;
+  tags: string[];
+  featured?: boolean;
+  content: string;
+}
+
+export interface BlogPostMeta {
+  slug: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  category: string;
+  tags: string[];
+  featured?: boolean;
+}
+
+function parseFrontmatter(fileName: string): BlogPostMeta | null {
+  const filePath = path.join(BLOG_DIR, fileName);
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { data } = matter(raw);
+
+  if (data.draft) return null;
+
+  return {
+    slug: fileName.replace(/\.md$/, ""),
+    title: data.title || "Untitled",
+    date: data.date || new Date().toISOString().split("T")[0],
+    excerpt: data.excerpt || "",
+    category: data.category || "Production",
+    tags: data.tags || [],
+    featured: data.featured || false,
+  };
+}
+
+export function getAllPosts(): BlogPostMeta[] {
+  if (!fs.existsSync(BLOG_DIR)) return [];
+
+  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
+
+  const posts = files
+    .map((f) => parseFrontmatter(f))
+    .filter((p): p is BlogPostMeta => p !== null);
+
+  return posts.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
+
+export async function getPostBySlug(
+  slug: string
+): Promise<BlogPost | null> {
+  const filePath = path.join(BLOG_DIR, `${slug}.md`);
+  if (!fs.existsSync(filePath)) return null;
+
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { data, content: markdown } = matter(raw);
+
+  if (data.draft) return null;
+
+  const result = await remark().use(html).process(markdown);
+
+  return {
+    slug,
+    title: data.title || "Untitled",
+    date: data.date || new Date().toISOString().split("T")[0],
+    excerpt: data.excerpt || "",
+    category: data.category || "Production",
+    tags: data.tags || [],
+    featured: data.featured || false,
+    content: result.toString(),
+  };
+}
+
+export function getPostSlugs(): string[] {
+  if (!fs.existsSync(BLOG_DIR)) return [];
+  return fs
+    .readdirSync(BLOG_DIR)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => f.replace(/\.md$/, ""));
+}
