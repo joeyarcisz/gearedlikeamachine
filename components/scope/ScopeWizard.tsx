@@ -25,7 +25,7 @@ import StepTimeline from "./StepTimeline";
 import EstimateOutput from "./EstimateOutput";
 import PrintableEstimate from "./PrintableEstimate";
 
-const STORAGE_KEY = "glam_scope_lead";
+const STORAGE_KEY = "glm_scope_lead";
 const TOTAL_STEPS = 5;
 
 function getDefaultProjectType(): StepProjectTypeData {

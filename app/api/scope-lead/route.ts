@@ -100,7 +100,7 @@ export async function POST(request: Request) {
 
               <p style="font-size: 15px; line-height: 1.6; margin-top: 32px;">
                 Talk soon,<br/>
-                <strong>The GLAM Team</strong><br/>
+                <strong>The GLM Team</strong><br/>
                 <span style="color: #999; font-size: 13px;">Geared Like A Machine</span>
               </p>
 

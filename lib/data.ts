@@ -268,7 +268,7 @@ export const faqItems = [
 ];
 
 export const socialLinks: { label: string; href: string; icon: string }[] = [
-  // Add real GLAM social profile URLs when accounts are created.
+  // Add real GLM social profile URLs when accounts are created.
   // Example: { label: "Instagram", href: "https://instagram.com/gearedlikeamachine", icon: "instagram" },
 ];
 
