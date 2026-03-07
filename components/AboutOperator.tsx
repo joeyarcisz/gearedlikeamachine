@@ -38,27 +38,29 @@ export default function AboutOperator() {
           <ScrollFadeIn delay={200}>
             <div className="lg:pl-4">
               <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
-                The Operator
+                Leadership
               </p>
               <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider mb-6">
                 Joey Arcisz
               </h2>
+              <p className="text-steel text-sm uppercase tracking-widest mb-6 font-[family-name:var(--font-heading)]">
+                Founder &amp; Executive Producer
+              </p>
               <div className="space-y-4 text-muted text-sm sm:text-base leading-relaxed">
                 <p>
-                  Two decades behind the camera. Director of Photography, director,
-                  and the engine behind Geared Like A Machine. From Super Bowl
-                  commercials to global fashion campaigns spanning 100+ countries,
-                  the work speaks for itself.
+                  Two decades of production experience across commercials, branded
+                  content, and documentary work for the world&apos;s most demanding
+                  clients. Joey founded GLM to build a production company that
+                  delivers at scale without compromise.
                 </p>
                 <p>
-                  Clients include SpaceX, U.S. Polo Assn., Chevrolet, Coca-Cola,
-                  ESPN, Ford, Hilton, and Tige Boats. Based in Dallas-Fort Worth,
-                  operating worldwide.
+                  The company has produced for SpaceX, U.S. Polo Assn., Chevrolet,
+                  Coca-Cola, ESPN, Ford, Hilton, and Tige Boats. Based in
+                  Dallas-Fort Worth, operating worldwide.
                 </p>
                 <p>
-                  Every project gets the same thing: precision, intent, and a
-                  relentless focus on the outcome. No filler. No guesswork. Just
-                  execution.
+                  Every project gets the same standard: precision planning, elite
+                  crew, and a relentless focus on the outcome.
                 </p>
               </div>
 

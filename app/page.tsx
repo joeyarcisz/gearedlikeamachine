@@ -109,8 +109,6 @@ export default function Home() {
           <Process />
         </div>
 
-        <AboutOperator />
-
         <div className="relative overflow-hidden">
           <SideVideoTexture src="/gears-texture.mp4" side="left" />
           <SideVideoTexture src="/camera-gear-4.mp4" side="right" />
@@ -126,6 +124,7 @@ export default function Home() {
           <CTA />
         </div>
         <ServicesTicker />
+        <AboutOperator />
       </main>
       <Footer />
     </>

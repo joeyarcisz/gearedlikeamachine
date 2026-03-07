@@ -5,7 +5,6 @@ import Image from "next/image";
 import ScrollFadeIn from "./ScrollFadeIn";
 
 const galleryImages = [
-  { src: "/gallery/joey-red-haze.jpg", alt: "Cinematographer operating RED camera on set", aspect: "landscape" },
   { src: "/gallery/warehouse-silhouette.jpg", alt: "Crew silhouettes in warehouse doorway", aspect: "landscape" },
   { src: "/gallery/tige-showroom.jpg", alt: "Blue-lit production in Tige Boats showroom", aspect: "landscape" },
   { src: "/gallery/uspa-garden.jpg", alt: "Fashion portrait for U.S. Polo Assn.", aspect: "landscape" },
@@ -13,12 +12,9 @@ const galleryImages = [
   { src: "/gallery/uspa-malibu-horse.jpg", alt: "Horseback on Malibu beach at sunset", aspect: "landscape" },
   { src: "/gallery/tige-lake-austin.jpg", alt: "Tige boat on Lake Austin at golden hour", aspect: "landscape" },
   { src: "/gallery/basketball-overhead.jpg", alt: "Overhead basketball hoop creative shot", aspect: "landscape" },
-  { src: "/gallery/concert-stage.jpg", alt: "Live event camera operation on concert stage", aspect: "portrait" },
   { src: "/gallery/camera-rig-bokeh.jpg", alt: "Cinema camera rig with bokeh lights", aspect: "landscape" },
-  { src: "/gallery/boxing-ring-operator.jpg", alt: "Handheld camera operation in boxing ring", aspect: "portrait" },
   { src: "/gallery/colorado-mountains.jpg", alt: "Aerial of Colorado mountains for USPA", aspect: "landscape" },
   { src: "/gallery/red-camera-neon.jpg", alt: "RED camera with neon LED environment", aspect: "portrait" },
-  { src: "/gallery/joey-ladder-concrete.jpg", alt: "Cinematographer on ladder in construction site", aspect: "landscape" },
 ];
 
 export default function ImageGalleryStrip() {
