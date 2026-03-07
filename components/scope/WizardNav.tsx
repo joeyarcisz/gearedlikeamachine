@@ -61,7 +61,7 @@ export default function WizardNav({
         {currentStep > 1 && (
           <button
             onClick={onBack}
-            className="px-6 py-2.5 text-sm uppercase tracking-widest text-muted border border-card-border hover:text-white hover:border-steel transition-colors"
+            className="px-6 py-2.5 text-sm uppercase tracking-widest text-muted border border-card-border hover:text-white hover:border-steel transition-colors cursor-pointer"
           >
             Back
           </button>
@@ -69,7 +69,7 @@ export default function WizardNav({
         <button
           onClick={onNext}
           disabled={!canAdvance}
-          className="px-6 py-2.5 text-sm uppercase tracking-widest font-semibold bg-steel text-black hover:bg-steel/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 text-sm uppercase tracking-widest font-semibold bg-steel text-black hover:bg-steel/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
         >
           {isLastStep ? "Generate Estimate" : "Next"}
         </button>

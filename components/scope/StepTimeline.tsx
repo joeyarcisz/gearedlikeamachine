@@ -65,7 +65,7 @@ export default function StepTimeline({ data, onChange }: Props) {
             <button
               key={tier.value}
               onClick={() => onChange({ ...data, urgency: tier.value })}
-              className={`p-4 border text-left transition-colors ${
+              className={`p-4 border text-left transition-colors cursor-pointer ${
                 data.urgency === tier.value
                   ? "bg-steel text-black border-steel"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"

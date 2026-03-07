@@ -42,7 +42,7 @@ function Stepper({
           <button
             onClick={() => onChange(Math.max(min, value - 1))}
             disabled={value <= min}
-            className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             -
           </button>
@@ -50,7 +50,7 @@ function Stepper({
           <button
             onClick={() => onChange(Math.min(max, value + 1))}
             disabled={value >= max}
-            className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             +
           </button>
@@ -73,7 +73,7 @@ function Toggle({
   return (
     <button
       onClick={() => onChange(!checked)}
-      className="flex items-center gap-3 bg-navy/50 border border-card-border p-3 w-full text-left"
+      className="flex items-center gap-3 bg-navy/50 border border-card-border p-3 w-full text-left cursor-pointer"
     >
       <div
         className={`w-10 h-5 rounded-full relative transition-colors ${
@@ -82,7 +82,7 @@ function Toggle({
       >
         <div
           className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${
-            checked ? "left-5.5" : "left-0.5"
+            checked ? "left-[1.375rem]" : "left-0.5"
           }`}
         />
       </div>
@@ -166,12 +166,12 @@ export default function StepProduction({ data, onChange }: Props) {
         <h3 className="text-xs uppercase tracking-widest text-muted mb-3">
           Crew Package
         </h3>
-        <div className="grid grid-cols-3 gap-3 max-w-lg mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mb-4">
           {(Object.keys(CREW_PACKAGES) as CrewPackage[]).map((pkg) => (
             <button
               key={pkg}
               onClick={() => setCrewPackage(pkg)}
-              className={`p-3 border text-left text-sm transition-colors ${
+              className={`p-3 border text-left text-sm transition-colors cursor-pointer ${
                 data.crewPackage === pkg
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -193,7 +193,7 @@ export default function StepProduction({ data, onChange }: Props) {
             <button
               key={role.value}
               onClick={() => toggleRole(role.value)}
-              className={`px-3 py-1.5 border text-xs transition-colors ${
+              className={`px-3 py-2 min-h-[44px] border text-xs transition-colors cursor-pointer ${
                 data.crewRoles.includes(role.value)
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -219,7 +219,7 @@ export default function StepProduction({ data, onChange }: Props) {
                   <button
                     key={opt.value}
                     onClick={() => setGear(key, opt.value as GearSelections[typeof key])}
-                    className={`px-3 py-2 border text-xs transition-colors text-left ${
+                    className={`px-3 py-2 min-h-[44px] border text-xs transition-colors text-left cursor-pointer ${
                       data.gear[key] === opt.value
                         ? "bg-steel text-black border-steel font-semibold"
                         : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -245,7 +245,7 @@ export default function StepProduction({ data, onChange }: Props) {
             <button
               key={sg.value}
               onClick={() => toggleSpecGear(sg.value)}
-              className={`px-3 py-1.5 border text-xs transition-colors ${
+              className={`px-3 py-2 min-h-[44px] border text-xs transition-colors cursor-pointer ${
                 data.specializedGear.includes(sg.value)
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"

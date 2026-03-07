@@ -38,7 +38,7 @@ function TierSelector<T extends string>({
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
-            className={`px-4 py-2 border text-xs transition-colors text-left ${
+            className={`px-4 py-2 min-h-[44px] border text-xs transition-colors text-left cursor-pointer ${
               value === opt.value
                 ? "bg-steel text-black border-steel font-semibold"
                 : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -112,7 +112,7 @@ export default function StepPostProduction({ data, onChange }: Props) {
               captionLanguages: !data.captions ? Math.max(1, data.captionLanguages) : 0,
             })
           }
-          className="flex items-center gap-3 bg-navy/50 border border-card-border p-3 w-full max-w-lg text-left"
+          className="flex items-center gap-3 bg-navy/50 border border-card-border p-3 w-full max-w-lg text-left cursor-pointer"
         >
           <div
             className={`w-10 h-5 rounded-full relative transition-colors ${
@@ -121,7 +121,7 @@ export default function StepPostProduction({ data, onChange }: Props) {
           >
             <div
               className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${
-                data.captions ? "left-5.5" : "left-0.5"
+                data.captions ? "left-[1.375rem]" : "left-0.5"
               }`}
             />
           </div>
@@ -138,7 +138,7 @@ export default function StepPostProduction({ data, onChange }: Props) {
                     onChange({ ...data, captionLanguages: Math.max(1, data.captionLanguages - 1) })
                   }
                   disabled={data.captionLanguages <= 1}
-                  className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
                   -
                 </button>
@@ -150,7 +150,7 @@ export default function StepPostProduction({ data, onChange }: Props) {
                     onChange({ ...data, captionLanguages: Math.min(10, data.captionLanguages + 1) })
                   }
                   disabled={data.captionLanguages >= 10}
-                  className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 >
                   +
                 </button>

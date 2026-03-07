@@ -271,7 +271,7 @@ export default function ScopeWizard() {
           {step > 1 && (
             <button
               onClick={handleBack}
-              className="px-6 py-2.5 text-sm uppercase tracking-widest text-muted border border-card-border hover:text-white hover:border-steel transition-colors"
+              className="px-6 py-2.5 text-sm uppercase tracking-widest text-muted border border-card-border hover:text-white hover:border-steel transition-colors cursor-pointer"
             >
               Back
             </button>
@@ -279,7 +279,7 @@ export default function ScopeWizard() {
           <button
             onClick={handleNext}
             disabled={!canAdvance()}
-            className="px-6 py-2.5 text-sm uppercase tracking-widest font-semibold bg-steel text-black hover:bg-steel/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 text-sm uppercase tracking-widest font-semibold bg-steel text-black hover:bg-steel/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           >
             {step === TOTAL_STEPS ? "Generate Estimate" : "Next"}
           </button>

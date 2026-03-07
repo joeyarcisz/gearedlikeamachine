@@ -26,7 +26,7 @@ function Stepper({
         <button
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
-          className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           -
         </button>
@@ -34,7 +34,7 @@ function Stepper({
         <button
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
-          className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           +
         </button>
@@ -86,7 +86,7 @@ export default function StepDeliverables({ data, onChange }: Props) {
             <button
               key={d.value}
               onClick={() => onChange({ ...data, duration: d.value })}
-              className={`px-4 py-2 border text-xs transition-colors ${
+              className={`px-4 py-2 min-h-[44px] border text-xs transition-colors cursor-pointer ${
                 data.duration === d.value
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -108,7 +108,7 @@ export default function StepDeliverables({ data, onChange }: Props) {
             <button
               key={p.value}
               onClick={() => togglePlatform(p.value)}
-              className={`px-4 py-2 border text-xs transition-colors ${
+              className={`px-4 py-2 min-h-[44px] border text-xs transition-colors cursor-pointer ${
                 data.platforms.includes(p.value)
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -130,7 +130,7 @@ export default function StepDeliverables({ data, onChange }: Props) {
             <button
               key={r.value}
               onClick={() => toggleRatio(r.value)}
-              className={`px-4 py-2 border text-xs transition-colors ${
+              className={`px-4 py-2 min-h-[44px] border text-xs transition-colors cursor-pointer ${
                 data.aspectRatios.includes(r.value)
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"

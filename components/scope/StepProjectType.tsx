@@ -21,7 +21,7 @@ export default function StepProjectType({ data, onChange }: Props) {
             <button
               key={pt.value}
               onClick={() => onChange({ ...data, projectType: pt.value })}
-              className={`p-4 border text-left text-sm transition-colors ${
+              className={`p-4 border text-left text-sm transition-colors cursor-pointer ${
                 data.projectType === pt.value
                   ? "bg-steel text-black border-steel font-semibold"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
@@ -45,7 +45,7 @@ export default function StepProjectType({ data, onChange }: Props) {
             <button
               key={sf.value}
               onClick={() => onChange({ ...data, scopeFormat: sf.value })}
-              className={`p-4 border text-left transition-colors ${
+              className={`p-4 border text-left transition-colors cursor-pointer ${
                 data.scopeFormat === sf.value
                   ? "bg-steel text-black border-steel"
                   : "bg-navy/50 border-card-border text-muted hover:text-white hover:border-steel/50"
