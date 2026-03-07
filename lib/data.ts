@@ -14,7 +14,7 @@ export const navLinks = [
   { label: "Work", href: "#portfolio" },
   { label: "Capabilities", href: "#services" },
   { label: "Blueprint", href: "#process" },
-  { label: "Scope Engine", href: "/scope" },
+  { label: "Scope", href: "/scope" },
   { label: "Rentals", href: "/rentals" },
   { label: "Blog", href: "/blog" },
 ];
