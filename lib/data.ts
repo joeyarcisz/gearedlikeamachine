@@ -92,7 +92,7 @@ export const featuredWork = [
     description:
       "Global campaign spanning over 100 countries. Full-scale brand films, product photography, and seasonal content built for international reach across broadcast, digital, and retail.",
     category: "Global Campaign",
-    image: "/featured-1.jpg",
+    image: "/uspa.gif",
     href: "/work/us-polo-assn",
   },
   {
