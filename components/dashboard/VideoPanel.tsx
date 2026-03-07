@@ -13,7 +13,7 @@ export default function VideoPanel() {
       <div className="dashboard-card-header">
         <span className="w-2 h-2 rounded-full bg-red-500" />
         <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-          Live Feed — Showreel
+          Live Feed | Showreel
         </span>
       </div>
       <div className="relative aspect-video bg-navy grayscale">

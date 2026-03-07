@@ -53,7 +53,7 @@ export default function WizardNav({
 
       {/* Step label */}
       <p className="text-xs uppercase tracking-widest text-muted">
-        Step {currentStep} of {totalSteps} — {STEP_LABELS[currentStep - 1]}
+        Step {currentStep} of {totalSteps}: {STEP_LABELS[currentStep - 1]}
       </p>
 
       {/* Navigation buttons */}

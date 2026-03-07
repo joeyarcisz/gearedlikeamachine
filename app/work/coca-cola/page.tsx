@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import CocaColaGallery from "./CocaColaGallery";
 
 export const metadata: Metadata = {
   title: "Coca-Cola | Geared Like A Machine",
   description:
-    "Coca-Cola Santa Claus commercial production — LED wall stage, multi-day shoot by Geared Like A Machine.",
+    "Coca-Cola Santa Claus commercial production. LED wall stage, multi-day shoot by Geared Like A Machine.",
 };
 
 const images = [
@@ -51,6 +52,7 @@ export default function CocaColaPage() {
           <CocaColaGallery images={images} />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

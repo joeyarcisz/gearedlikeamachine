@@ -24,6 +24,7 @@ export default function AgazulGallery({ images }: { images: GalleryImage[] }) {
               src={img.src}
               alt={img.alt}
               className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+              loading="lazy"
             />
           </button>
         ))}
@@ -44,7 +45,8 @@ export default function AgazulGallery({ images }: { images: GalleryImage[] }) {
             {lightbox > 0 && (
               <button
                 onClick={() => setLightbox(lightbox - 1)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2 cursor-pointer"
+                aria-label="Previous image"
               >
                 ‹
               </button>
@@ -52,14 +54,16 @@ export default function AgazulGallery({ images }: { images: GalleryImage[] }) {
             {lightbox < images.length - 1 && (
               <button
                 onClick={() => setLightbox(lightbox + 1)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2 cursor-pointer"
+                aria-label="Next image"
               >
                 ›
               </button>
             )}
             <button
               onClick={() => setLightbox(null)}
-              className="absolute top-2 right-2 text-white/70 hover:text-white text-xl p-2"
+              className="absolute top-2 right-2 text-white/70 hover:text-white text-xl p-2 cursor-pointer"
+              aria-label="Close lightbox"
             >
               ✕
             </button>

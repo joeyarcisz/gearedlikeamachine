@@ -79,7 +79,8 @@ export default function USPAGallery() {
             {lightbox > 0 && (
               <button
                 onClick={() => setLightbox(lightbox - 1)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2 cursor-pointer"
+                aria-label="Previous image"
               >
                 ‹
               </button>
@@ -87,7 +88,8 @@ export default function USPAGallery() {
             {lightbox < images.length - 1 && (
               <button
                 onClick={() => setLightbox(lightbox + 1)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2 cursor-pointer"
+                aria-label="Next image"
               >
                 ›
               </button>
@@ -95,7 +97,8 @@ export default function USPAGallery() {
 
             <button
               onClick={() => setLightbox(null)}
-              className="absolute top-2 right-2 text-white/70 hover:text-white text-xl p-2"
+              className="absolute top-2 right-2 text-white/70 hover:text-white text-xl p-2 cursor-pointer"
+              aria-label="Close lightbox"
             >
               ✕
             </button>

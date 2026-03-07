@@ -29,6 +29,7 @@ export default function Showreel() {
             className="absolute inset-0 w-full h-full"
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
+            title="GLM Production Showreel"
           />
         </div>
       </ScrollFadeIn>
@@ -42,7 +43,7 @@ export default function Showreel() {
                 key={spec.label}
                 className="bg-navy/50 border border-card-border px-4 py-3 text-center"
               >
-                <span className="text-steel block mb-1 flex justify-center">
+                <span className="text-steel mb-1 flex justify-center">
                   {(() => {
                     const Icon = specIcons[spec.icon];
                     return Icon ? <Icon className="w-6 h-6" /> : spec.icon;

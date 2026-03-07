@@ -30,7 +30,7 @@ export default function CTAPanel() {
           </span>
         </a>
         <p className="text-muted text-[10px] uppercase tracking-widest mt-3">
-          {siteConfig.location} — {siteConfig.availability}
+          {siteConfig.location}, {siteConfig.availability}
         </p>
       </div>
     </div>

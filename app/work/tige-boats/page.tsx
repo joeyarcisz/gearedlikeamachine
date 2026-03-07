@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import TigeGallery from "./TigeGallery";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default function TigeBoatsPage() {
           <TigeGallery />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

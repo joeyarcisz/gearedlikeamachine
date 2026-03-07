@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "JFK: The Unspoken Speech | Geared Like A Machine",
@@ -46,6 +47,7 @@ export default function JFKPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

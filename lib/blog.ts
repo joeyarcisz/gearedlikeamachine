@@ -62,6 +62,7 @@ export function getAllPosts(): BlogPostMeta[] {
 export async function getPostBySlug(
   slug: string
 ): Promise<BlogPost | null> {
+  if (slug.includes('/') || slug.includes('\\') || slug.includes('..')) return null;
   const filePath = path.join(BLOG_DIR, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
 

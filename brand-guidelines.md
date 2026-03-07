@@ -376,7 +376,7 @@ transition-all duration-300
 - Fixed position, transparent by default
 - On scroll: `bg-black/90 backdrop-blur-md border-b border-card-border`
 - Links: `text-sm uppercase tracking-widest text-muted hover:text-white`
-- Mobile: hamburger menu at `md` breakpoint, full-height sidebar
+- Mobile: hamburger menu at `lg` breakpoint, full-height sidebar
 
 ### Footer
 

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import PowerDigitalGallery from "./PowerDigitalGallery";
 
 export const metadata: Metadata = {
-  title: "Power Digital — James + James | Geared Like A Machine",
+  title: "Power Digital | James + James | Geared Like A Machine",
   description:
-    "Made For Life — furniture commercial production for James + James, produced for Power Digital by Geared Like A Machine.",
+    "Made For Life, furniture commercial production for James + James, produced for Power Digital by Geared Like A Machine.",
 };
 
 const images = [
@@ -36,7 +37,7 @@ export default function PowerDigitalPage() {
               Power Digital
             </h1>
             <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto mb-4 leading-relaxed">
-              &ldquo;Made For Life&rdquo; — commercial production for James +
+              &ldquo;Made For Life&rdquo;, commercial production for James +
               James Furniture, produced for Power Digital. Producer and Director
               of Photography on a full-scale furniture brand campaign.
             </p>
@@ -52,6 +53,7 @@ export default function PowerDigitalPage() {
           <PowerDigitalGallery images={images} />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

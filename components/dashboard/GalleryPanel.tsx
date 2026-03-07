@@ -36,7 +36,7 @@ export default function GalleryPanel() {
     >
       <div className="dashboard-card-header justify-between">
         <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-          Gallery — Stills & Production
+          Gallery | Stills & Production
         </span>
         <span className="text-chrome/50 text-[10px]">{filtered.length} images</span>
       </div>

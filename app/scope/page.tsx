@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   title:
     "Production Scope Engine | Instant Video Production Estimate | Geared Like A Machine",
   description:
-    "Get a ballpark video production estimate in under two minutes. Define your project type, crew, locations, and deliverables — the Scope Engine calculates your range instantly.",
+    "Get a ballpark video production estimate in under two minutes. Define your project type, crew, locations, and deliverables. The Scope Engine calculates your range instantly.",
   openGraph: {
-    title: "Production Scope Engine — Geared Like A Machine",
+    title: "Production Scope Engine | Geared Like A Machine",
     description:
       "Instant production estimates for commercials, brand films, and campaigns. Build your scope in under two minutes.",
     type: "website",
@@ -23,7 +23,7 @@ const jsonLd = {
   name: "Production Scope Engine",
   applicationCategory: "BusinessApplication",
   description:
-    "Get a ballpark video production estimate in under two minutes. Define your project type, crew, locations, and deliverables — the Scope Engine calculates your range instantly.",
+    "Get a ballpark video production estimate in under two minutes. Define your project type, crew, locations, and deliverables. The Scope Engine calculates your range instantly.",
   url: "https://www.gearedlikeamachine.com/scope",
   provider: {
     "@type": "Organization",

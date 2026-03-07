@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Super Bowl — Troy Aikman | Geared Like A Machine",
+  title: "Super Bowl | Troy Aikman | Geared Like A Machine",
   description:
     "Super Bowl commercial production featuring NFL legend Troy Aikman by Geared Like A Machine.",
 };
@@ -19,7 +20,7 @@ export default function TroyAikmanPage() {
               Commercial
             </p>
             <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight uppercase text-white mb-4">
-              Super Bowl — Troy Aikman
+              Super Bowl | Troy Aikman
             </h1>
             <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto mb-4 leading-relaxed">
               Super Bowl advertising production featuring NFL legend and Dallas
@@ -42,6 +43,7 @@ export default function TroyAikmanPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

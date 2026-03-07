@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         await resend.emails.send({
           from: "Discovery Form <noreply@gearedlikeamachine.com>",
           to: "hello@gearedlikeamachine.com",
-          subject: `New Discovery: ${escapeHtml(name)}${company ? ` — ${escapeHtml(company)}` : ""}`,
+          subject: `New Discovery: ${escapeHtml(name)}${company ? `, ${escapeHtml(company)}` : ""}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px;">
               <h2 style="margin-bottom: 16px;">New Discovery Form Submission</h2>
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
           from: "Geared Like A Machine <hello@gearedlikeamachine.com>",
           to: email,
           subject:
-            "We Got Your Message — Geared Like A Machine",
+            "We Got Your Message | Geared Like A Machine",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; color: #333;">
               <div style="border-bottom: 2px solid #222; padding-bottom: 16px; margin-bottom: 24px;">
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
               </p>
 
               <div style="border-top: 1px solid #ddd; margin-top: 32px; padding-top: 16px; font-size: 12px; color: #999;">
-                <p>Geared Like A Machine &mdash; Video Production & Equipment Rentals</p>
+                <p>Geared Like A Machine | Video Production & Equipment Rentals</p>
                 <p>hello@gearedlikeamachine.com &bull; gearedlikeamachine.com</p>
               </div>
             </div>
@@ -106,7 +106,7 @@ export async function POST(request: Request) {
         });
       } catch (emailError) {
         console.error("Failed to send discovery email:", emailError);
-        // Don't fail the request — form submission still counts
+        // Don't fail the request, form submission still counts
       }
     }
 
@@ -171,7 +171,7 @@ export async function POST(request: Request) {
       }
     } catch (crmError) {
       console.error("Failed to upsert CRM contact from discovery:", crmError);
-      // Don't fail the request — form submission still counts
+      // Don't fail the request, form submission still counts
     }
 
     return NextResponse.json({ success: true });

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import StarlinkGallery from "./StarlinkGallery";
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function SpaceXStarlinkPage() {
             <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto mb-4 leading-relaxed">
               Product demonstration content for one of the most defining
               innovations in modern technology. Served as the first freelance DP
-              hired by Starlink — leading production, gear, crew, logistics, and
+              hired by Starlink, leading production, gear, crew, logistics, and
               coordination across multiple locations in Austin, Texas.
             </p>
             <a
@@ -58,6 +59,7 @@ export default function SpaceXStarlinkPage() {
           <StarlinkGallery images={images} />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

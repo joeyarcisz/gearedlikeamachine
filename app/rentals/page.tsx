@@ -5,7 +5,7 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 export const metadata: Metadata = {
   title: "Equipment Rentals | Geared Like A Machine",
   description:
-    "Browse our full equipment rental inventory — cameras, lenses, lighting, drones, grip, audio, monitoring, and more. Daily rates for professional production gear.",
+    "Browse our full equipment rental inventory: cameras, lenses, lighting, drones, grip, audio, monitoring, and more. Daily rates for professional production gear.",
   openGraph: {
     title: "Equipment Rentals | Geared Like A Machine",
     description:
@@ -23,7 +23,7 @@ export default function RentalsPage() {
         <div className="dashboard-card mb-4" style={{ "--card-delay": "0ms" } as React.CSSProperties}>
           <div className="dashboard-card-header">
             <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-              Gear Rentals — Production Equipment
+              Gear Rentals | Production Equipment
             </span>
           </div>
           <div className="dashboard-card-body text-center py-8">
@@ -32,7 +32,7 @@ export default function RentalsPage() {
             </h1>
             <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-4">
               Our rental department carries cameras, lenses, lighting, drones,
-              grip, audio, monitoring, power, and support gear — everything you
+              grip, audio, monitoring, power, and support gear. Everything you
               need to execute at the highest level.
             </p>
             <p className="text-chrome text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">

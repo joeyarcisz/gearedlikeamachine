@@ -26,7 +26,7 @@ export default function DiscoveryPage() {
         >
           <div className="dashboard-card-header">
             <span className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-              Discovery — Start a Conversation
+              Discovery | Start a Conversation
             </span>
           </div>
           <div className="dashboard-card-body text-center py-8">

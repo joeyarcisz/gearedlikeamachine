@@ -32,7 +32,7 @@ export default function TigeGallery() {
       >
         <img
           src={heroImage}
-          alt="Tige Boats — Morning Fog"
+          alt="Tige Boats, Morning Fog"
           className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
         />
       </button>
@@ -96,7 +96,8 @@ export default function TigeGallery() {
             {lightbox > 0 && (
               <button
                 onClick={() => setLightbox(lightbox - 1)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2 cursor-pointer"
+                aria-label="Previous image"
               >
                 &#8249;
               </button>
@@ -104,7 +105,8 @@ export default function TigeGallery() {
             {lightbox < allImages.length - 1 && (
               <button
                 onClick={() => setLightbox(lightbox + 1)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-2 cursor-pointer"
+                aria-label="Next image"
               >
                 &#8250;
               </button>
@@ -112,7 +114,8 @@ export default function TigeGallery() {
 
             <button
               onClick={() => setLightbox(null)}
-              className="absolute top-2 right-2 text-white/70 hover:text-white text-xl p-2"
+              className="absolute top-2 right-2 text-white/70 hover:text-white text-xl p-2 cursor-pointer"
+              aria-label="Close lightbox"
             >
               &#10005;
             </button>

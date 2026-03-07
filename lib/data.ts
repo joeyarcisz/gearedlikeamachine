@@ -126,7 +126,7 @@ export const featuredWork = [
 
 export const stats = [
   { value: 200, suffix: "+", label: "Productions Delivered" },
-  { value: 100, suffix: "'s", label: "of Terabytes" },
+  { value: 100, suffix: "s", label: "of Terabytes" },
   { value: 20, suffix: "+", label: "Years Experience" },
   { value: 100, suffix: "+", label: "Countries Reached" },
 ];
@@ -137,7 +137,7 @@ export const services = [
     number: "01",
     title: "Short-Form & Social",
     description:
-      "Platform-native vertical and horizontal content built to stop the scroll. Reels, TikToks, YouTube Shorts — all captured at cinema-grade quality with formats engineered for each algorithm.",
+      "Platform-native vertical and horizontal content built to stop the scroll. Reels, TikToks, YouTube Shorts, all captured at cinema-grade quality with formats engineered for each algorithm.",
   },
   {
     icon: "brand-film",
@@ -174,14 +174,14 @@ export const processSteps = [
     step: 2,
     title: "Architect",
     description:
-      "Concept, script, storyboard, shot list, and production logistics — all engineered before a single camera rolls. No guesswork.",
+      "Concept, script, storyboard, shot list, and production logistics. All engineered before a single camera rolls. No guesswork.",
     deliverable: "Creative Deck",
   },
   {
     step: 3,
     title: "Capture",
     description:
-      "Our vetted operators execute on set — directing, cinematography, lighting, sound. Every department runs like a well-oiled machine.",
+      "Our vetted operators execute on set: directing, cinematography, lighting, sound. Every department runs like a well-oiled machine.",
     deliverable: "Principal Photography",
   },
   {
@@ -204,7 +204,7 @@ export const whyChooseUs = [
   {
     title: "Operator Network",
     description:
-      "A deep bench of vetted industry operators. We're not locked into one crew — we assemble the exact team your project demands, every time.",
+      "A deep bench of vetted industry operators. We're not locked into one crew. We assemble the exact team your project demands, every time.",
   },
   {
     title: "Format Agnostic",
@@ -214,12 +214,12 @@ export const whyChooseUs = [
   {
     title: "Elastic Operations",
     description:
-      "We throttle up and down as scope shifts. One-day social shoot or six-week campaign — the machine scales to match.",
+      "We throttle up and down as scope shifts. One-day social shoot or six-week campaign, the machine scales to match.",
   },
   {
     title: "Outcome-Driven",
     description:
-      "Every frame is engineered with intent. We don't just produce content — we build assets that move metrics and drive measurable business outcomes.",
+      "Every frame is engineered with intent. We don't just produce content. We build assets that move metrics and drive measurable business outcomes.",
   },
 ];
 
@@ -243,7 +243,7 @@ export const faqItems = [
   {
     question: "How much does a video production project cost?",
     answer:
-      "Project costs vary based on scope, duration, and complexity — from single-day social media shoots to multi-week commercial campaigns. Use our Scope Tool for an instant ballpark estimate, or submit a Discovery Form and we'll follow up within 24 hours with a detailed quote.",
+      "Project costs vary based on scope, duration, and complexity, from single-day social media shoots to multi-week commercial campaigns. Use our Scope Tool for an instant ballpark estimate, or submit a Discovery Form and we'll follow up within 24 hours with a detailed quote.",
   },
   {
     question: "What is your production process?",
@@ -286,13 +286,13 @@ export const activityTimestamps = [
   {
     time: "Recent",
     label: "Brand Film Delivered",
-    detail: "U.S. Polo Assn. — Global Campaign Final Cut",
+    detail: "U.S. Polo Assn., Global Campaign Final Cut",
     image: "/dashboard/interview-1.jpg",
   },
   {
     time: "Recent",
     label: "Production Complete",
-    detail: "Tige Boats — Lifestyle Campaign Color Graded",
+    detail: "Tige Boats, Lifestyle Campaign Color Graded",
   },
   {
     time: "Recent",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import ChevroletGallery from "./ChevroletGallery";
 
 export const metadata: Metadata = {
@@ -51,6 +52,7 @@ export default function ChevroletPage() {
           <ChevroletGallery gifs={gifs} />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

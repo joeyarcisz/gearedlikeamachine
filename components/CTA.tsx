@@ -53,7 +53,7 @@ export default function CTA() {
             </div>
 
             <p className="text-muted text-xs sm:text-sm uppercase tracking-widest">
-              Based in {siteConfig.location} — {siteConfig.availability}
+              Based in {siteConfig.location}, {siteConfig.availability}
             </p>
           </ScrollFadeIn>
         </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import USPAGallery from "./USPAGallery";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function USPAPage() {
           <USPAGallery />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

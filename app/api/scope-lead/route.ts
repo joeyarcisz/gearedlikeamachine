@@ -62,7 +62,7 @@ export async function POST(request: Request) {
         await resend.emails.send({
           from: "Geared Like A Machine <hello@gearedlikeamachine.com>",
           to: email,
-          subject: "Your Scope Tool is Ready — Geared Like A Machine",
+          subject: "Your Scope Tool is Ready | Geared Like A Machine",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; color: #333;">
               <div style="border-bottom: 2px solid #222; padding-bottom: 16px; margin-bottom: 24px;">
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
 
               <p style="font-size: 15px; line-height: 1.6;">
                 Once you've built an estimate you're happy with, download the PDF and reply
-                to this email — we'd love to talk through the details and get your project
+                to this email, we'd love to talk through the details and get your project
                 on the calendar.
               </p>
 
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
               </p>
 
               <div style="border-top: 1px solid #ddd; margin-top: 32px; padding-top: 16px; font-size: 12px; color: #999;">
-                <p>Geared Like A Machine &mdash; Video Production & Equipment Rentals</p>
+                <p>Geared Like A Machine | Video Production & Equipment Rentals</p>
                 <p>hello@gearedlikeamachine.com &bull; gearedlikeamachine.com</p>
               </div>
             </div>
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
         });
       } catch (emailError) {
         console.error("Failed to send lead email:", emailError);
-        // Don't fail the request — lead gate still works via localStorage
+        // Don't fail the request, lead gate still works via localStorage
       }
     }
 

@@ -59,7 +59,7 @@ export default function Navbar() {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden text-white p-2"
+              className="lg:hidden text-white p-2 cursor-pointer"
               aria-label="Toggle menu"
             >
               <div className="space-y-1.5">

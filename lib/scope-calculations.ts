@@ -97,7 +97,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
     const option = options.find((o) => o.value === selected);
     if (option && option.rate > 0) {
       items.push({
-        name: `${GEAR_CATEGORY_LABELS[key]} — ${option.label}`,
+        name: `${GEAR_CATEGORY_LABELS[key]}: ${option.label}`,
         category: "Gear",
         quantity: shootDays,
         unit: "day",
@@ -132,10 +132,10 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
     const rawEditDays = Math.ceil(totalFinishedMinutes * editTier.daysPerMinute);
     const editDays = Math.max(1, Math.min(MAX_EDIT_DAYS, rawEditDays));
     if (rawEditDays > MAX_EDIT_DAYS) {
-      warnings.push(`Editing days were capped at ${MAX_EDIT_DAYS} (calculated ${rawEditDays}). The actual cost for this scope may be higher — contact us for a custom quote.`);
+      warnings.push(`Editing days were capped at ${MAX_EDIT_DAYS} (calculated ${rawEditDays}). The actual cost for this scope may be higher, contact us for a custom quote.`);
     }
     items.push({
-      name: `Editing — ${editTier.label}`,
+      name: `Editing: ${editTier.label}`,
       category: "Post-Production",
       quantity: editDays,
       unit: "day",
@@ -148,7 +148,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   const colorTier = COLOR_TIERS.find((t) => t.value === input.postProduction.colorGrade);
   if (colorTier && colorTier.perVideo > 0) {
     items.push({
-      name: `Color Grading — ${colorTier.label}`,
+      name: `Color Grading: ${colorTier.label}`,
       category: "Post-Production",
       quantity: videoCount,
       unit: "video",
@@ -161,7 +161,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   const soundTier = SOUND_TIERS.find((t) => t.value === input.postProduction.soundDesign);
   if (soundTier && soundTier.perVideo > 0) {
     items.push({
-      name: `Sound Design — ${soundTier.label}`,
+      name: `Sound Design: ${soundTier.label}`,
       category: "Post-Production",
       quantity: videoCount,
       unit: "video",
@@ -174,7 +174,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   const motionTier = MOTION_TIERS.find((t) => t.value === input.postProduction.motionGraphics);
   if (motionTier && motionTier.perVideo > 0) {
     items.push({
-      name: `Motion Graphics — ${motionTier.label}`,
+      name: `Motion Graphics: ${motionTier.label}`,
       category: "Post-Production",
       quantity: videoCount,
       unit: "video",
@@ -188,7 +188,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   if (musicTier && musicTier.perVideo > 0) {
     if (musicTier.isPerProject) {
       items.push({
-        name: `Music — ${musicTier.label}`,
+        name: `Music: ${musicTier.label}`,
         category: "Post-Production",
         quantity: 1,
         unit: "project",
@@ -197,7 +197,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
       });
     } else {
       items.push({
-        name: `Music — ${musicTier.label}`,
+        name: `Music: ${musicTier.label}`,
         category: "Post-Production",
         quantity: videoCount,
         unit: "video",
