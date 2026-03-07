@@ -38,7 +38,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -59,7 +59,7 @@ export default function Navbar() {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden text-white p-2"
+              className="lg:hidden text-white p-2"
               aria-label="Toggle menu"
             >
               <div className="space-y-1.5">
@@ -85,7 +85,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden transition-all duration-300 overflow-hidden ${
+          className={`lg:hidden transition-all duration-300 overflow-hidden ${
             mobileOpen ? "max-h-96" : "max-h-0"
           }`}
         >

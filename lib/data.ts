@@ -10,13 +10,13 @@ export const siteConfig = {
 };
 
 export const navLinks = [
-  { label: "Home", href: "#home" },
   { label: "Work", href: "#portfolio" },
   { label: "Capabilities", href: "#services" },
   { label: "Blueprint", href: "#process" },
   { label: "Scope", href: "/scope" },
   { label: "Rentals", href: "/rentals" },
   { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export const tickerServices = [
