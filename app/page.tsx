@@ -5,7 +5,6 @@ import Showreel from "@/components/Showreel";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import FeaturedWork from "@/components/FeaturedWork";
 import ImageGalleryStrip from "@/components/ImageGalleryStrip";
-import AboutOperator from "@/components/AboutOperator";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -124,7 +123,6 @@ export default function Home() {
           <CTA />
         </div>
         <ServicesTicker />
-        <AboutOperator />
       </main>
       <Footer />
     </>
