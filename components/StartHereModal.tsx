@@ -37,6 +37,19 @@ export default function StartHereModal({ open, onClose }: StartHereModalProps) {
 
   const options = [
     {
+      title: "Scope Engine",
+      description: "Build your project scope and get an instant production estimate.",
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+          <path d="M9 7h6m-6 4h6m-3 4h3M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ),
+      onClick: () => {
+        onClose();
+        router.push("/scope");
+      },
+    },
+    {
       title: "Discovery Form",
       description: "Tell us about your project and we'll follow up within 24 hours.",
       icon: (
@@ -105,7 +118,7 @@ export default function StartHereModal({ open, onClose }: StartHereModalProps) {
         </h2>
 
         {/* Option cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {options.map((opt) => (
             <button
               key={opt.title}

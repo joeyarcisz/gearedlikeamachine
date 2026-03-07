@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import ScopeCalculator from "./ScopeCalculator";
+import ScopeWizard from "./ScopeWizard";
 
 const VALUE_PROPS = [
   {
@@ -246,7 +246,7 @@ export default function ScopePageContent() {
               Build Your Scope
             </h2>
           </div>
-          <ScopeCalculator />
+          <ScopeWizard />
         </div>
       </section>
 
