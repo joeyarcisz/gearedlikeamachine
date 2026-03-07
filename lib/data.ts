@@ -16,7 +16,6 @@ export const navLinks = [
   { label: "Blueprint", href: "#process" },
   { label: "Rentals", href: "/rentals" },
   { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "#contact" },
 ];
 
 export const tickerServices = [
