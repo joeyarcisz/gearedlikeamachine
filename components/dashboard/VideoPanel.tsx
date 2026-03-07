@@ -18,7 +18,7 @@ export default function VideoPanel() {
       </div>
       <div className="relative aspect-video bg-navy grayscale">
         <iframe
-          src="https://player.vimeo.com/video/1153853483?h=0&title=0&byline=0&portrait=0"
+          src="https://player.vimeo.com/video/1171232165?h=0&title=0&byline=0&portrait=0"
           className="absolute inset-0 w-full h-full"
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
