@@ -100,7 +100,7 @@ export default function RentalInventory() {
     for (const cat of Object.keys(groupedSelected).sort()) {
       lines.push(`── ${cat} ──`);
       for (const item of groupedSelected[cat]) {
-        lines.push(`  ${item.item} — $${item.rate}/day`);
+        lines.push(`  ${item.item} - $${item.rate}/day`);
       }
       lines.push("");
     }

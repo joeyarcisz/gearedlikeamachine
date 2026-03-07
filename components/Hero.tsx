@@ -84,7 +84,7 @@ export default function Hero() {
             {/* Left — Text content */}
             <div className="animate-fade-in-up">
               <p className="text-steel text-xs sm:text-sm uppercase tracking-[0.3em] mb-6 font-[family-name:var(--font-heading)]">
-                {siteConfig.location} — {siteConfig.availability}
+                {siteConfig.location} / {siteConfig.availability}
               </p>
 
               <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-wider leading-[0.95] mb-6">

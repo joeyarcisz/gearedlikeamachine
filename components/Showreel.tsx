@@ -15,7 +15,7 @@ export default function Showreel() {
               The Reel
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl">
-              A look inside our production output — motion, narrative, and everything in between.
+              A look inside our production output. Motion, narrative, and everything in between.
             </p>
           </div>
         </ScrollFadeIn>

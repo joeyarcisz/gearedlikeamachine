@@ -11,7 +11,7 @@ export default function Testimonials() {
               Client Feedback
             </h2>
             <p className="text-muted text-base sm:text-lg max-w-xl mx-auto">
-              Don&apos;t take our word for it — hear from the brands we&apos;ve
+              Don&apos;t take our word for it. Hear from the brands we&apos;ve
               worked with.
             </p>
           </div>
