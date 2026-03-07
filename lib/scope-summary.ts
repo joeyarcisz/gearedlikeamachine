@@ -40,13 +40,21 @@ export function generateSummary(input: ScopeInput): ScopeSummary {
   );
 
   /* ── Overview ── */
-  const overview = `This estimate covers a ${formatLabel.toLowerCase()} engagement for ${projectLabel.toLowerCase()} production. The project scope includes ${input.deliverables.videoCount} finished video${input.deliverables.videoCount !== 1 ? "s" : ""} at approximately ${durationLabel.toLowerCase()} each, optimized for delivery across ${listJoin(platformLabels)}.`;
+  let overview = `This estimate covers a ${formatLabel.toLowerCase()} engagement for ${projectLabel.toLowerCase()} production. The project scope includes ${input.deliverables.videoCount} finished video${input.deliverables.videoCount !== 1 ? "s" : ""} at approximately ${durationLabel.toLowerCase()} each`;
+  if (platformLabels.length > 0) {
+    overview += `, optimized for delivery across ${listJoin(platformLabels)}`;
+  }
+  overview += ".";
 
   /* ── Deliverables ── */
   const ratioLabels = input.deliverables.aspectRatios.join(", ");
   const cutdownTotal =
     input.deliverables.cutdownsPerVideo * input.deliverables.videoCount;
-  let deliverablesText = `The final deliverable package will include ${input.deliverables.videoCount} ${durationLabel.toLowerCase()} video${input.deliverables.videoCount !== 1 ? "s" : ""} formatted in ${ratioLabels} aspect ratio${input.deliverables.aspectRatios.length > 1 ? "s" : ""}.`;
+  let deliverablesText = `The final deliverable package will include ${input.deliverables.videoCount} ${durationLabel.toLowerCase()} video${input.deliverables.videoCount !== 1 ? "s" : ""}`;
+  if (input.deliverables.aspectRatios.length > 0) {
+    deliverablesText += ` formatted in ${ratioLabels} aspect ratio${input.deliverables.aspectRatios.length > 1 ? "s" : ""}`;
+  }
+  deliverablesText += ".";
   if (cutdownTotal > 0) {
     deliverablesText += ` Additionally, ${cutdownTotal} social cutdown${cutdownTotal !== 1 ? "s" : ""} (${input.deliverables.cutdownsPerVideo} per video) will be produced for platform-specific distribution.`;
   }
@@ -57,7 +65,10 @@ export function generateSummary(input: ScopeInput): ScopeSummary {
   const activeRoles = input.production.crewRoles.map(
     (r) => CREW_ROLES.find((cr) => cr.value === r)?.label ?? r
   );
-  let productionText = `Production will span ${input.production.shootDays} shoot day${input.production.shootDays !== 1 ? "s" : ""} across ${input.production.locations} location${input.production.locations !== 1 ? "s" : ""}. The crew operates under a ${crewPackageLabel.toLowerCase()} package configuration with ${activeRoles.length} positions: ${listJoin(activeRoles)}.`;
+  let productionText = `Production will span ${input.production.shootDays} shoot day${input.production.shootDays !== 1 ? "s" : ""} across ${input.production.locations} location${input.production.locations !== 1 ? "s" : ""}.`;
+  if (activeRoles.length > 0) {
+    productionText += ` The crew operates under a ${crewPackageLabel.toLowerCase()} package configuration with ${activeRoles.length} position${activeRoles.length !== 1 ? "s" : ""}: ${listJoin(activeRoles)}.`;
+  }
 
   // Gear summary
   const gearSummary: string[] = [];
@@ -85,7 +96,7 @@ export function generateSummary(input: ScopeInput): ScopeSummary {
   }
 
   if (input.production.talentNeeded) {
-    productionText += ` ${input.production.talentCount} on-camera talent position${input.production.talentCount !== 1 ? "s" : ""} are included.`;
+    productionText += ` ${input.production.talentCount} on-camera talent position${input.production.talentCount !== 1 ? "s are" : " is"} included.`;
   }
 
   /* ── Post-Production ── */

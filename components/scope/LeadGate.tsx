@@ -31,18 +31,22 @@ export default function LeadGate({ onSubmit }: LeadGateProps) {
     };
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
       const res = await fetch("/api/scope-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lead),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
       if (!res.ok) {
         setError("Something went wrong. Please try again.");
         setSubmitting(false);
         return;
       }
     } catch {
-      setError("Network error. Please check your connection and try again.");
+      setError("Connection timed out. Please try again.");
       setSubmitting(false);
       return;
     }
@@ -113,7 +117,7 @@ export default function LeadGate({ onSubmit }: LeadGateProps) {
           <button
             type="submit"
             disabled={!canSubmit || submitting}
-            className="w-full bg-steel text-black py-3 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-full bg-steel text-black py-3 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           >
             {submitting ? "Loading..." : "Access Scope Tool"}
           </button>

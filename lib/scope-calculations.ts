@@ -208,7 +208,7 @@ export function calculateEstimate(input: ScopeInput): EstimateBreakdown {
   }
 
   // Captions
-  if (input.postProduction.captions) {
+  if (input.postProduction.captions && input.postProduction.captionLanguages > 0) {
     items.push({
       name: "Captions (Primary Language)",
       category: "Post-Production",

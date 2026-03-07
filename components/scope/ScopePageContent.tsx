@@ -55,7 +55,7 @@ export default function ScopePageContent() {
             </h1>
             <p className="text-muted text-base sm:text-lg max-w-2xl mb-10 leading-relaxed">
               Get a ballpark production estimate in under two minutes. Tell us
-              what you&apos;re building &mdash; we&apos;ll tell you what it takes.
+              what you&apos;re building, and we&apos;ll tell you what it takes.
             </p>
             <div className="flex flex-col sm:flex-row items-start gap-4">
               <button
@@ -98,7 +98,7 @@ export default function ScopePageContent() {
                 Define Your Project
               </h3>
               <p className="text-muted text-sm leading-relaxed">
-                Select your format &mdash; commercial, brand film, social campaign,
+                Select your format: commercial, brand film, social campaign,
                 documentary, or event coverage.
               </p>
             </div>
@@ -238,14 +238,6 @@ export default function ScopePageContent() {
         className="py-16 sm:py-20 scroll-mt-20"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="mb-10">
-            <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
-              Scope Calculator
-            </p>
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider">
-              Build Your Scope
-            </h2>
-          </div>
           <ScopeWizard />
         </div>
       </section>

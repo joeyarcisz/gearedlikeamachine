@@ -173,7 +173,7 @@ export default function StepPostProduction({ data, onChange }: Props) {
                 onChange({ ...data, revisionRounds: Math.max(1, data.revisionRounds - 1) })
               }
               disabled={data.revisionRounds <= 1}
-              className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               -
             </button>
@@ -185,7 +185,7 @@ export default function StepPostProduction({ data, onChange }: Props) {
                 onChange({ ...data, revisionRounds: Math.min(5, data.revisionRounds + 1) })
               }
               disabled={data.revisionRounds >= 5}
-              className="w-8 h-8 flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center bg-card text-steel border border-card-border text-sm hover:border-steel disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               +
             </button>

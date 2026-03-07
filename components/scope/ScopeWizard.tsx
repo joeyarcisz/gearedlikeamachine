@@ -162,17 +162,21 @@ export default function ScopeWizard() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       // Generate estimate
-      const input: ScopeInput = {
-        projectType,
-        deliverables,
-        production,
-        postProduction,
-        timeline,
-      };
-      setEstimate(calculateEstimate(input));
-      setSummary(generateSummary(input));
-      setShowEstimate(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      try {
+        const input: ScopeInput = {
+          projectType,
+          deliverables,
+          production,
+          postProduction,
+          timeline,
+        };
+        setEstimate(calculateEstimate(input));
+        setSummary(generateSummary(input));
+        setShowEstimate(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch {
+        alert("Something went wrong generating your estimate. Please try again or reach out to us directly.");
+      }
     }
   }
 

@@ -155,19 +155,19 @@ export default function EstimateOutput({ summary, estimate, onStartOver }: Props
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button
           onClick={() => window.print()}
-          className="px-6 py-2.5 text-sm uppercase tracking-widest font-semibold bg-steel text-black hover:bg-steel/80 transition-colors text-center"
+          className="px-6 py-2.5 text-sm uppercase tracking-widest font-semibold bg-steel text-black hover:bg-steel/80 transition-colors text-center cursor-pointer"
         >
-          Download PDF
+          Print / Save PDF
         </button>
         <button
           onClick={onStartOver}
-          className="px-6 py-2.5 text-sm uppercase tracking-widest text-muted border border-card-border hover:text-white hover:border-steel transition-colors text-center"
+          className="px-6 py-2.5 text-sm uppercase tracking-widest text-muted border border-card-border hover:text-white hover:border-steel transition-colors text-center cursor-pointer"
         >
           Start Over
         </button>
         <a
           href="mailto:hello@gearedlikeamachine.com?subject=Scope%20Estimate%20Question"
-          className="px-6 py-2.5 text-sm uppercase tracking-widest text-steel border border-steel hover:bg-steel hover:text-black transition-colors text-center"
+          className="px-6 py-2.5 text-sm uppercase tracking-widest text-steel border border-steel hover:bg-steel hover:text-black transition-colors text-center cursor-pointer"
         >
           Questions? Reach Out
         </a>
