@@ -15,9 +15,9 @@ const images = [
   { src: "/power-digital/frame-2.jpg", alt: "Furniture production shot" },
   { src: "/power-digital/frame-3.png", alt: "Made For Life production" },
   { src: "/power-digital/frame-4.jpg", alt: "Commercial lighting setup" },
-  { src: "/power-digital/frame-5.jpg", alt: "On set behind the scenes" },
+  { src: "/power-digital/frame-5.jpg", alt: "On set behind the scenes for Power Digital brand content" },
   { src: "/power-digital/frame-6.jpg", alt: "Furniture product cinematography" },
-  { src: "/power-digital/frame-7.jpg", alt: "Production frame" },
+  { src: "/power-digital/frame-7.jpg", alt: "Power Digital commercial video production frame" },
   { src: "/power-digital/frame-8.jpg", alt: "Made For Life scene" },
   { src: "/power-digital/frame-9.jpg", alt: "Final commercial frame" },
 ];

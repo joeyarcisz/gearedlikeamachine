@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import ClientLogoBar from "@/components/ClientLogoBar";
 import ServicesTicker from "@/components/ServicesTicker";
 import Showreel from "@/components/Showreel";
 import PortfolioGrid from "@/components/PortfolioGrid";
@@ -8,6 +9,7 @@ import ImageGalleryStrip from "@/components/ImageGalleryStrip";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhyChooseUs from "@/components/WhyChooseUs";
+import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { MechanicalDivider } from "@/components/icons";
@@ -76,6 +78,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <ClientLogoBar />
         <Showreel />
 
         {/* Divider 1 — gear motion video */}
@@ -113,6 +116,8 @@ export default function Home() {
           <SideVideoTexture src="/camera-gear-4.mp4" side="right" />
           <WhyChooseUs />
         </div>
+
+        <Testimonials />
 
         {/* Divider 3 — gear motion video */}
         <GearMotionStrip video="/gear-motion-3.mp4" side="left" />

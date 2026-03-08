@@ -41,7 +41,7 @@ export default function JFKPage() {
           <div className="relative w-full aspect-[21/9] overflow-hidden bg-navy">
             <img
               src="/jfk/featured.jpg"
-              alt="JFK: The Unspoken Speech"
+              alt="JFK documentary production, featured still from The Unspoken Speech"
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>

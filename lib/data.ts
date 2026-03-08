@@ -144,21 +144,21 @@ export const services = [
     number: "02",
     title: "Narrative & Commercial",
     description:
-      "Story-driven brand films and high-impact commercials from script to screen. We build narratives that move audiences and convert viewers into loyal customers.",
+      "Story-driven brand films and high-impact commercials from script to screen. As a commercial video production company, we build narratives that move audiences and convert viewers into loyal customers.",
   },
   {
     icon: "longform",
     number: "03",
     title: "Documentary & Series",
     description:
-      "Multi-episode series, documentaries, and long-form corporate features. We manage complex storylines across extended production timelines with precision.",
+      "Multi-episode series, documentaries, and long-form corporate features. Our Texas video production team manages complex storylines across extended production timelines with precision.",
   },
   {
     icon: "strategy",
     number: "04",
     title: "Performance Creative",
     description:
-      "Ad-ready video assets built for ROI. Platform-optimized creative backed by data-driven strategy across paid social, display, CTV, and programmatic channels.",
+      "Ad-ready video production for brands built for ROI. Platform-optimized creative backed by data-driven strategy across paid social, display, CTV, and programmatic channels.",
   },
 ];
 
@@ -167,7 +167,7 @@ export const processSteps = [
     step: 1,
     title: "Intake",
     description:
-      "We study your brand, map your objectives, and lock in the scope. Every project starts with a deep-dive into what you need and who you're trying to reach.",
+      "We study your brand, map your objectives, and lock in the scope. Every Dallas video production project starts with a deep-dive into what you need and who you're trying to reach.",
     deliverable: "Project Scope",
   },
   {

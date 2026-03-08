@@ -69,7 +69,7 @@ export default function TigeGallery() {
           >
             <img
               src={src}
-              alt={`Tige Boats ${i + 1}`}
+              alt={`Tige Boats cinematic production, frame ${i + 1}`}
               className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
               loading="lazy"
             />
@@ -89,7 +89,7 @@ export default function TigeGallery() {
           >
             <img
               src={allImages[lightbox]}
-              alt={`Tige Boats ${lightbox + 1}`}
+              alt={`Tige Boats cinematic production, frame ${lightbox + 1}`}
               className="w-full h-full object-contain"
             />
 

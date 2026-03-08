@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ScrollFadeIn from "./ScrollFadeIn";
 import StartHereModal from "./StartHereModal";
+import ContactForm from "./ContactForm";
 import { siteConfig } from "@/lib/data";
 
 export default function CTA() {
@@ -34,12 +35,20 @@ export default function CTA() {
               production to match. No filler. Just execution.
             </p>
 
+            <div className="mb-10">
+              <ContactForm />
+            </div>
+
+            <p className="text-muted text-xs uppercase tracking-widest mb-4 font-[family-name:var(--font-heading)]">
+              Or email us directly:
+            </p>
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <button
                 onClick={() => setModalOpen(true)}
                 className="group bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-all duration-300 flex items-center gap-2 cursor-pointer"
               >
-                Start Here
+                Scope Your Project
                 <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
                   →
                 </span>

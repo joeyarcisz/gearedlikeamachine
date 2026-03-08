@@ -92,7 +92,7 @@ export default function GalleryPanel() {
           <div className="relative max-w-5xl max-h-[85vh] w-full" onClick={(e) => e.stopPropagation()}>
             <img
               src={filtered[lightbox].src}
-              alt={filtered[lightbox].title}
+              alt={`${filtered[lightbox].title} - GLM production gallery`}
               className="w-full h-full object-contain grayscale"
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">

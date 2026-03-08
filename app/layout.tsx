@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Geared Like A Machine",
+    url: "https://gearedlikeamachine.com",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Geared Like A Machine | Video Production & Equipment Rentals" }],
   },
   twitter: {
@@ -58,7 +59,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
+        {/* PREVIOUS JSON-LD — commented out, replaced below */}
+        {/* <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -77,6 +79,31 @@ export default function RootLayout({
                 addressCountry: "US",
               },
               areaServed: "United States",
+              priceRange: "$$",
+            }),
+          }}
+        /> */}
+        {/* UPDATED JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              additionalType: "VideoProductionService",
+              name: "Geared Like A Machine",
+              url: "https://gearedlikeamachine.com",
+              description:
+                "Commercial video production and equipment rentals based in Dallas, Texas. Available worldwide.",
+              telephone: "(682) 229-7699",
+              email: "hello@gearedlikeamachine.com",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Dallas",
+                addressRegion: "TX",
+                addressCountry: "US",
+              },
+              areaServed: "Worldwide",
               priceRange: "$$",
             }),
           }}

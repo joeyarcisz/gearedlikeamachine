@@ -52,7 +52,7 @@ export default function Navbar() {
                 onClick={() => setModalOpen(true)}
                 className="bg-steel text-black px-5 py-2 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors duration-200 cursor-pointer"
               >
-                Start Here
+                Scope Your Project
               </button>
             </div>
 
@@ -107,7 +107,7 @@ export default function Navbar() {
               }}
               className="inline-block bg-steel text-black px-5 py-2 text-sm uppercase tracking-widest font-semibold mt-2 cursor-pointer"
             >
-              Start Here
+              Scope Your Project
             </button>
           </div>
         </div>

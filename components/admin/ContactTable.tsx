@@ -165,7 +165,7 @@ export default function ContactTable({ contacts }: ContactTableProps) {
                   )}
                 </td>
                 <td className="px-4 py-3 text-chrome">
-                  {contact.company || "—"}
+                  {contact.company || "-"}
                 </td>
                 <td className="px-4 py-3">
                   <StageTag stage={contact.stage} />
@@ -173,7 +173,7 @@ export default function ContactTable({ contacts }: ContactTableProps) {
                 <td className="px-4 py-3 text-muted text-xs">
                   {contact.lastContact
                     ? new Date(contact.lastContact).toLocaleDateString()
-                    : "—"}
+                    : "-"}
                 </td>
               </tr>
             ))}

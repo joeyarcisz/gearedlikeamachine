@@ -16,8 +16,8 @@ const images = [
   { src: "/coca-cola/santa-4.jpg", alt: "Coca-Cola behind the scenes" },
   { src: "/coca-cola/santa-5.jpg", alt: "Coca-Cola Santa on set" },
   { src: "/coca-cola/santa-6.jpg", alt: "Coca-Cola production lighting" },
-  { src: "/coca-cola/santa-7.jpg", alt: "Coca-Cola final shot" },
-  { src: "/coca-cola/santa-8.jpg", alt: "Coca-Cola commercial frame" },
+  { src: "/coca-cola/santa-7.jpg", alt: "Coca-Cola Santa commercial, final production shot" },
+  { src: "/coca-cola/santa-8.jpg", alt: "Coca-Cola Santa commercial production frame" },
 ];
 
 export default function CocaColaPage() {

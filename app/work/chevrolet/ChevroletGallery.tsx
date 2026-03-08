@@ -17,7 +17,7 @@ export default function ChevroletGallery({ gifs }: { gifs: string[] }) {
           >
             <img
               src={src}
-              alt={`Chevrolet ${i + 1}`}
+              alt={`Chevrolet commercial production, frame ${i + 1}`}
               className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
               loading="lazy"
             />
@@ -34,7 +34,7 @@ export default function ChevroletGallery({ gifs }: { gifs: string[] }) {
           <div className="relative max-w-4xl max-h-[85vh] w-full" onClick={(e) => e.stopPropagation()}>
             <img
               src={gifs[lightbox]}
-              alt={`Chevrolet ${lightbox + 1}`}
+              alt={`Chevrolet commercial production, frame ${lightbox + 1}`}
               className="w-full h-full object-contain"
             />
 

@@ -55,7 +55,7 @@ export default function USPAGallery() {
           >
             <img
               src={src}
-              alt={`U.S. Polo Assn. ${i + 1}`}
+              alt={`U.S. Polo Assn. global campaign production, frame ${i + 1}`}
               className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
               loading="lazy"
             />
@@ -72,7 +72,7 @@ export default function USPAGallery() {
           <div className="relative max-w-4xl max-h-[85vh] w-full" onClick={(e) => e.stopPropagation()}>
             <img
               src={images[lightbox]}
-              alt={`U.S. Polo Assn. ${lightbox + 1}`}
+              alt={`U.S. Polo Assn. global campaign production, frame ${lightbox + 1}`}
               className="w-full h-full object-contain"
             />
 

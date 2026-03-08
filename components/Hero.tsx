@@ -100,7 +100,7 @@ export default function Hero() {
                   onClick={() => setModalOpen(true)}
                   className="group bg-steel text-black px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:bg-steel/80 transition-all duration-300 flex items-center gap-2 cursor-pointer"
                 >
-                  Start Here
+                  Scope Your Project
                   <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
                     →
                   </span>
