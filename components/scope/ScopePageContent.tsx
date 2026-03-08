@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ScopeWizard from "./ScopeWizard";
 
 const VALUE_PROPS = [
@@ -28,8 +28,10 @@ const VALUE_PROPS = [
 
 export default function ScopePageContent() {
   const calculatorRef = useRef<HTMLDivElement>(null);
+  const [engineStarted, setEngineStarted] = useState(false);
 
   function scrollToCalculator() {
+    setEngineStarted(true);
     calculatorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -81,6 +83,8 @@ export default function ScopePageContent() {
 
       {/* ── How It Works ── */}
       {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      {/* SECTION VISIBILITY - HIDDEN ONCE ENGINE STARTED 2026-03-07 */}
+      {!engineStarted && (
       <section className="py-16 sm:py-20 border-y border-card-border print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
@@ -131,9 +135,12 @@ export default function ScopePageContent() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── What the Engine Evaluates ── */}
       {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      {/* SECTION VISIBILITY - HIDDEN ONCE ENGINE STARTED 2026-03-07 */}
+      {!engineStarted && (
       <section className="py-16 sm:py-20 print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
@@ -175,9 +182,12 @@ export default function ScopePageContent() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── Typical Production Ranges ── */}
       {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      {/* SECTION VISIBILITY - HIDDEN ONCE ENGINE STARTED 2026-03-07 */}
+      {!engineStarted && (
       <section className="py-16 sm:py-20 border-y border-card-border print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
@@ -234,6 +244,7 @@ export default function ScopePageContent() {
           </p>
         </div>
       </section>
+      )}
 
       {/* ── Build Your Scope ── */}
       <section
