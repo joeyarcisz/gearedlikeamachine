@@ -71,7 +71,13 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
         Cost Estimate
       </h2>
 
-      <table className="w-full text-sm border-collapse">
+      <table className="w-full text-sm border-collapse" style={{ tableLayout: "fixed" }}>
+        <colgroup>
+          <col style={{ width: "46%" }} />
+          <col style={{ width: "14%" }} />
+          <col style={{ width: "20%" }} />
+          <col style={{ width: "20%" }} />
+        </colgroup>
         <thead>
           <tr className="border-b-2 border-black">
             <th className="text-left text-xs uppercase tracking-wide font-bold pb-2 pr-4">
@@ -99,30 +105,32 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
       </table>
 
       {/* Totals */}
-      <div className="mt-6 pt-4 border-t-2 border-black space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>Subtotal</span>
-          <span>{formatCurrency(estimate.subtotal)}</span>
-        </div>
-        {estimate.urgencyPremium !== 0 && (
+      <div className="mt-8 pt-6 border-t-2 border-black" style={{ breakInside: "avoid" }}>
+        <div className="space-y-2 max-w-xs ml-auto">
           <div className="flex justify-between text-sm">
-            <span>
-              {estimate.urgencyPremium < 0 ? "Flexible Discount" : "Urgency Premium"} ({Math.round((estimate.urgencyMultiplier - 1) * 100)}%)
-            </span>
-            <span>{estimate.urgencyPremium < 0 ? "" : "+"}{formatCurrency(estimate.urgencyPremium)}</span>
+            <span>Subtotal</span>
+            <span>{formatCurrency(estimate.subtotal)}</span>
           </div>
-        )}
-        <div className="flex justify-between text-sm">
-          <span>Contingency (10%)</span>
-          <span>+{formatCurrency(estimate.contingency)}</span>
-        </div>
-        <div className="flex justify-between text-base font-bold pt-2 border-t border-black">
-          <span className="uppercase tracking-wide">Estimated Total</span>
-          <span>{formatCurrency(estimate.total)}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span>Deposit (50%)</span>
-          <span className="font-semibold">{formatCurrency(estimate.deposit)}</span>
+          {estimate.urgencyPremium !== 0 && (
+            <div className="flex justify-between text-sm">
+              <span>
+                {estimate.urgencyPremium < 0 ? "Flexible Discount" : "Urgency Premium"} ({Math.round((estimate.urgencyMultiplier - 1) * 100)}%)
+              </span>
+              <span>{estimate.urgencyPremium < 0 ? "" : "+"}{formatCurrency(estimate.urgencyPremium)}</span>
+            </div>
+          )}
+          <div className="flex justify-between text-sm">
+            <span>Contingency (10%)</span>
+            <span>+{formatCurrency(estimate.contingency)}</span>
+          </div>
+          <div className="flex justify-between text-lg font-bold pt-3 mt-2 border-t-2 border-black">
+            <span className="uppercase tracking-wide">Estimated Total</span>
+            <span>{formatCurrency(estimate.total)}</span>
+          </div>
+          <div className="flex justify-between text-sm pt-1">
+            <span>Deposit (50%)</span>
+            <span className="font-semibold">{formatCurrency(estimate.deposit)}</span>
+          </div>
         </div>
       </div>
 
@@ -158,31 +166,36 @@ function PrintGroup({
 }) {
   return (
     <>
-      <tr>
+      <tr style={{ breakInside: "avoid" }}>
         <td
           colSpan={4}
-          className="pt-4 pb-1 text-xs font-bold uppercase tracking-wide"
+          className="pt-6 pb-2 text-xs font-bold uppercase tracking-wide border-b border-black"
+          style={{ fontSize: "11px", letterSpacing: "0.1em" }}
         >
           {group.category}
         </td>
       </tr>
       {group.items.map((item, idx) => (
-        <tr key={idx} className="border-b border-gray-200">
-          <td className="py-1.5 pr-4">{item.name}</td>
-          <td className="py-1.5 pr-4 text-right text-gray-800">
+        <tr key={idx} className="border-b border-gray-200" style={{ breakInside: "avoid" }}>
+          <td className="py-2 pr-4">{item.name}</td>
+          <td className="py-2 pr-4 text-right text-gray-800">
             {item.quantity} {item.unit}
           </td>
-          <td className="py-1.5 pr-4 text-right text-gray-800">
+          <td className="py-2 pr-4 text-right text-gray-800">
             {formatCurrency(item.unitPrice)}
           </td>
-          <td className="py-1.5 text-right">{formatCurrency(item.total)}</td>
+          <td className="py-2 text-right">{formatCurrency(item.total)}</td>
         </tr>
       ))}
-      <tr className="border-b border-gray-400">
-        <td colSpan={3} className="py-1.5 text-right text-xs uppercase tracking-wide text-gray-800">
+      <tr className="border-b-2 border-gray-400" style={{ breakInside: "avoid" }}>
+        <td colSpan={3} className="py-2 text-right text-xs font-bold uppercase tracking-wide text-gray-800"
+          style={{ backgroundColor: "#f5f5f5" }}
+        >
           {group.category} Total
         </td>
-        <td className="py-1.5 text-right font-semibold">
+        <td className="py-2 text-right font-bold"
+          style={{ backgroundColor: "#f5f5f5" }}
+        >
           {formatCurrency(categoryTotal)}
         </td>
       </tr>

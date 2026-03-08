@@ -36,7 +36,8 @@ export default function ScopePageContent() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
+      {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      <section className="relative py-20 sm:py-28 lg:py-36 overflow-hidden print:hidden">
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -79,7 +80,8 @@ export default function ScopePageContent() {
       </section>
 
       {/* ── How It Works ── */}
-      <section className="py-16 sm:py-20 border-y border-card-border">
+      {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      <section className="py-16 sm:py-20 border-y border-card-border print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
@@ -131,7 +133,8 @@ export default function ScopePageContent() {
       </section>
 
       {/* ── What the Engine Evaluates ── */}
-      <section className="py-16 sm:py-20">
+      {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      <section className="py-16 sm:py-20 print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
@@ -174,7 +177,8 @@ export default function ScopePageContent() {
       </section>
 
       {/* ── Typical Production Ranges ── */}
-      <section className="py-16 sm:py-20 border-y border-card-border">
+      {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      <section className="py-16 sm:py-20 border-y border-card-border print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
@@ -243,7 +247,8 @@ export default function ScopePageContent() {
       </section>
 
       {/* ── What You Get ── */}
-      <section className="py-16 sm:py-20 border-t border-card-border">
+      {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      <section className="py-16 sm:py-20 border-t border-card-border print:hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
             <p className="text-steel text-xs uppercase tracking-[0.3em] mb-3 font-[family-name:var(--font-heading)]">
@@ -273,7 +278,8 @@ export default function ScopePageContent() {
       </section>
 
       {/* ── Bottom CTA ── */}
-      <section className="py-16 sm:py-20 border-t border-card-border">
+      {/* PDF CLEANUP - HIDDEN FROM PDF OUTPUT 2026-03-07 - LIVES ON /SCOPE LANDING PAGE ONLY */}
+      <section className="py-16 sm:py-20 border-t border-card-border print:hidden">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="font-[family-name:var(--font-heading)] text-2xl sm:text-3xl font-bold uppercase tracking-wider mb-4">
             Need a Custom Quote?
