@@ -9,7 +9,7 @@ import ImageGalleryStrip from "@/components/ImageGalleryStrip";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
 import WhyChooseUs from "@/components/WhyChooseUs";
-import Testimonials from "@/components/Testimonials";
+// import Testimonials from "@/components/Testimonials"; // COMMENTED OUT 2026-03-07
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { MechanicalDivider } from "@/components/icons";
@@ -117,7 +117,8 @@ export default function Home() {
           <WhyChooseUs />
         </div>
 
-        <Testimonials />
+        {/* TESTIMONIALS SECTION - COMMENTED OUT 2026-03-07 */}
+        {/* <Testimonials /> */}
 
         {/* Divider 3 — gear motion video */}
         <GearMotionStrip video="/gear-motion-3.mp4" side="left" />
