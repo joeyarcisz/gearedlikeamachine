@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Geared Like A Machine",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Geared Like A Machine | Video Production & Equipment Rentals" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Geared Like A Machine | Video Production & Equipment Rentals" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Geared Like A Machine | Video Production & Equipment Rentals",
     description:
       "Engineered to Move Audiences. Cinema-grade video production and professional equipment rentals. Dallas-Fort Worth, TX.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,

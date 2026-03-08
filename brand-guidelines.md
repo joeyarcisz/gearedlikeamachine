@@ -436,7 +436,7 @@ transition-all duration-300
 | Font configuration | `/app/layout.tsx` → Google Fonts imports |
 | Tailwind config | `/app/globals.css` (Tailwind v4, no separate config file) |
 | Portfolio images | `/public/portfolio-*.gif`, `/public/[project]/` |
-| OG image | `/public/og-image.jpg` |
+| OG image | `/public/og-image.png` |
 
 ---
 
