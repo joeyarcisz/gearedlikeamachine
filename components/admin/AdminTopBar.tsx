@@ -10,6 +10,8 @@ const breadcrumbMap: Record<string, string> = {
   "/admin": "Dashboard",
   "/admin/contacts": "Contacts",
   "/admin/contacts/new": "New Contact",
+  "/admin/crew": "Crew",
+  "/admin/crew/new": "New Crew Member",
   "/admin/pipeline": "Pipeline",
   "/admin/pipeline/new": "New Opportunity",
 };
@@ -22,6 +24,8 @@ export default function AdminTopBar({ onToggleSidebar }: AdminTopBarProps) {
   let pageLabel = breadcrumbMap[pathname] || "Admin";
   if (pathname.startsWith("/admin/contacts/") && !breadcrumbMap[pathname]) {
     pageLabel = "Edit Contact";
+  } else if (pathname.startsWith("/admin/crew/") && !breadcrumbMap[pathname]) {
+    pageLabel = "Edit Crew Member";
   } else if (pathname.startsWith("/admin/pipeline/") && !breadcrumbMap[pathname]) {
     pageLabel = "Edit Opportunity";
   }

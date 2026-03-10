@@ -11,6 +11,12 @@ interface PipelineStageSummary {
   _sumHigh: number;
 }
 
+interface CrewSummary {
+  total: number;
+  missingW9: number;
+  recentlyBooked: number;
+}
+
 interface DashboardData {
   overdueContacts: CRMContact[];
   staleContacts: CRMContact[];
@@ -24,6 +30,7 @@ interface DashboardData {
     contact?: { id: string; name: string } | null;
     opportunity?: { id: string; title: string } | null;
   })[];
+  crewSummary?: CrewSummary;
 }
 
 const activityTypeColors: Record<string, string> = {
@@ -68,6 +75,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
     wonValue,
     totalPipelineValue,
     recentActivities,
+    crewSummary,
   } = data;
 
   const actionCount = overdueContacts.length + overdueOpportunities.length;
@@ -230,6 +238,47 @@ export default function DashboardView({ data }: { data: DashboardData }) {
           )}
         </div>
       </div>
+
+      {/* Crew Summary */}
+      {crewSummary && (
+        <div className="dashboard-card">
+          <div className="dashboard-card-header">
+            <h2 className="text-xs uppercase tracking-widest text-white font-[family-name:var(--font-heading)]">
+              Crew
+            </h2>
+            <Link
+              href="/admin/crew"
+              className="ml-auto text-[10px] uppercase tracking-widest text-steel hover:text-white transition-colors font-[family-name:var(--font-heading)]"
+            >
+              View All Crew
+            </Link>
+          </div>
+          <div className="dashboard-card-body">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{crewSummary.total}</p>
+                <p className="text-[10px] uppercase tracking-widest text-muted mt-1 font-[family-name:var(--font-heading)]">
+                  Total
+                </p>
+              </div>
+              <div className="text-center">
+                <p className={`text-2xl font-bold ${crewSummary.missingW9 > 0 ? "text-amber-400" : "text-white"}`}>
+                  {crewSummary.missingW9}
+                </p>
+                <p className="text-[10px] uppercase tracking-widest text-muted mt-1 font-[family-name:var(--font-heading)]">
+                  Missing W-9
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{crewSummary.recentlyBooked}</p>
+                <p className="text-[10px] uppercase tracking-widest text-muted mt-1 font-[family-name:var(--font-heading)]">
+                  Booked (30d)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Recent Activity */}
       <div className="dashboard-card">

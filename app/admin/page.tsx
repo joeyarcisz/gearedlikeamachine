@@ -31,6 +31,9 @@ export default async function AdminPage() {
     wonOpportunities,
     lostCount,
     recentActivities,
+    crewTotal,
+    crewMissingW9,
+    crewRecentlyBooked,
   ] = await Promise.all([
     // Overdue: active stage, has nextAction, lastContact > 7 days ago
     prisma.contact.findMany({
@@ -85,6 +88,10 @@ export default async function AdminPage() {
         opportunity: { select: { id: true, title: true } },
       },
     }),
+    // Crew stats
+    prisma.crewMember.count(),
+    prisma.crewMember.count({ where: { w9OnFile: false } }),
+    prisma.crewMember.count({ where: { lastBooked: { gte: thirtyDaysAgo } } }),
   ]);
 
   // Build pipeline summary by stage
@@ -125,6 +132,11 @@ export default async function AdminPage() {
         wonValue,
         totalPipelineValue,
         recentActivities: recentActivities.map(serialize),
+        crewSummary: {
+          total: crewTotal,
+          missingW9: crewMissingW9,
+          recentlyBooked: crewRecentlyBooked,
+        },
       }}
     />
   );

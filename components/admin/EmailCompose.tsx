@@ -9,6 +9,8 @@ interface EmailComposeProps {
   contactName: string;
   contactStage: string;
   contactCompany?: string | null;
+  crewMode?: boolean;
+  crewMemberId?: string;
 }
 
 interface EmailTemplate {
@@ -81,6 +83,56 @@ Geared Like A Machine`,
   ];
 }
 
+function getCrewTemplates(firstName: string): EmailTemplate[] {
+  return [
+    {
+      label: "Custom",
+      subject: "",
+      message: "",
+    },
+    {
+      label: "Call Sheet",
+      subject: "[PROJECT] - Call Sheet - [DATE]",
+      message: `Hey ${firstName},
+
+Here are the details for the upcoming shoot.
+
+[Call time, location, parking, wrap estimate, point of contact, and any notes go here]
+
+Let me know if you have questions.
+
+Joey Arcisz
+Geared Like A Machine`,
+    },
+    {
+      label: "Project Details",
+      subject: "[PROJECT] - Project Details",
+      message: `Hey ${firstName},
+
+Wanted to share the details for an upcoming project.
+
+[Project overview, deliverables, schedule, gear to bring, special requirements go here]
+
+Looking forward to working together.
+
+Joey Arcisz
+Geared Like A Machine`,
+    },
+    {
+      label: "Deal Memo",
+      subject: "[PROJECT] - Deal Memo",
+      message: `Hey ${firstName},
+
+Here is the deal memo for the upcoming project. Please review the terms and let me know if you have any questions.
+
+[Rate, dates, kit fee, OT terms, payment schedule go here]
+
+Joey Arcisz
+Geared Like A Machine`,
+    },
+  ];
+}
+
 const stageTemplateMap: Record<string, string> = {
   lead: "Lead: Introduction",
   qualifying: "Qualifying: Next Steps",
@@ -97,10 +149,14 @@ export default function EmailCompose({
   contactName,
   contactStage,
   contactCompany,
+  crewMode = false,
+  crewMemberId,
 }: EmailComposeProps) {
   const router = useRouter();
   const firstName = contactName.split(" ")[0];
-  const templates = getTemplates(firstName, contactCompany ?? null);
+  const templates = crewMode
+    ? getCrewTemplates(firstName)
+    : getTemplates(firstName, contactCompany ?? null);
 
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState("");
@@ -111,13 +167,15 @@ export default function EmailCompose({
   const [sent, setSent] = useState(false);
 
   function handleOpen() {
-    // Auto-select the template that matches the contact's current stage
-    const suggestedLabel = stageTemplateMap[contactStage];
-    const template = templates.find((t) => t.label === suggestedLabel);
-    if (template) {
-      setSelectedTemplate(template.label);
-      setSubject(template.subject);
-      setMessage(template.message);
+    if (!crewMode) {
+      // Auto-select the template that matches the contact's current stage
+      const suggestedLabel = stageTemplateMap[contactStage];
+      const template = templates.find((t) => t.label === suggestedLabel);
+      if (template) {
+        setSelectedTemplate(template.label);
+        setSubject(template.subject);
+        setMessage(template.message);
+      }
     }
     setOpen(true);
   }
@@ -137,7 +195,10 @@ export default function EmailCompose({
     setSending(true);
 
     try {
-      const res = await fetch(`/api/crm/contacts/${contactId}/email`, {
+      const emailEndpoint = crewMode && crewMemberId
+        ? `/api/crm/crew/${crewMemberId}/email`
+        : `/api/crm/contacts/${contactId}/email`;
+      const res = await fetch(emailEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ subject, message }),

@@ -22,11 +22,13 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const contactId = searchParams.get("contactId");
     const opportunityId = searchParams.get("opportunityId");
+    const crewMemberId = searchParams.get("crewMemberId");
     const limit = parseInt(searchParams.get("limit") || "50");
 
     const where: Record<string, unknown> = {};
     if (contactId) where.contactId = contactId;
     if (opportunityId) where.opportunityId = opportunityId;
+    if (crewMemberId) where.crewMemberId = crewMemberId;
 
     const activities = await prisma.activity.findMany({
       where,
@@ -51,7 +53,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { type, description, contactId, opportunityId } = body;
+    const { type, description, contactId, opportunityId, crewMemberId } = body;
 
     if (!type || !description?.trim()) {
       return NextResponse.json(
@@ -73,6 +75,7 @@ export async function POST(request: Request) {
       description: description.trim(),
       contactId: contactId || undefined,
       opportunityId: opportunityId || undefined,
+      crewMemberId: crewMemberId || undefined,
     });
 
     // Update lastContact / lastTouch

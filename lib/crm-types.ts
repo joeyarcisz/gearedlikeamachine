@@ -38,6 +38,7 @@ export interface CRMActivity {
   metadata: Record<string, unknown> | null;
   contactId: string | null;
   opportunityId: string | null;
+  crewMemberId: string | null;
   createdAt: string;
 }
 
@@ -59,6 +60,77 @@ export const ACTIVITY_TYPE_LABELS: Record<string, string> = {
   stage_change: "Stage Change",
   created: "Created",
   updated: "Updated",
+};
+
+export interface CRMCrewMember {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  role: string;
+  dayRate: number | null;
+  kitFee: number | null;
+  notes: string | null;
+  city: string | null;
+  state: string | null;
+  website: string | null;
+  instagram: string | null;
+  imdb: string | null;
+  w9OnFile: boolean;
+  ndaOnFile: boolean;
+  rating: number | null;
+  lastBooked: string | null;
+  tags: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const CREW_ROLES = [
+  "Gaffer",
+  "Key Grip",
+  "Sound Mixer",
+  "AC / 1st AC",
+  "AC / 2nd AC",
+  "Grip",
+  "Editor",
+  "Producer",
+  "Production Assistant",
+  "Drone Operator",
+  "DIT",
+  "MUA / Hair",
+  "Stylist",
+  "Art Director",
+  "Production Designer",
+  "Teleprompter Op",
+  "Jib / Technocrane Op",
+  "Steadicam Op",
+  "BTS Photographer",
+  "Colorist",
+  "Other",
+] as const;
+
+export const CREW_ROLE_LABELS: Record<string, string> = {
+  "Gaffer": "Gaffer",
+  "Key Grip": "Key Grip",
+  "Sound Mixer": "Sound Mixer",
+  "AC / 1st AC": "AC / 1st AC",
+  "AC / 2nd AC": "AC / 2nd AC",
+  "Grip": "Grip",
+  "Editor": "Editor",
+  "Producer": "Producer",
+  "Production Assistant": "Production Assistant",
+  "Drone Operator": "Drone Operator",
+  "DIT": "DIT",
+  "MUA / Hair": "MUA / Hair",
+  "Stylist": "Stylist",
+  "Art Director": "Art Director",
+  "Production Designer": "Production Designer",
+  "Teleprompter Op": "Teleprompter Op",
+  "Jib / Technocrane Op": "Jib / Technocrane Op",
+  "Steadicam Op": "Steadicam Op",
+  "BTS Photographer": "BTS Photographer",
+  "Colorist": "Colorist",
+  "Other": "Other",
 };
 
 export const CONTACT_STAGES = [

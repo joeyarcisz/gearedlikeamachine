@@ -84,7 +84,33 @@ model Activity {
   contact       Contact?     @relation(fields: [contactId], references: [id], onDelete: Cascade)
   opportunityId String?
   opportunity   Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  crewMemberId  String?
+  crewMember    CrewMember?  @relation(fields: [crewMemberId], references: [id], onDelete: Cascade)
   createdAt     DateTime     @default(now())
+}
+
+model CrewMember {
+  id          String    @id @default(cuid())
+  name        String
+  email       String?   @unique
+  phone       String?
+  role        String
+  dayRate     Int?
+  kitFee      Int?
+  notes       String?
+  city        String?
+  state       String?
+  website     String?
+  instagram   String?
+  imdb        String?
+  w9OnFile    Boolean   @default(false)
+  ndaOnFile   Boolean   @default(false)
+  rating      Int?
+  lastBooked  DateTime?
+  tags        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  activities  Activity[]
 }
 
 model AdminSession {

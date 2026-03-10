@@ -9,6 +9,7 @@ interface LogActivityParams {
   metadata?: Prisma.InputJsonValue;
   contactId?: string;
   opportunityId?: string;
+  crewMemberId?: string;
 }
 
 export async function logActivity({
@@ -17,6 +18,7 @@ export async function logActivity({
   metadata,
   contactId,
   opportunityId,
+  crewMemberId,
 }: LogActivityParams) {
   return prisma.activity.create({
     data: {
@@ -25,6 +27,7 @@ export async function logActivity({
       metadata: metadata ?? undefined,
       contactId: contactId ?? undefined,
       opportunityId: opportunityId ?? undefined,
+      crewMemberId: crewMemberId ?? undefined,
     },
   });
 }

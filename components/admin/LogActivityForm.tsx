@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 interface LogActivityFormProps {
   contactId?: string;
   opportunityId?: string;
+  crewMemberId?: string;
 }
 
 const MANUAL_TYPES = [
@@ -17,6 +18,7 @@ const MANUAL_TYPES = [
 export default function LogActivityForm({
   contactId,
   opportunityId,
+  crewMemberId,
 }: LogActivityFormProps) {
   const router = useRouter();
   const [type, setType] = useState("note");
@@ -39,6 +41,7 @@ export default function LogActivityForm({
           description: description.trim(),
           contactId,
           opportunityId,
+          crewMemberId: !contactId ? crewMemberId : undefined,
         }),
       });
 
