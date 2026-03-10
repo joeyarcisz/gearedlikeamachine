@@ -1,26 +1,32 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
+import { useState, useMemo, useEffect } from "react";
 import StageTag from "./StageTag";
+import InlineStageDropdown from "./InlineStageDropdown";
 import { CONTACT_STAGES, CONTACT_STAGE_LABELS } from "@/lib/crm-types";
 import type { CRMContact } from "@/lib/crm-types";
 
 interface ContactTableProps {
   contacts: CRMContact[];
+  onSelectContact: (contact: CRMContact) => void;
 }
 
 type SortKey = "name" | "company" | "stage" | "lastContact";
 type SortDir = "asc" | "desc";
 
-export default function ContactTable({ contacts }: ContactTableProps) {
+export default function ContactTable({ contacts, onSelectContact }: ContactTableProps) {
   const [search, setSearch] = useState("");
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [localContacts, setLocalContacts] = useState(contacts);
+
+  useEffect(() => {
+    setLocalContacts(contacts);
+  }, [contacts]);
 
   const filtered = useMemo(() => {
-    let result = contacts;
+    let result = localContacts;
 
     // Stage filter
     if (stageFilter !== "all") {
@@ -47,7 +53,7 @@ export default function ContactTable({ contacts }: ContactTableProps) {
     });
 
     return result;
-  }, [contacts, search, stageFilter, sortKey, sortDir]);
+  }, [localContacts, search, stageFilter, sortKey, sortDir]);
 
   function handleSort(key: SortKey) {
     if (sortKey === key) {
@@ -77,12 +83,6 @@ export default function ContactTable({ contacts }: ContactTableProps) {
           onChange={(e) => setSearch(e.target.value)}
           className={`${inputClasses} max-w-xs`}
         />
-        <Link
-          href="/admin/contacts/new"
-          className="bg-steel text-black px-4 py-2.5 text-xs uppercase tracking-widest font-semibold hover:bg-steel/80 transition-colors font-[family-name:var(--font-heading)] shrink-0"
-        >
-          + New Contact
-        </Link>
       </div>
 
       {/* Stage filter pills */}
@@ -95,10 +95,10 @@ export default function ContactTable({ contacts }: ContactTableProps) {
               : "border-card-border text-muted hover:text-white"
           }`}
         >
-          All ({contacts.length})
+          All ({localContacts.length})
         </button>
         {CONTACT_STAGES.map((stage) => {
-          const count = contacts.filter((c) => c.stage === stage).length;
+          const count = localContacts.filter((c) => c.stage === stage).length;
           if (count === 0) return null;
           return (
             <button
@@ -148,31 +148,38 @@ export default function ContactTable({ contacts }: ContactTableProps) {
                 </td>
               </tr>
             )}
-            {filtered.map((contact) => (
+            {filtered.map((c) => (
               <tr
-                key={contact.id}
-                className="border-b border-card-border/50 hover:bg-white/[0.02] transition-colors"
+                key={c.id}
+                onClick={() => onSelectContact(c)}
+                className="border-b border-card-border hover:bg-graphite/50 cursor-pointer transition-colors"
               >
                 <td className="px-4 py-3">
-                  <Link
-                    href={`/admin/contacts/${contact.id}`}
-                    className="text-white hover:text-steel transition-colors"
-                  >
-                    {contact.name}
-                  </Link>
-                  {contact.email && (
-                    <div className="text-muted text-xs mt-0.5">{contact.email}</div>
+                  <span className="text-steel hover:text-white transition-colors">
+                    {c.name}
+                  </span>
+                  {c.email && (
+                    <div className="text-muted text-xs mt-0.5">{c.email}</div>
                   )}
                 </td>
                 <td className="px-4 py-3 text-chrome">
-                  {contact.company || "-"}
+                  {c.company || "-"}
                 </td>
                 <td className="px-4 py-3">
-                  <StageTag stage={contact.stage} />
+                  <InlineStageDropdown
+                    stage={c.stage}
+                    type="contact"
+                    entityId={c.id}
+                    onUpdated={(newStage) => {
+                      setLocalContacts((prev) =>
+                        prev.map((lc) => lc.id === c.id ? { ...lc, stage: newStage } : lc)
+                      );
+                    }}
+                  />
                 </td>
                 <td className="px-4 py-3 text-muted text-xs">
-                  {contact.lastContact
-                    ? new Date(contact.lastContact).toLocaleDateString()
+                  {c.lastContact
+                    ? new Date(c.lastContact).toLocaleDateString()
                     : "-"}
                 </td>
               </tr>
@@ -182,7 +189,7 @@ export default function ContactTable({ contacts }: ContactTableProps) {
       </div>
 
       <p className="text-muted text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)]">
-        Showing {filtered.length} of {contacts.length} contacts
+        Showing {filtered.length} of {localContacts.length} contacts
       </p>
     </div>
   );
