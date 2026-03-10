@@ -42,7 +42,7 @@ model Contact {
   id            String       @id @default(cuid())
   name          String
   company       String?
-  email         String?      @unique
+  email         String?
   phone         String?
   stage         ContactStage @default(lead)
   lastContact   DateTime?

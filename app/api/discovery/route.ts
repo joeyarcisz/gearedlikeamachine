@@ -126,7 +126,7 @@ export async function POST(request: Request) {
         .filter(Boolean)
         .join("\n");
 
-      const existing = await prisma.contact.findUnique({
+      const existing = await prisma.contact.findFirst({
         where: { email },
       });
 
@@ -136,7 +136,7 @@ export async function POST(request: Request) {
           : discoveryNote;
 
         await prisma.contact.update({
-          where: { email },
+          where: { id: existing.id },
           data: {
             lastContact: new Date(),
             notes: updatedNotes,
