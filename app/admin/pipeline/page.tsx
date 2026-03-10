@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import PipelineBoard from "@/components/admin/PipelineBoard";
+import KanbanBoard from "@/components/admin/KanbanBoard";
 import type { CRMOpportunity, CRMContact } from "@/lib/crm-types";
 
 export default async function PipelinePage() {
@@ -28,7 +28,7 @@ export default async function PipelinePage() {
       <h1 className="text-xs uppercase tracking-widest text-white font-[family-name:var(--font-heading)]">
         Pipeline
       </h1>
-      <PipelineBoard opportunities={serialized} />
+      <KanbanBoard opportunities={serialized} />
     </div>
   );
 }
