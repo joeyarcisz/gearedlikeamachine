@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Four Bucket Exposure System</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #111114;
+  --border: #1e1e24;
+  --text: #c8c8d0;
+  --text-dim: #5a5a66;
+  --accent: #e8e8e0;
+  --key-color: #f0c040;
+  --fill-color: #4080d0;
+  --back-color: #d05050;
+  --bg-color: #40a070;
+  --over: #ff3030;
+  --under: #2020ff;
+  --mid: #50b050;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── SECTION COUNTER ── */
+.section-counter {
+  position: absolute;
+  left: -3.5rem;
+  top: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  opacity: 0.3;
+  letter-spacing: 0.1em;
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+}
+
+@media (max-width: 1300px) {
+  .section-counter { display: none; }
+}
+
+/* ── HEADER ── */
+.header {
+  padding: 5rem 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.header h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.header h1 em {
+  font-style: italic;
+  color: var(--key-color);
+  opacity: 0.9;
+}
+
+.header .subtitle {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-top: 1rem;
+}
+
+/* ── SECTIONS ── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+}
+
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+section + section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.section-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  font-weight: 400;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.section-desc {
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  max-width: 600px;
+  margin-bottom: 2.5rem;
+}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-child {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.stagger-child.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── FOUR BUCKETS DIAGRAM ── */
+.buckets-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bucket {
+  background: var(--surface);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  transition: background 0.3s;
+  cursor: default;
+}
+
+.bucket:hover {
+  background: #151518;
+}
+
+.bucket-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1.2rem;
+  position: relative;
+}
+
+.bucket-name {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5rem;
+}
+
+.bucket-name.key { color: var(--key-color); }
+.bucket-name.fill { color: var(--fill-color); }
+.bucket-name.back { color: var(--back-color); }
+.bucket-name.bg { color: var(--bg-color); }
+
+.bucket-role {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+.bucket-detail {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.bucket-range {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.stop-pip {
+  width: 6px;
+  border-radius: 1px;
+  opacity: 0.3;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+.stop-pip.active { opacity: 1; }
+
+.stop-pip.grown { transform: scaleY(1); }
+
+.bucket.key-bucket .stop-pip { background: var(--key-color); }
+.bucket.fill-bucket .stop-pip { background: var(--fill-color); }
+.bucket.back-bucket .stop-pip { background: var(--back-color); }
+.bucket.bg-bucket .stop-pip { background: var(--bg-color); }
+
+/* ── STOP SCALE ── */
+.stop-scale-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stop-scale-wrap::before {
+  content: 'EXPOSURE RANGE';
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+.stop-scale {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 120px;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.stop-scale::before {
+  content: '';
+  position: absolute;
+  bottom: 40px;
+  left: 1rem;
+  right: 1rem;
+  height: 1px;
+  background: var(--border);
+}
+
+.stop-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.stop-bar {
+  width: 20px;
+  border-radius: 2px 2px 0 0;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+.stop-bar.grown { transform: scaleY(1); }
+
+.stop-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  transition: color 0.3s;
+}
+
+.stop-mark:hover .stop-label { color: var(--accent); }
+
+.stop-zone {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  position: absolute;
+  bottom: -28px;
+}
+
+/* ── LOOK BUILDER (interactive) ── */
+.look-builder {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.look-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.look-header h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.look-readout {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--key-color);
+  letter-spacing: 0.1em;
+}
+
+.look-controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.look-control {
+  background: var(--bg);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.look-control label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  margin-bottom: 1rem;
+  cursor: default;
+}
+
+.look-control label.key-l { color: var(--key-color); }
+.look-control label.fill-l { color: var(--fill-color); }
+.look-control label.back-l { color: var(--back-color); }
+.look-control label.bg-l { color: var(--bg-color); }
+
+.slider-wrap {
+  position: relative;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 3.5ch;
+  text-align: center;
+}
+
+.slider-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slider-btn {
+  width: 40px;
+  height: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-btn:hover {
+  background: var(--border);
+  color: var(--accent);
+  border-color: var(--text-dim);
+}
+
+.slider-btn:active {
+  transform: scale(0.95);
+}
+
+/* ── SCENE PREVIEW ── */
+.preview-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.scene-preview-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.preview-label {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+.false-color-toggle {
+  padding: 0.35rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.false-color-toggle:hover {
+  background: var(--border);
+  color: var(--accent);
+}
+
+.false-color-toggle.active {
+  background: #1a2a1a;
+  border-color: var(--mid);
+  color: var(--mid);
+}
+
+.scene-canvas-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.scene-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 1px;
+}
+
+.false-color-legend {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2rem;
+  position: relative;
+}
+
+.fc-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 1rem;
+}
+
+.fc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.fc-swatch {
+  width: 32px;
+  height: 16px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.fc-label {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.fc-stop {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  width: 3ch;
+  text-align: right;
+}
+
+/* ── PRESETS ── */
+.presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.preset {
+  background: var(--surface);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  position: relative;
+}
+
+.preset:hover {
+  background: #151518;
+}
+
+.preset:active {
+  transform: scale(0.99);
+}
+
+.preset-gradient-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.preset:hover .preset-gradient-bar { opacity: 1; }
+
+.preset-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1rem;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.preset-values {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+}
+
+.preset-desc {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  opacity: 0.6;
+  line-height: 1.5;
+}
+
+/* ── SLIDE CONCEPT ── */
+.slide-demo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2.5rem;
+}
+
+.slide-offset-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+
+.slide-offset-sub {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.slide-film-strip {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.slide-frame {
+  flex-shrink: 0;
+  width: 128px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+  background: var(--bg);
+}
+
+.slide-frame:hover {
+  border-color: var(--text-dim);
+}
+
+.slide-frame.active-frame {
+  border-color: var(--key-color);
+  box-shadow: 0 0 16px rgba(240,192,64,0.15);
+}
+
+.slide-frame canvas {
+  width: 100%;
+  aspect-ratio: 16/9;
+  display: block;
+}
+
+.slide-frame-label {
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 4px 0;
+  color: var(--text-dim);
+  background: var(--surface);
+}
+
+.slide-frame.active-frame .slide-frame-label {
+  color: var(--key-color);
+}
+
+.slide-range-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.slide-range-label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  min-width: 60px;
+  text-align: center;
+}
+
+.slide-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 300px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slide-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slide-range::-webkit-slider-thumb:hover {
+  background: var(--key-color);
+}
+
+.slide-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.slide-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.slide-row:last-child { margin-bottom: 0; }
+
+.slide-label-col {
+  width: 100px;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.slide-stops {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
+.slide-cell {
+  flex: 1;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border-radius: 1px;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+.slide-cell.active {
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255,255,255,0.1);
+}
+
+.slide-cell.inactive {
+  background: var(--bg);
+  color: var(--text-dim);
+  opacity: 0.3;
+}
+
+/* ── BOX vs DISTRIBUTION ── */
+.box-dist {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+
+.box-panel, .dist-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2rem;
+}
+
+.box-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 1.5rem;
+}
+
+.box-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 1rem;
+}
+
+.box-item {
+  padding: 0.4rem 0.8rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.box-item.physical {
+  border-color: var(--key-color);
+  color: var(--key-color);
+  opacity: 0.7;
+}
+
+.box-item.creative {
+  border-color: var(--fill-color);
+  color: var(--fill-color);
+  opacity: 0.7;
+}
+
+/* ── MATRIX RAIN ── */
+.matrix-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.matrix-canvas {
+  width: 100%;
+  height: 400px;
+}
+
+.matrix-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.matrix-quote-wrap {
+  background: rgba(10, 10, 12, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 4px;
+  padding: 2rem 2.5rem;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.matrix-quote {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  color: var(--accent);
+  text-align: center;
+  max-width: 500px;
+  line-height: 1.4;
+}
+
+.matrix-quote em { color: var(--key-color); font-style: italic; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 5rem 2rem;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.footer span {
+  opacity: 0.5;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .buckets-grid { grid-template-columns: repeat(2, 1fr); }
+  .look-controls { grid-template-columns: repeat(2, 1fr); }
+  .preview-section { grid-template-columns: 1fr; }
+  .box-dist { grid-template-columns: 1fr; }
+  .box-arrow { transform: rotate(90deg); padding: 1rem; }
+  .slide-label-col { width: 60px; font-size: 0.5rem; }
+  .slide-film-strip { flex-wrap: wrap; }
+  .slide-frame { width: 100px; }
+  .slide-range { width: 200px; }
+}
+
+@media (max-width: 480px) {
+  .buckets-grid { grid-template-columns: 1fr; }
+  .look-controls { grid-template-columns: 1fr 1fr; }
+  .slide-frame { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header reveal">
+  <h1>The <em>Four Bucket</em><br>Exposure System</h1>
+  <div class="subtitle">Cinematography Lecture &middot; Stops, False Color & Light Meter Workflow</div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1: THE FOUR BUCKETS -->
+  <section>
+    <span class="section-counter">01 THE FRAMEWORK</span>
+    <div class="section-label reveal">01 &mdash; The Framework</div>
+    <h2 class="section-title reveal">Four Buckets. Nine Stops. Every Look.</h2>
+    <p class="section-desc reveal">
+      Every exposure decision reduces to four elements measured in stops relative to key.
+      Master these four numbers and you can see, predict, and reproduce any cinematic look.
+    </p>
+
+    <div class="buckets-grid" id="bucketsGrid">
+      <div class="bucket key-bucket stagger-child">
+        <svg class="bucket-icon" viewBox="0 0 48 48">
+          <circle cx="24" cy="20" r="12" fill="none" stroke="#f0c040" stroke-width="1.5" opacity="0.6"/>
+          <line x1="24" y1="34" x2="24" y2="44" stroke="#f0c040" stroke-width="1.5" opacity="0.4"/>
+          <line x1="14" y1="36" x2="24" y2="44" stroke="#f0c040" stroke-width="1" opacity="0.2"/>
+          <line x1="34" y1="36" x2="24" y2="44" stroke="#f0c040" stroke-width="1" opacity="0.2"/>
+        </svg>
+        <div class="bucket-name key">Key Light</div>
+        <div class="bucket-role">The Anchor</div>
+        <div class="bucket-detail">Sets the overall exposure level. Everything else is measured relative to this. Usually at 0 (proper exposure).</div>
+        <div class="bucket-range">
+          <div class="stop-pip" style="height:8px"></div>
+          <div class="stop-pip" style="height:10px"></div>
+          <div class="stop-pip active" style="height:18px"></div>
+          <div class="stop-pip" style="height:10px"></div>
+          <div class="stop-pip" style="height:8px"></div>
+        </div>
+      </div>
+
+      <div class="bucket fill-bucket stagger-child">
+        <svg class="bucket-icon" viewBox="0 0 48 48">
+          <rect x="10" y="14" width="28" height="20" rx="2" fill="none" stroke="#4080d0" stroke-width="1.5" opacity="0.6"/>
+          <line x1="10" y1="24" x2="38" y2="24" stroke="#4080d0" stroke-width="1" opacity="0.3" stroke-dasharray="2 2"/>
+        </svg>
+        <div class="bucket-name fill">Fill Light</div>
+        <div class="bucket-role">The Shape</div>
+        <div class="bucket-detail">Controls contrast on the face. Relative to key: 0 = flat, -3 = dramatic. Defines the shadow side.</div>
+        <div class="bucket-range">
+          <div class="stop-pip" style="height:8px"></div>
+          <div class="stop-pip active" style="height:12px"></div>
+          <div class="stop-pip active" style="height:16px"></div>
+          <div class="stop-pip active" style="height:18px"></div>
+          <div class="stop-pip" style="height:10px"></div>
+        </div>
+      </div>
+
+      <div class="bucket back-bucket stagger-child">
+        <svg class="bucket-icon" viewBox="0 0 48 48">
+          <path d="M24 8 L24 40" stroke="#d05050" stroke-width="1.5" opacity="0.6"/>
+          <path d="M16 16 L24 8 L32 16" fill="none" stroke="#d05050" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="24" r="6" fill="none" stroke="#d05050" stroke-width="1" opacity="0.3"/>
+        </svg>
+        <div class="bucket-name back">Backlight</div>
+        <div class="bucket-role">The Separation</div>
+        <div class="bucket-detail">Defines edge and separation from background. Typically +1 to +3 over key. Creates rim and hair light.</div>
+        <div class="bucket-range">
+          <div class="stop-pip" style="height:8px"></div>
+          <div class="stop-pip" style="height:10px"></div>
+          <div class="stop-pip" style="height:12px"></div>
+          <div class="stop-pip active" style="height:16px"></div>
+          <div class="stop-pip active" style="height:18px"></div>
+        </div>
+      </div>
+
+      <div class="bucket bg-bucket stagger-child">
+        <svg class="bucket-icon" viewBox="0 0 48 48">
+          <rect x="8" y="8" width="32" height="32" rx="1" fill="none" stroke="#40a070" stroke-width="1.5" opacity="0.4"/>
+          <rect x="14" y="14" width="20" height="20" rx="1" fill="none" stroke="#40a070" stroke-width="1" opacity="0.3"/>
+          <rect x="20" y="20" width="8" height="8" rx="1" fill="none" stroke="#40a070" stroke-width="1" opacity="0.2"/>
+        </svg>
+        <div class="bucket-name bg">Background</div>
+        <div class="bucket-role">The World</div>
+        <div class="bucket-detail">Most variance lives here (-4 to +4). Darker = subject isolation. Brighter = environmental context. Average matters most.</div>
+        <div class="bucket-range">
+          <div class="stop-pip active" style="height:14px"></div>
+          <div class="stop-pip active" style="height:16px"></div>
+          <div class="stop-pip active" style="height:18px"></div>
+          <div class="stop-pip active" style="height:16px"></div>
+          <div class="stop-pip active" style="height:14px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE STOP SCALE -->
+  <section>
+    <span class="section-counter">02 THE SCALE</span>
+    <div class="section-label reveal">02 &mdash; The Scale</div>
+    <h2 class="section-title reveal">Nine Positions. That's the Whole World.</h2>
+    <p class="section-desc reveal">
+      From -4 (crushed shadows) to +4 (blown highlights), every surface in frame falls
+      somewhere on this nine-stop scale. See the numbers, see the image.
+    </p>
+
+    <div class="stop-scale-wrap reveal">
+      <div class="stop-scale" id="stopScale"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: INTERACTIVE LOOK BUILDER -->
+  <section>
+    <span class="section-counter">03 THE LOOK BUILDER</span>
+    <div class="section-label reveal">03 &mdash; The Look Builder</div>
+    <h2 class="section-title reveal">Dial In the Numbers, See the Look</h2>
+    <p class="section-desc reveal">
+      Every combination of four numbers creates a distinct cinematic look.
+      Adjust each bucket and watch the scene respond in real time.
+    </p>
+
+    <div class="look-builder reveal">
+      <div class="look-header">
+        <h3>Exposure Recipe</h3>
+        <div class="look-readout" id="lookReadout">0 / -2 / +1 / -2</div>
+      </div>
+      <div class="look-controls">
+        <div class="look-control">
+          <label class="key-l">Key</label>
+          <div class="slider-wrap">
+            <div class="slider-value" id="keyVal">0</div>
+            <div class="slider-buttons">
+              <button class="slider-btn" onclick="adjust('key',1)">&#9650;</button>
+              <button class="slider-btn" onclick="adjust('key',-1)">&#9660;</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-control">
+          <label class="fill-l">Fill</label>
+          <div class="slider-wrap">
+            <div class="slider-value" id="fillVal">-2</div>
+            <div class="slider-buttons">
+              <button class="slider-btn" onclick="adjust('fill',1)">&#9650;</button>
+              <button class="slider-btn" onclick="adjust('fill',-1)">&#9660;</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-control">
+          <label class="back-l">Back</label>
+          <div class="slider-wrap">
+            <div class="slider-value" id="backVal">+1</div>
+            <div class="slider-buttons">
+              <button class="slider-btn" onclick="adjust('back',1)">&#9650;</button>
+              <button class="slider-btn" onclick="adjust('back',-1)">&#9660;</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-control">
+          <label class="bg-l">Background</label>
+          <div class="slider-wrap">
+            <div class="slider-value" id="bgVal">-2</div>
+            <div class="slider-buttons">
+              <button class="slider-btn" onclick="adjust('bg',1)">&#9650;</button>
+              <button class="slider-btn" onclick="adjust('bg',-1)">&#9660;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRESETS -->
+    <div class="presets reveal" id="presets">
+      <div class="preset" onclick="animateToPreset(0,-2,1,-2)">
+        <div class="preset-gradient-bar" style="background: linear-gradient(90deg, #f0c040, #4080d0, #d05050, #2a5040);"></div>
+        <div class="preset-name">Classic Interview</div>
+        <div class="preset-values">0 / -2 / +1 / -2</div>
+        <div class="preset-desc">Clean key, shaped fill, subtle rim, controlled background</div>
+      </div>
+      <div class="preset" onclick="animateToPreset(0,-3,-1,-3)">
+        <div class="preset-gradient-bar" style="background: linear-gradient(90deg, #f0c040, #111133, #552222, #0a0a1a);"></div>
+        <div class="preset-name">Moody / Noir</div>
+        <div class="preset-values">0 / -3 / -1 / -3</div>
+        <div class="preset-desc">Deep shadows, minimal fill, dark world</div>
+      </div>
+      <div class="preset" onclick="animateToPreset(0,-1,2,-1)">
+        <div class="preset-gradient-bar" style="background: linear-gradient(90deg, #f0c040, #6699dd, #ff6644, #448866);"></div>
+        <div class="preset-name">Commercial / Beauty</div>
+        <div class="preset-values">0 / -1 / +2 / -1</div>
+        <div class="preset-desc">Open fill, hot rim, airy background</div>
+      </div>
+      <div class="preset" onclick="animateToPreset(-2,-4,0,-3)">
+        <div class="preset-gradient-bar" style="background: linear-gradient(90deg, #334422, #080810, #556644, #0a0a14);"></div>
+        <div class="preset-name">Night Interior</div>
+        <div class="preset-values">-2 / -4 / 0 / -3</div>
+        <div class="preset-desc">Underexposed key, crushed fill, backlight carries the scene</div>
+      </div>
+      <div class="preset" onclick="animateToPreset(0,0,0,0)">
+        <div class="preset-gradient-bar" style="background: linear-gradient(90deg, #888, #999, #888, #777);"></div>
+        <div class="preset-name">Flat / Even</div>
+        <div class="preset-values">0 / 0 / 0 / 0</div>
+        <div class="preset-desc">Everything at key. No shape, no depth. The anti-look.</div>
+      </div>
+    </div>
+
+    <!-- SCENE PREVIEW -->
+    <div class="preview-section reveal">
+      <div class="scene-preview-wrap">
+        <div class="scene-header">
+          <div class="preview-label">Scene Preview</div>
+          <button class="false-color-toggle" id="fcToggle" onclick="toggleFalseColor()">False Color</button>
+        </div>
+        <div class="scene-canvas-wrap">
+          <canvas id="sceneCanvas" width="640" height="360"></canvas>
+        </div>
+      </div>
+      <div class="false-color-legend">
+        <div class="preview-label">False Color Reference</div>
+        <div class="fc-strip">
+          <div class="fc-row"><div class="fc-swatch" style="background:#ff0000"></div><div class="fc-stop">+4</div><div class="fc-label">Clipped / Blown</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#ff6600"></div><div class="fc-stop">+3</div><div class="fc-label">Hot highlights</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#ffcc00"></div><div class="fc-stop">+2</div><div class="fc-label">Bright highlight</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#cccc44"></div><div class="fc-stop">+1</div><div class="fc-label">Above key</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#55aa55"></div><div class="fc-stop">0</div><div class="fc-label">Key / Proper exposure</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#44aa88"></div><div class="fc-stop">-1</div><div class="fc-label">Below key</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#3388bb"></div><div class="fc-stop">-2</div><div class="fc-label">Shadow detail</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#2244aa"></div><div class="fc-stop">-3</div><div class="fc-label">Deep shadow</div></div>
+          <div class="fc-row"><div class="fc-swatch" style="background:#1111aa"></div><div class="fc-stop">-4</div><div class="fc-label">Crushed / Black</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE SLIDE -->
+  <section>
+    <span class="section-counter">04 THE SLIDE</span>
+    <div class="section-label reveal">04 &mdash; The Slide</div>
+    <h2 class="section-title reveal">Same Ratios. Different World.</h2>
+    <p class="section-desc reveal">
+      Keep the relationships between buckets locked and slide the whole exposure up or down.
+      The mood shifts but the shape stays. This is how you go from day to night with one move.
+    </p>
+
+    <div class="slide-demo reveal">
+      <div class="slide-offset-label" id="slideLabel">Offset: 0 stops</div>
+      <div class="slide-offset-sub" id="slideSub">At key level</div>
+
+      <div class="slide-film-strip" id="slideFilmStrip"></div>
+
+      <div class="slide-range-wrap">
+        <div class="slide-range-label">Darker</div>
+        <input type="range" class="slide-range" id="slideRange" min="-4" max="4" value="0" step="1">
+        <div class="slide-range-label">Brighter</div>
+      </div>
+
+      <div id="slideRows"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: BOX vs DISTRIBUTION -->
+  <section>
+    <span class="section-counter">05 BOX VS DISTRIBUTION</span>
+    <div class="section-label reveal">05 &mdash; Box vs. Distribution</div>
+    <h2 class="section-title reveal">Physical Cap. Creative Control.</h2>
+    <p class="section-desc reveal">
+      The box (camera settings) defines how much total light enters.
+      Distribution (lighting) decides where it goes. 99% of creativity flows through distribution.
+    </p>
+
+    <div class="box-dist reveal">
+      <div class="box-panel">
+        <div class="bucket-name key" style="margin-bottom:0.5rem">The Box</div>
+        <div class="bucket-role">Physical Cap on Light</div>
+        <div class="bucket-detail">Set once at scene start. Defines the world's boundaries. Rarely changes mid-scene.</div>
+        <div class="box-items">
+          <div class="box-item physical">Shutter Speed</div>
+          <div class="box-item physical">ISO / ASA</div>
+          <div class="box-item physical">Aperture</div>
+          <div class="box-item physical">ND Filters</div>
+        </div>
+        <div style="margin-top:1.2rem; font-size:0.65rem; color:var(--text-dim); line-height:1.6;">
+          <strong style="color:var(--accent)">ISO Trap:</strong> Higher ISO doesn't add sensitivity.
+          It eliminates shadow stops by pre-filling photosites with signal noise.
+          For dark scenes, keep ISO low to preserve maximum bucket space.
+        </div>
+      </div>
+
+      <div class="box-arrow">&rarr;</div>
+
+      <div class="dist-panel">
+        <div class="bucket-name fill" style="margin-bottom:0.5rem">Distribution</div>
+        <div class="bucket-role">Creative Allocation</div>
+        <div class="bucket-detail">Where 99% of cinematographic decisions live. This is the four-bucket system in action.</div>
+        <div class="box-items">
+          <div class="box-item creative">Key Light</div>
+          <div class="box-item creative">Fill Light</div>
+          <div class="box-item creative">Backlight</div>
+          <div class="box-item creative">Background</div>
+        </div>
+        <div style="margin-top:1.2rem; font-size:0.65rem; color:var(--text-dim); line-height:1.6;">
+          <strong style="color:var(--accent)">The Power:</strong> Once you know your ratios,
+          you can reproduce any look from any reference. The numbers don't lie.
+          Same ratios = same result. Every time.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: MATRIX VISION -->
+  <section>
+    <span class="section-counter">06 THE VISION</span>
+    <div class="section-label reveal">06 &mdash; The Vision</div>
+    <h2 class="section-title reveal">See the Numbers Falling Across the Frame</h2>
+
+    <div class="matrix-section reveal">
+      <canvas class="matrix-canvas" id="matrixCanvas"></canvas>
+      <div class="matrix-overlay">
+        <div class="matrix-quote-wrap">
+          <div class="matrix-quote">
+            "Like Neo in The Matrix, you start to see the <em>streaming numbers</em> across the frame."
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="footer">
+  <span>Four Buckets &middot; Nine Stops &middot; Every Look</span>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ================================================================
+  // STATE
+  // ================================================================
+  var state = { key: 0, fill: -2, back: 1, bg: -2 };
+  var slideOff = 0;
+  var baseRatios = { key: 0, fill: -2, back: 1, bg: -2 };
+  var falseColorMode = false;
+  var presetAnimId = null;
+  var presetAnimStart = null;
+  var presetAnimFrom = null;
+  var presetAnimTo = null;
+  var ANIM_MS = 400;
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function fmtStop(v) { return v > 0 ? '+' + v : '' + v; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function easeIO(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  // expose to onclick handlers
+  window.adjust = adjust;
+  window.animateToPreset = animateToPreset;
+  window.toggleFalseColor = toggleFalseColor;
+
+  // ================================================================
+  // FALSE COLOR MAPPING
+  // ================================================================
+  var fcMap = {
+    '-4': [17,17,170],
+    '-3': [34,68,170],
+    '-2': [51,136,187],
+    '-1': [68,170,136],
+    '0':  [85,170,85],
+    '1':  [204,204,68],
+    '2':  [255,204,0],
+    '3':  [255,102,0],
+    '4':  [255,0,0]
+  };
+
+  function stopToFC(stop) {
+    return fcMap['' + clamp(Math.round(stop), -4, 4)] || [85,170,85];
+  }
+
+  function stopToReal(stop, warmth) {
+    var baseL = clamp((stop + 4) / 8, 0, 1);
+    var bright = Math.pow(baseL, 0.7) * 255;
+    var r = bright, g = bright, b = bright;
+    if (warmth > 0) {
+      r = Math.min(255, bright * (1 + warmth * 0.12));
+      g = bright * (1 + warmth * 0.04);
+      b = bright * (1 - warmth * 0.08);
+    } else if (warmth < 0) {
+      r = bright * (1 + warmth * 0.06);
+      g = bright * (1 - warmth * 0.02);
+      b = Math.min(255, bright * (1 - warmth * 0.12));
+    }
+    return [Math.round(clamp(r,0,255)), Math.round(clamp(g,0,255)), Math.round(clamp(b,0,255))];
+  }
+
+  function gc(stop, warm) {
+    return falseColorMode ? stopToFC(stop) : stopToReal(stop, warm || 0);
+  }
+  function rgb(c) { return 'rgb('+c[0]+','+c[1]+','+c[2]+')'; }
+  function rgba(c,a) { return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
+
+  // ================================================================
+  // SCENE CANVAS
+  // ================================================================
+  function drawScene(cvs, kv, fv, bv, bgv) {
+    var ctx = cvs.getContext('2d');
+    var w = cvs.width, h = cvs.height;
+    ctx.clearRect(0, 0, w, h);
+
+    var wallS = bgv;
+    var floorS = bgv - 0.5;
+    var ceilS = bgv + 0.3;
+    var winS = bgv + 2;
+    var lampS = bgv + 1.5;
+    var frameS = bgv - 0.3;
+
+    // Back wall
+    ctx.fillStyle = rgb(gc(wallS, 0));
+    ctx.fillRect(0, 0, w, h);
+
+    // Wall gradient
+    var wg = ctx.createRadialGradient(w*0.4, h*0.4, h*0.1, w*0.5, h*0.5, w*0.8);
+    wg.addColorStop(0, rgba(gc(wallS+0.5, 0), 0.3));
+    wg.addColorStop(1, rgba(gc(wallS-1, 0), 0.5));
+    ctx.fillStyle = wg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Floor
+    var fy = h * 0.68;
+    ctx.fillStyle = rgb(gc(floorS, 0));
+    ctx.fillRect(0, fy, w, h - fy);
+
+    // Floor key spill
+    var fg = ctx.createLinearGradient(w*0.3, fy, w, fy);
+    fg.addColorStop(0, rgba(gc(floorS, 0), 0));
+    fg.addColorStop(1, rgba(gc(floorS + kv*0.3, 0.5), 0.3));
+    ctx.fillStyle = fg;
+    ctx.fillRect(0, fy, w, h - fy);
+
+    // Floor line
+    ctx.strokeStyle = rgba(gc(wallS-1, 0), 0.3);
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, fy); ctx.lineTo(w, fy); ctx.stroke();
+
+    // Ceiling
+    var ch = h * 0.12;
+    ctx.fillStyle = rgb(gc(ceilS, 0));
+    ctx.fillRect(0, 0, w, ch);
+    ctx.strokeStyle = rgba(gc(wallS-1, 0), 0.2);
+    ctx.beginPath(); ctx.moveTo(0, ch); ctx.lineTo(w, ch); ctx.stroke();
+
+    // Window
+    var wx = w*0.72, wy = h*0.15, ww = w*0.18, wh = h*0.42;
+    ctx.fillStyle = rgb(gc(wallS-0.5, 0));
+    ctx.fillRect(wx-3, wy-3, ww+6, wh+6);
+    ctx.fillStyle = rgb(gc(winS, 0.3));
+    ctx.fillRect(wx, wy, ww, wh);
+
+    // Window glow
+    var wgl = ctx.createRadialGradient(wx+ww/2, wy+wh/2, wh*0.2, wx+ww/2, wy+wh/2, wh*1.2);
+    wgl.addColorStop(0, rgba(gc(winS-1, 0.4), 0.15));
+    wgl.addColorStop(1, rgba(gc(winS-1, 0.4), 0));
+    ctx.fillStyle = wgl;
+    ctx.fillRect(0, 0, w, h);
+
+    // Window mullion
+    ctx.strokeStyle = rgb(gc(wallS-0.5, 0));
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(wx+ww/2, wy); ctx.lineTo(wx+ww/2, wy+wh);
+    ctx.moveTo(wx, wy+wh/2); ctx.lineTo(wx+ww, wy+wh/2);
+    ctx.stroke();
+
+    // Wall frames
+    var f1x=w*0.06, f1y=h*0.2, f1w=w*0.1, f1h=h*0.2;
+    ctx.fillStyle = rgb(gc(frameS, 0));
+    ctx.fillRect(f1x, f1y, f1w, f1h);
+    ctx.strokeStyle = rgba(gc(frameS-1, 0), 0.5);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(f1x, f1y, f1w, f1h);
+    ctx.strokeStyle = rgba(gc(frameS+0.5, 0), 0.3);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(f1x+6, f1y+6, f1w-12, f1h-12);
+
+    var f2x=w*0.2, f2y=h*0.18, f2w=w*0.08, f2h=h*0.12;
+    ctx.fillStyle = rgb(gc(frameS+0.2, 0));
+    ctx.fillRect(f2x, f2y, f2w, f2h);
+    ctx.strokeStyle = rgba(gc(frameS-1, 0), 0.5);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(f2x, f2y, f2w, f2h);
+
+    // Practical lamp
+    var lx = w*0.56, lby = fy - 2, lh = h*0.2;
+    ctx.fillStyle = rgb(gc(bgv-0.8, 0));
+    ctx.fillRect(lx-14, lby-h*0.08, 28, h*0.08);
+    ctx.fillStyle = rgb(gc(bgv-0.5, 0));
+    ctx.fillRect(lx-3, lby-h*0.08-lh*0.15, 6, lh*0.15);
+
+    var st = lby-h*0.08-lh*0.15-lh*0.35;
+    var sb = lby-h*0.08-lh*0.15;
+    ctx.beginPath();
+    ctx.moveTo(lx-10, sb); ctx.lineTo(lx-6, st);
+    ctx.lineTo(lx+6, st); ctx.lineTo(lx+10, sb);
+    ctx.closePath();
+    ctx.fillStyle = rgb(gc(lampS, 0.6));
+    ctx.fill();
+
+    var lg = ctx.createRadialGradient(lx, st+(sb-st)*0.5, 4, lx, st+(sb-st)*0.5, lh*1.5);
+    lg.addColorStop(0, rgba(gc(lampS+0.5, 0.5), 0.12));
+    lg.addColorStop(1, rgba(gc(lampS+0.5, 0.5), 0));
+    ctx.fillStyle = lg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Key source glow
+    var kg = ctx.createRadialGradient(w*1.05, h*0.35, 10, w*0.8, h*0.4, w*0.5);
+    kg.addColorStop(0, rgba(gc(kv+1, 1), 0.08));
+    kg.addColorStop(1, rgba(gc(kv+1, 1), 0));
+    ctx.fillStyle = kg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Figure
+    var fx = w*0.35, fhy = h*0.33;
+    var hrx = w*0.045, hry = h*0.1;
+    var sw = w*0.14;
+    var nw = hrx*0.6, nh = h*0.04;
+
+    // Floor shadow
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(fx-w*0.02, fy+4, sw*0.8, 6, 0, 0, Math.PI*2);
+    ctx.fillStyle = rgba(gc(floorS-1.5, 0), 0.3);
+    ctx.fill();
+    ctx.restore();
+
+    // Body
+    var bt = fhy + hry + nh;
+
+    // Left body (fill side)
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(fx, bt);
+    ctx.quadraticCurveTo(fx-sw*0.2, bt, fx-sw, bt+sw*0.12);
+    ctx.lineTo(fx-sw, fy);
+    ctx.lineTo(fx, fy);
+    ctx.closePath();
+    ctx.fillStyle = rgb(gc(fv, -0.6));
+    ctx.fill();
+    ctx.restore();
+
+    // Right body (key side)
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(fx, bt);
+    ctx.quadraticCurveTo(fx+sw*0.2, bt, fx+sw, bt+sw*0.12);
+    ctx.lineTo(fx+sw, fy);
+    ctx.lineTo(fx, fy);
+    ctx.closePath();
+    ctx.fillStyle = rgb(gc(kv, 0.6));
+    ctx.fill();
+    ctx.restore();
+
+    // Body gradient
+    var bg2 = ctx.createLinearGradient(fx-sw, bt, fx+sw, bt);
+    bg2.addColorStop(0, rgba(gc(fv, -0.6), 0));
+    bg2.addColorStop(0.45, rgba(gc(fv, -0.6), 0));
+    bg2.addColorStop(0.55, rgba(gc(kv, 0.6), 0));
+    bg2.addColorStop(1, rgba(gc(kv+0.3, 0.8), 0.2));
+    ctx.fillStyle = bg2;
+    ctx.fillRect(fx-sw, bt, sw*2, fy-bt);
+
+    // Shoulder rim
+    var brc = gc(bv, 0.2);
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(fx-sw, bt+sw*0.12);
+    ctx.quadraticCurveTo(fx-sw*0.2, bt-1, fx, bt-1);
+    ctx.quadraticCurveTo(fx+sw*0.2, bt-1, fx+sw, bt+sw*0.12);
+    ctx.lineTo(fx+sw, bt+sw*0.12+4);
+    ctx.quadraticCurveTo(fx+sw*0.2, bt+3, fx, bt+3);
+    ctx.quadraticCurveTo(fx-sw*0.2, bt+3, fx-sw, bt+sw*0.12+4);
+    ctx.closePath();
+    ctx.fillStyle = rgba(brc, 0.6);
+    ctx.fill();
+    ctx.restore();
+
+    // Neck
+    ctx.fillStyle = rgb(gc((kv+fv)/2, 0.2));
+    ctx.fillRect(fx-nw, fhy+hry, nw*2, nh);
+
+    // Head fill side
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(fx, fhy, hrx, hry, 0, Math.PI*0.5, Math.PI*1.5);
+    ctx.closePath();
+    ctx.fillStyle = rgb(gc(fv, -0.6));
+    ctx.fill();
+    ctx.restore();
+
+    // Head key side
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(fx, fhy, hrx, hry, 0, -Math.PI*0.5, Math.PI*0.5);
+    ctx.closePath();
+    ctx.fillStyle = rgb(gc(kv, 0.8));
+    ctx.fill();
+    ctx.restore();
+
+    // Face gradient blend
+    var fgr = ctx.createLinearGradient(fx-hrx, fhy, fx+hrx, fhy);
+    fgr.addColorStop(0, rgba(gc(fv, -0.6), 0.5));
+    fgr.addColorStop(0.35, rgba(gc(fv, -0.6), 0.3));
+    fgr.addColorStop(0.5, 'rgba(0,0,0,0)');
+    fgr.addColorStop(0.65, rgba(gc(kv, 0.8), 0.2));
+    fgr.addColorStop(1, rgba(gc(kv, 0.8), 0.4));
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(fx, fhy, hrx, hry, 0, 0, Math.PI*2);
+    ctx.clip();
+    ctx.fillStyle = fgr;
+    ctx.fillRect(fx-hrx, fhy-hry, hrx*2, hry*2);
+    ctx.restore();
+
+    // Head rim (full)
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(fx, fhy, hrx, hry, 0, 0, Math.PI*2);
+    ctx.strokeStyle = rgba(brc, 0.8);
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+
+    // Stronger top rim
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(fx, fhy, hrx+1, hry+1, 0, Math.PI*1.15, Math.PI*1.85);
+    ctx.strokeStyle = rgba(gc(bv+0.5, 0.3), 0.9);
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+
+    // Back glow
+    var bgl = ctx.createRadialGradient(fx, fhy-hry*0.5, hrx*0.5, fx, fhy, hry*2.5);
+    bgl.addColorStop(0, rgba(gc(bv, 0), 0.06));
+    bgl.addColorStop(1, rgba(gc(bv, 0), 0));
+    ctx.fillStyle = bgl;
+    ctx.fillRect(0, 0, w, h);
+
+    // Vignette
+    var vig = ctx.createRadialGradient(w*0.45, h*0.45, w*0.2, w*0.5, h*0.5, w*0.8);
+    vig.addColorStop(0, 'rgba(0,0,0,0)');
+    vig.addColorStop(1, 'rgba(0,0,0,0.35)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // ================================================================
+  // CONTROLS
+  // ================================================================
+  function adjust(bucket, delta) {
+    state[bucket] = clamp(state[bucket] + delta, -4, 4);
+    updateUI();
+  }
+
+  function animateToPreset(k, f, b, bg) {
+    if (presetAnimId) { cancelAnimationFrame(presetAnimId); presetAnimId = null; }
+    presetAnimFrom = { key: state.key, fill: state.fill, back: state.back, bg: state.bg };
+    presetAnimTo = { key: k, fill: f, back: b, bg: bg };
+    presetAnimStart = performance.now();
+
+    function tick(now) {
+      var elapsed = now - presetAnimStart;
+      var t = Math.min(elapsed / ANIM_MS, 1);
+      var e = easeIO(t);
+
+      state.key = Math.round(lerp(presetAnimFrom.key, presetAnimTo.key, e));
+      state.fill = Math.round(lerp(presetAnimFrom.fill, presetAnimTo.fill, e));
+      state.back = Math.round(lerp(presetAnimFrom.back, presetAnimTo.back, e));
+      state.bg = Math.round(lerp(presetAnimFrom.bg, presetAnimTo.bg, e));
+
+      var sk = lerp(presetAnimFrom.key, presetAnimTo.key, e);
+      var sf = lerp(presetAnimFrom.fill, presetAnimTo.fill, e);
+      var sb = lerp(presetAnimFrom.back, presetAnimTo.back, e);
+      var sbg = lerp(presetAnimFrom.bg, presetAnimTo.bg, e);
+
+      showValues();
+      drawScene(document.getElementById('sceneCanvas'), sk, sf, sb, sbg);
+
+      if (t < 1) {
+        presetAnimId = requestAnimationFrame(tick);
+      } else {
+        state.key = k; state.fill = f; state.back = b; state.bg = bg;
+        updateUI();
+        presetAnimId = null;
+      }
+    }
+    presetAnimId = requestAnimationFrame(tick);
+  }
+
+  function showValues() {
+    document.getElementById('keyVal').textContent = fmtStop(state.key);
+    document.getElementById('fillVal').textContent = fmtStop(state.fill);
+    document.getElementById('backVal').textContent = fmtStop(state.back);
+    document.getElementById('bgVal').textContent = fmtStop(state.bg);
+    document.getElementById('lookReadout').textContent =
+      fmtStop(state.key)+' / '+fmtStop(state.fill)+' / '+fmtStop(state.back)+' / '+fmtStop(state.bg);
+  }
+
+  function updateUI() {
+    showValues();
+    drawScene(document.getElementById('sceneCanvas'), state.key, state.fill, state.back, state.bg);
+  }
+
+  // ================================================================
+  // FALSE COLOR
+  // ================================================================
+  function toggleFalseColor() {
+    falseColorMode = !falseColorMode;
+    var btn = document.getElementById('fcToggle');
+    if (falseColorMode) {
+      btn.classList.add('active');
+      btn.textContent = 'Normal View';
+    } else {
+      btn.classList.remove('active');
+      btn.textContent = 'False Color';
+    }
+    updateUI();
+    rebuildSlideFilmStrip();
+  }
+
+  // ================================================================
+  // STOP SCALE
+  // ================================================================
+  function buildStopScale() {
+    var el = document.getElementById('stopScale');
+    var stops = [-4,-3,-2,-1,0,1,2,3,4];
+    var heights = [30,45,60,75,90,75,60,45,30];
+
+    stops.forEach(function(s, i) {
+      var mark = document.createElement('div');
+      mark.className = 'stop-mark';
+
+      var bar = document.createElement('div');
+      bar.className = 'stop-bar';
+      bar.style.height = heights[i] + 'px';
+      bar.style.background = rgb(stopToFC(s));
+
+      var label = document.createElement('div');
+      label.className = 'stop-label';
+      label.textContent = fmtStop(s);
+
+      mark.appendChild(bar);
+      mark.appendChild(label);
+
+      if (s === -4 || s === 0 || s === 4) {
+        var zone = document.createElement('div');
+        zone.className = 'stop-zone';
+        if (s === -4) { zone.textContent = 'crushed'; zone.style.color = '#4444aa'; }
+        if (s === 0)  { zone.textContent = 'key'; zone.style.color = '#55aa55'; }
+        if (s === 4)  { zone.textContent = 'clipped'; zone.style.color = '#cc3333'; }
+        mark.appendChild(zone);
+      }
+
+      el.appendChild(mark);
+    });
+  }
+
+  // ================================================================
+  // SLIDE
+  // ================================================================
+  function buildSlideFilmStrip() {
+    var el = document.getElementById('slideFilmStrip');
+    while (el.firstChild) el.removeChild(el.firstChild);
+
+    for (var offset = -2; offset <= 2; offset++) {
+      var frame = document.createElement('div');
+      frame.className = 'slide-frame' + (offset === slideOff ? ' active-frame' : '');
+      frame.setAttribute('data-offset', '' + offset);
+
+      var cvs = document.createElement('canvas');
+      cvs.width = 256; cvs.height = 144;
+      frame.appendChild(cvs);
+
+      var lbl = document.createElement('div');
+      lbl.className = 'slide-frame-label';
+      lbl.textContent = (offset === 0 ? '0' : fmtStop(offset)) + ' stop' + (Math.abs(offset) !== 1 ? 's' : '');
+      frame.appendChild(lbl);
+
+      (function(o, f) {
+        f.addEventListener('click', function() {
+          slideOff = o;
+          document.getElementById('slideRange').value = '' + o;
+          refreshSlide();
+        });
+      })(offset, frame);
+
+      el.appendChild(frame);
+
+      drawScene(cvs,
+        clamp(baseRatios.key+offset,-4,4),
+        clamp(baseRatios.fill+offset,-4,4),
+        clamp(baseRatios.back+offset,-4,4),
+        clamp(baseRatios.bg+offset,-4,4)
+      );
+    }
+  }
+
+  function rebuildSlideFilmStrip() {
+    var frames = document.querySelectorAll('.slide-frame');
+    frames.forEach(function(fr) {
+      var o = parseInt(fr.getAttribute('data-offset'));
+      fr.className = 'slide-frame' + (o === slideOff ? ' active-frame' : '');
+      var cvs = fr.querySelector('canvas');
+      drawScene(cvs,
+        clamp(baseRatios.key+o,-4,4),
+        clamp(baseRatios.fill+o,-4,4),
+        clamp(baseRatios.back+o,-4,4),
+        clamp(baseRatios.bg+o,-4,4)
+      );
+    });
+  }
+
+  function buildSlideRows() {
+    var el = document.getElementById('slideRows');
+    while (el.firstChild) el.removeChild(el.firstChild);
+
+    var buckets = [
+      { name:'Key', base:baseRatios.key, color:'var(--key-color)' },
+      { name:'Fill', base:baseRatios.fill, color:'var(--fill-color)' },
+      { name:'Back', base:baseRatios.back, color:'var(--back-color)' },
+      { name:'BG', base:baseRatios.bg, color:'var(--bg-color)' }
+    ];
+    var stops = [-4,-3,-2,-1,0,1,2,3,4];
+
+    buckets.forEach(function(b) {
+      var row = document.createElement('div');
+      row.className = 'slide-row';
+
+      var lbl = document.createElement('div');
+      lbl.className = 'slide-label-col';
+      lbl.style.color = b.color;
+      lbl.textContent = b.name;
+      row.appendChild(lbl);
+
+      var sd = document.createElement('div');
+      sd.className = 'slide-stops';
+
+      stops.forEach(function(s) {
+        var cell = document.createElement('div');
+        cell.className = 'slide-cell';
+        var val = clamp(b.base + slideOff, -4, 4);
+        if (s === val) {
+          cell.classList.add('active');
+          cell.style.background = rgb(stopToFC(s));
+          cell.textContent = fmtStop(s);
+        } else {
+          cell.classList.add('inactive');
+          cell.textContent = fmtStop(s);
+        }
+        sd.appendChild(cell);
+      });
+
+      row.appendChild(sd);
+      el.appendChild(row);
+    });
+
+    var descs = {
+      '-4':'Extremely dark','-3':'Very dark scene','-2':'Dark / night interior',
+      '-1':'Slightly underexposed','0':'At key level','1':'Slightly overexposed',
+      '2':'Bright / high-key','3':'Very bright','4':'Extremely bright'
+    };
+    document.getElementById('slideLabel').textContent = 'Offset: '+fmtStop(slideOff)+' stop'+(Math.abs(slideOff)!==1?'s':'');
+    document.getElementById('slideSub').textContent = descs[''+slideOff] || '';
+  }
+
+  function refreshSlide() {
+    buildSlideRows();
+    rebuildSlideFilmStrip();
+  }
+
+  document.getElementById('slideRange').addEventListener('input', function(e) {
+    slideOff = parseInt(e.target.value);
+    refreshSlide();
+  });
+
+  // ================================================================
+  // MATRIX RAIN
+  // ================================================================
+  var matrixRunning = false;
+  function initMatrix() {
+    var cvs = document.getElementById('matrixCanvas');
+    var ctx = cvs.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    cvs.width = cvs.offsetWidth * dpr;
+    cvs.height = cvs.offsetHeight * dpr;
+    ctx.scale(dpr, dpr);
+    var w = cvs.offsetWidth, h = cvs.offsetHeight;
+
+    var colW = 11;
+    var cols = Math.floor(w / colW);
+    var drops = [], speeds = [], opacs = [];
+    var vals = ['-4','-3','-2','-1','0','+1','+2','+3','+4'];
+
+    for (var i = 0; i < cols; i++) {
+      drops.push(Math.random() * -30);
+      speeds.push(0.3 + Math.random() * 0.8);
+      opacs.push(0.3 + Math.random() * 0.7);
+    }
+
+    if (matrixRunning) return;
+    matrixRunning = true;
+
+    function draw() {
+      ctx.fillStyle = 'rgba(10,10,12,0.1)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.font = '10px JetBrains Mono';
+
+      for (var i = 0; i < cols; i++) {
+        var val = vals[Math.floor(Math.random() * vals.length)];
+        var sn = parseInt(val);
+        var c = stopToFC(sn);
+        var alpha = opacs[i] * 0.65;
+
+        if (sn >= 3) {
+          ctx.shadowColor = rgba(c, 0.5);
+          ctx.shadowBlur = 6;
+        } else if (sn >= 2) {
+          ctx.shadowColor = rgba(c, 0.3);
+          ctx.shadowBlur = 3;
+        } else {
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.fillStyle = rgba(c, alpha);
+        ctx.fillText(val, i * colW, drops[i] * 16);
+
+        if (drops[i] * 16 > h && Math.random() > 0.96) {
+          drops[i] = 0;
+          speeds[i] = 0.3 + Math.random() * 0.8;
+          opacs[i] = 0.3 + Math.random() * 0.7;
+        }
+        drops[i] += speeds[i];
+      }
+
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // ================================================================
+  // SCROLL REVEAL
+  // ================================================================
+  function initObservers() {
+    var ro = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          ro.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(function(el) { ro.observe(el); });
+
+    // Bucket cards stagger
+    var bo = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var kids = e.target.querySelectorAll('.stagger-child');
+          kids.forEach(function(k, i) {
+            setTimeout(function() { k.classList.add('visible'); }, i * 100);
+          });
+          bo.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    var bg = document.getElementById('bucketsGrid');
+    if (bg) bo.observe(bg);
+
+    // Stop bars grow
+    var sbo = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.stop-bar').forEach(function(b, i) {
+            setTimeout(function() { b.classList.add('grown'); }, i * 60);
+          });
+          sbo.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    var ss = document.getElementById('stopScale');
+    if (ss) sbo.observe(ss);
+
+    // Stop pips
+    var po = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.stop-pip').forEach(function(p, i) {
+            setTimeout(function() { p.classList.add('grown'); }, i * 40);
+          });
+          po.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.bucket').forEach(function(c) { po.observe(c); });
+  }
+
+  // ================================================================
+  // RESIZE
+  // ================================================================
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      matrixRunning = false;
+      initMatrix();
+      rebuildSlideFilmStrip();
+    }, 200);
+  });
+
+  // ================================================================
+  // INIT
+  // ================================================================
+  buildStopScale();
+  updateUI();
+  buildSlideRows();
+  buildSlideFilmStrip();
+  setTimeout(initMatrix, 100);
+  setTimeout(initObservers, 50);
+
+})();
+</script>
+</body>
+</html>
