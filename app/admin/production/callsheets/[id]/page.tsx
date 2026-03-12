@@ -13,9 +13,12 @@ export default async function CallSheetDetailPage({
   const callSheet = await prisma.callSheet.findUnique({
     where: { id },
     include: {
-      project: { select: { id: true, title: true } },
+      project: { select: { id: true, title: true, clientName: true } },
       crewCalls: {
         orderBy: { callTime: "asc" },
+        include: {
+          crewMember: { select: { phone: true, email: true } },
+        },
       },
     },
   });
@@ -47,6 +50,8 @@ export default async function CallSheetDetailPage({
       role: cc.role,
       callTime: cc.callTime,
       notes: cc.notes,
+      phone: cc.crewMember?.phone ?? null,
+      email: cc.crewMember?.email ?? null,
     })),
     createdAt: callSheet.createdAt.toISOString(),
     updatedAt: callSheet.updatedAt.toISOString(),

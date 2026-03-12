@@ -100,7 +100,7 @@ export interface CallSheetSummary {
 }
 
 export interface CallSheetDetail extends CallSheetSummary {
-  project: { id: string; title: string };
+  project: { id: string; title: string; clientName?: string | null };
   locationAddress: string | null;
   parkingNotes: string | null;
   nearestHospital: string | null;
@@ -122,6 +122,8 @@ export interface CrewCallEntry {
   role: string;
   callTime: string;
   notes: string | null;
+  phone?: string | null;
+  email?: string | null;
 }
 
 // ── Shot Lists ──
