@@ -4,6 +4,7 @@ date: "2026-03-12"
 excerpt: "Nine essential shots every filmmaker must master. What they do, when to use them, and the film scenes that prove it. Plus a cheat sheet you will actually use on set."
 category: "Filmmaking"
 tags: ["shot sizes", "composition", "filmmaking", "close-up", "wide shot"]
+interactive: "/interactive/shot-size-guide.html"
 featured: true
 ---
 

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Contrast — The Art of Tension in Every Frame</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #faf9f7;
+  --dark: #0a0a0c;
+  --surface: #fff;
+  --surface-dark: #111114;
+  --border: #e4e0da;
+  --border-dark: #222228;
+  --text: #1a1816;
+  --dim: #7a756c;
+  --accent: #0a0a0c;
+  --warm: #c85a20;
+  --cool: #2060a0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Archivo', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ── HERO: SPLIT DARK/LIGHT ── */
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 3rem;
+}
+
+.hero-dark {
+  background: var(--dark);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.hero-light {
+  background: var(--surface);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid var(--border);
+  border-left: none;
+}
+
+.hero-dark h1, .hero-light h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.hero-dark h1 { color: #eee; }
+.hero-light h1 { color: var(--accent); }
+
+.hero-dark .hero-sub {
+  font-family: 'Lora', serif;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.8rem;
+  line-height: 1.6;
+}
+
+.hero-light .hero-sub {
+  font-family: 'Lora', serif;
+  font-size: 0.8rem;
+  color: var(--dim);
+  margin-top: 0.8rem;
+  line-height: 1.6;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.hero-dark .hero-tag { color: #555; }
+.hero-light .hero-tag { color: var(--dim); }
+
+/* ── INTRO ── */
+.intro {
+  max-width: 680px;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+.intro p {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.intro p strong { font-weight: 600; }
+
+.rule {
+  height: 1px;
+  background: var(--border);
+  margin: 3rem 0;
+}
+
+/* ── SECTION ── */
+.sect-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1rem;
+}
+
+.sect-title {
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.sect-desc {
+  font-family: 'Lora', serif;
+  font-size: 0.82rem;
+  color: var(--dim);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 2rem;
+}
+
+/* ── CONTRAST PILLARS ── */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pillar {
+  background: var(--surface);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: background 0.2s;
+  cursor: default;
+}
+
+.pillar:hover { background: #faf8f5; }
+
+.pillar-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+
+.pillar-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.pillar-desc {
+  font-size: 0.62rem;
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+/* ── TONE SECTION (INTERACTIVE) ── */
+.tone-demo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tone-canvas-wrap {
+  background: #000;
+  position: relative;
+  aspect-ratio: 16/10;
+}
+
+.tone-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.tone-controls {
+  background: var(--surface);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tone-controls h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.tone-controls .sub {
+  font-family: 'Lora', serif;
+  font-size: 0.75rem;
+  color: var(--dim);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.tone-slider-group {
+  margin-bottom: 1.2rem;
+}
+
+.tone-slider-group label {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.4rem;
+}
+
+.tone-slider-group input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.tone-slider-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.tone-readout {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 0.2rem;
+}
+
+/* ── THREE TOOLS OF TONE ── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.tool-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tool-card-header {
+  padding: 1.5rem;
+  position: relative;
+}
+
+.tool-card-num {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+.tool-card-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.tool-card-desc {
+  font-family: 'Lora', serif;
+  font-size: 0.72rem;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+.tool-card-example {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.65rem;
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+.tool-card-example strong { color: var(--accent); }
+
+/* visual bars */
+.tool-viz {
+  height: 60px;
+  display: flex;
+  border-top: 1px solid var(--border);
+}
+
+.tool-viz-bar {
+  flex: 1;
+  transition: all 0.3s;
+}
+
+/* ── PRODUCTION DESIGN ── */
+.pd-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pd-card {
+  background: var(--surface);
+  padding: 1.5rem;
+}
+
+.pd-icon { font-size: 1.3rem; margin-bottom: 0.5rem; }
+
+.pd-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.pd-desc {
+  font-size: 0.65rem;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+.pd-example {
+  margin-top: 0.6rem;
+  font-size: 0.6rem;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.pd-example strong { color: var(--accent); font-style: normal; }
+
+/* ── CASE STUDY: HOMEPOD ── */
+.case-study {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.case-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.case-header h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.case-tag {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 0.3rem 0.8rem;
+  background: #f0ede7;
+  border-radius: 100px;
+}
+
+.case-timeline {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  min-height: 200px;
+}
+
+.case-before {
+  background: var(--dark);
+  padding: 2rem;
+  color: #888;
+}
+
+.case-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-size: 1.5rem;
+  color: var(--dim);
+}
+
+.case-after {
+  background: var(--surface);
+  padding: 2rem;
+}
+
+.case-phase-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.case-before .case-phase-label { color: #555; }
+.case-after .case-phase-label { color: var(--warm); }
+
+.case-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.7rem;
+}
+
+.case-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.case-before .case-dot { background: #333; }
+.case-after .case-dot { background: var(--warm); }
+.case-before .case-item { color: #666; }
+.case-after .case-item { color: var(--text); }
+
+/* ── IRONY SECTION ── */
+.irony-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.irony-card {
+  padding: 2rem;
+}
+
+.irony-card.dark-humor {
+  background: var(--dark);
+  color: #ccc;
+}
+
+.irony-card.bright-violence {
+  background: var(--surface);
+}
+
+.irony-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.irony-card.dark-humor .irony-label { color: #555; }
+.irony-card.bright-violence .irony-label { color: var(--dim); }
+
+.irony-title {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.irony-card.dark-humor .irony-title { color: #eee; }
+.irony-card.bright-violence .irony-title { color: var(--accent); }
+
+.irony-desc {
+  font-family: 'Lora', serif;
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+
+.irony-card.dark-humor .irony-desc { color: #777; }
+.irony-card.bright-violence .irony-desc { color: var(--dim); }
+
+.irony-example {
+  margin-top: 0.8rem;
+  font-size: 0.62rem;
+  font-style: italic;
+}
+
+.irony-card.dark-humor .irony-example { color: #555; }
+.irony-card.bright-violence .irony-example { color: var(--dim); }
+
+.irony-example strong { font-style: normal; }
+.irony-card.dark-humor .irony-example strong { color: #ccc; }
+.irony-card.bright-violence .irony-example strong { color: var(--accent); }
+
+/* ── CHECKLIST ── */
+.checklist {
+  background: var(--dark);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.checklist h3 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #eee;
+  margin-bottom: 1.2rem;
+}
+
+.check-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.8rem;
+}
+
+.check-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.check-box {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #333;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.check-text {
+  font-size: 0.7rem;
+  color: #888;
+  line-height: 1.5;
+}
+
+.check-text strong { color: #ccc; }
+
+/* ── QUOTE ── */
+.quote-block {
+  border-left: 3px solid var(--accent);
+  padding: 1rem 0 1rem 1.5rem;
+  margin: 2rem 0;
+}
+
+.quote-text {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.quote-text em {
+  font-style: normal;
+  color: var(--warm);
+  font-weight: 600;
+}
+
+.footer {
+  text-align: center;
+  padding: 3rem 0 1rem;
+  font-size: 0.5rem;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .hero-split { grid-template-columns: 1fr; }
+  .hero-light { border-left: 1px solid var(--border); border-top: none; }
+  .pillars { grid-template-columns: repeat(2, 1fr); }
+  .tone-demo { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .pd-grid { grid-template-columns: 1fr; }
+  .case-timeline { grid-template-columns: 1fr; }
+  .case-arrow { height: 40px; }
+  .irony-split { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO SPLIT -->
+  <div class="hero-split">
+    <div class="hero-dark">
+      <div class="hero-tag">Dark</div>
+      <h1>Visual<br>Contrast</h1>
+      <div class="hero-sub">Contrast is to visuals what conflict is to a script. Without it, there's no tension. No story. No feeling.</div>
+    </div>
+    <div class="hero-light">
+      <div class="hero-tag">Light</div>
+      <h1>Visual<br>Contrast</h1>
+      <div class="hero-sub">Same words, different feeling. That's the power of tone. Brightness alone changes everything.</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <p>Good stories start with good scripts, but they don't end there. In a visual medium, the finished product has to be <strong>visual</strong>. Contrast creates tension in every frame. It lives in tone, art direction, production design, blocking, and color.</p>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- FIVE PILLARS -->
+  <div class="sect-label">01 // The Five Pillars of Visual Contrast</div>
+
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">🌗</div>
+      <div class="pillar-name">Tone</div>
+      <div class="pillar-desc">Brightness and darkness. The most fundamental contrast. Controls emotional temperature.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🎨</div>
+      <div class="pillar-name">Art Direction</div>
+      <div class="pillar-desc">Set dressing, props, wardrobe. Every object in frame is a tonal choice.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🏗️</div>
+      <div class="pillar-name">Production Design</div>
+      <div class="pillar-desc">The unified visual world. Mood, character reflection, thematic communication.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🚶</div>
+      <div class="pillar-name">Blocking</div>
+      <div class="pillar-desc">Where characters stand and move in frame. Spatial relationships create meaning.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🎬</div>
+      <div class="pillar-name">Camera Movement</div>
+      <div class="pillar-desc">How the frame itself moves. Static vs. dynamic. Stillness vs. energy.</div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- TONE: THE BIG THREE -->
+  <div class="sect-label">02 // Tone: Three Controls</div>
+  <div class="sect-title">Lighting. Exposure. Art Direction.</div>
+  <p class="sect-desc">
+    Tone literally means brightness. Just turning brightness up or down creates a completely different
+    emotional experience. Three tools control it.
+  </p>
+
+  <!-- INTERACTIVE TONE DEMO -->
+  <div class="tone-demo">
+    <div class="tone-canvas-wrap">
+      <canvas id="toneCanvas" width="640" height="400"></canvas>
+    </div>
+    <div class="tone-controls">
+      <h3>Tone Playground</h3>
+      <div class="sub">Adjust the three controls and watch the scene transform. Same composition, completely different feeling.</div>
+      <div class="tone-slider-group">
+        <label>Lighting <span class="tone-readout" id="lightVal">50%</span></label>
+        <input type="range" min="5" max="100" value="50" id="lightSlider" oninput="updateTone()">
+      </div>
+      <div class="tone-slider-group">
+        <label>Exposure <span class="tone-readout" id="expVal">50%</span></label>
+        <input type="range" min="5" max="100" value="50" id="expSlider" oninput="updateTone()">
+      </div>
+      <div class="tone-slider-group">
+        <label>Art Direction (Wardrobe/Set) <span class="tone-readout" id="artVal">50%</span></label>
+        <input type="range" min="5" max="100" value="50" id="artSlider" oninput="updateTone()">
+      </div>
+    </div>
+  </div>
+
+  <div style="height:2rem"></div>
+
+  <!-- THREE TOOL CARDS -->
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <div class="tool-card-num">Tool 01</div>
+        <div class="tool-card-name">Lighting</div>
+        <div class="tool-card-desc">How you light the scene. High contrast shadows or flat even illumination. The most direct control over tone.</div>
+      </div>
+      <div class="tool-viz">
+        <div class="tool-viz-bar" style="background:#111;"></div>
+        <div class="tool-viz-bar" style="background:#222;"></div>
+        <div class="tool-viz-bar" style="background:#555;"></div>
+        <div class="tool-viz-bar" style="background:#999;"></div>
+        <div class="tool-viz-bar" style="background:#ddd;"></div>
+      </div>
+      <div class="tool-card-example">🎬 <strong>Raging Bull</strong> — Mid-fight, lighting shifts in a single shot. Sugar Ray becomes a monstrous silhouette. We brace for impact.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <div class="tool-card-num">Tool 02</div>
+        <div class="tool-card-name">Exposure</div>
+        <div class="tool-card-desc">How much light enters the camera. Crush the blacks or blow it out. Intentional under/overexposure tells a story.</div>
+      </div>
+      <div class="tool-viz">
+        <div class="tool-viz-bar" style="background:#080808;"></div>
+        <div class="tool-viz-bar" style="background:#0a0a0a;"></div>
+        <div class="tool-viz-bar" style="background:#111;"></div>
+        <div class="tool-viz-bar" style="background:#eee;"></div>
+        <div class="tool-viz-bar" style="background:#fff;"></div>
+      </div>
+      <div class="tool-card-example">🎬 <strong>The Godfather</strong> — Gordon Willis underexposed so aggressively Paramount execs panicked. Mafia in shadow, wedding in blown-out light. Michael descends from light to dark across the film.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-header">
+        <div class="tool-card-num">Tool 03</div>
+        <div class="tool-card-name">Art Direction</div>
+        <div class="tool-card-desc">Tonal difference in set dressing, props, wardrobe. Every object in frame has a brightness value that shapes the feel.</div>
+      </div>
+      <div class="tool-viz">
+        <div class="tool-viz-bar" style="background:#111;"></div>
+        <div class="tool-viz-bar" style="background:#111;"></div>
+        <div class="tool-viz-bar" style="background:#eee;"></div>
+        <div class="tool-viz-bar" style="background:#eee;"></div>
+        <div class="tool-viz-bar" style="background:#111;"></div>
+      </div>
+      <div class="tool-card-example">🎬 <strong>The Matrix</strong> — White construct room vs. Neo's black wardrobe. When guns arrive, black and white art direction creates instant tension. <strong>The Shining</strong> — Dark bar for Jack, light reverse for the ghostly bartender.</div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- PRODUCTION DESIGN -->
+  <div class="sect-label">03 // Production Design</div>
+  <div class="sect-title">Three Jobs: Mood, Character, Theme</div>
+  <p class="sect-desc">
+    Production design isn't decoration. It's storytelling. Every prop, every color on the wall,
+    every piece of wardrobe either supports or undermines the story.
+  </p>
+
+  <div class="pd-grid">
+    <div class="pd-card">
+      <div class="pd-icon">🌧️</div>
+      <div class="pd-name">Mood</div>
+      <div class="pd-desc">Should the frame feel uplifting, melancholic, dreamy? Production design creates the emotional container for the scene.</div>
+      <div class="pd-example"><strong>The Royal Tenenbaums</strong> — Richie's empty room with bare walls = emptiness. Contrast: same character on a yacht with colorful drinks and trinkets = full life.</div>
+    </div>
+    <div class="pd-card">
+      <div class="pd-icon">🧠</div>
+      <div class="pd-name">Character</div>
+      <div class="pd-desc">Externalize the internal. The state of a character's environment reveals the state of their mind.</div>
+      <div class="pd-example"><strong>True Detective</strong> — Rust Cohle's storage unit is a visual map of his obsession. McConaughey spent an entire night dressing it himself.</div>
+    </div>
+    <div class="pd-card">
+      <div class="pd-icon">🔬</div>
+      <div class="pd-name">Theme</div>
+      <div class="pd-desc">Communicate deeper meaning through visual subtext. The smartest production design tells you the theme without a word.</div>
+      <div class="pd-example"><strong>Jurassic Park</strong> — DNA projected onto the dinosaur. Man's attempt to control nature, visualized in a single image.</div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- CASE STUDY: HOMEPOD -->
+  <div class="sect-label">04 // Case Study</div>
+  <div class="sect-title">Spike Jonze's Apple HomePod Ad</div>
+  <p class="sect-desc">A masterclass in visual contrast. Every pillar deployed in a single commercial.</p>
+
+  <div class="case-study">
+    <div class="case-header">
+      <h3>The Transformation</h3>
+      <div class="case-tag">Spike Jonze / Apple</div>
+    </div>
+    <div class="case-timeline">
+      <div class="case-before">
+        <div class="case-phase-label">Before HomePod</div>
+        <div class="case-item"><div class="case-dot"></div> Desaturated, dark world</div>
+        <div class="case-item"><div class="case-dot"></div> Minimal lighting</div>
+        <div class="case-item"><div class="case-dot"></div> Dark wardrobe (jacket on)</div>
+        <div class="case-item"><div class="case-dot"></div> Dark subway, dark streets</div>
+        <div class="case-item"><div class="case-dot"></div> Nearly absent of color</div>
+        <div class="case-item"><div class="case-dot"></div> Constricted blocking</div>
+      </div>
+      <div class="case-arrow">→</div>
+      <div class="case-after">
+        <div class="case-phase-label">After HomePod</div>
+        <div class="case-item"><div class="case-dot"></div> Full color revealed</div>
+        <div class="case-item"><div class="case-dot"></div> Face clearly lit</div>
+        <div class="case-item"><div class="case-dot"></div> White shirt revealed (jacket off)</div>
+        <div class="case-item"><div class="case-dot"></div> Space opens up</div>
+        <div class="case-item"><div class="case-dot"></div> Color inside her emerges</div>
+        <div class="case-item"><div class="case-dot"></div> Expansive, free movement</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block" style="margin-top:2rem;">
+    <div class="quote-text">
+      Spike Jonze uses blocking to tell the story of <em>someone constricted breaking free</em>.
+      The result is eye-popping, attention-grabbing, meaningful, emotional, and intelligent.
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- IRONY: BREAKING CONVENTIONS -->
+  <div class="sect-label">05 // Breaking the Rules</div>
+  <div class="sect-title">When Contrast Creates Irony</div>
+  <p class="sect-desc">
+    What happens when you deliberately mismatch brightness and emotion?
+    You get irony. Dark humor. Unsettling comedy. The Coen Brothers' specialty.
+  </p>
+
+  <div class="irony-split">
+    <div class="irony-card bright-violence">
+      <div class="irony-label">Convention Broken</div>
+      <div class="irony-title">Bright + Violence</div>
+      <div class="irony-desc">
+        Flat daylight, cheerful setting. Then violence arrives in dark wardrobe.
+        The art direction screams "he doesn't belong here." And then he proves it.
+      </div>
+      <div class="irony-example">🎬 <strong>No Country for Old Men</strong> — Bright day, flat lighting, then Chigurh arrives dressed all in black. The wardrobe is screaming danger before a word is spoken.</div>
+    </div>
+    <div class="irony-card dark-humor">
+      <div class="irony-label">Convention Broken</div>
+      <div class="irony-title">Dark + Comedy</div>
+      <div class="irony-desc">
+        Moody lighting, shadowy atmosphere. Then something funny happens.
+        We laugh when perhaps we shouldn't. That discomfort is the point.
+      </div>
+      <div class="irony-example">🎬 <strong>The Coen Brothers</strong> — Comedic moments set against dark, moody atmosphere. Making you laugh while the world is falling apart. That's dark humor, literally.</div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- CHECKLIST -->
+  <div class="sect-label">06 // Your Toolkit</div>
+  <div class="sect-title">Planning Visual Contrast</div>
+
+  <div class="checklist">
+    <h3>🎬 Pre-Production Contrast Checklist</h3>
+    <div class="check-items">
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Define tonal range.</strong> Is the story dark or bright overall? Where does it sit on the spectrum?</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Map pivot scenes.</strong> Which moments need to contrast from the rest of the film to draw attention?</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Storyboard with tone.</strong> Sketch lighting and art direction alongside composition. Don't leave it to set day.</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Script breakdown.</strong> Tag set dressing, props, wardrobe. Breakdowns force better production design thinking.</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Character arc = tonal arc.</strong> Does your character move from light to dark (or vice versa)? Match production design to their journey.</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Test the desaturate trick.</strong> Strip color from any reference. Pure brightness reveals the real tonal story.</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Consider irony.</strong> Could mismatching tone and emotion create a more interesting, unexpected feeling?</div></div>
+      <div class="check-item"><div class="check-box"></div><div class="check-text"><strong>Unify with theme.</strong> Does the production design communicate the story's deeper meaning without dialogue?</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Visual Contrast &middot; Tone &middot; Production Design &middot; Blocking</div>
+
+<script>
+function updateTone() {
+  const light = parseInt(document.getElementById('lightSlider').value);
+  const exp = parseInt(document.getElementById('expSlider').value);
+  const art = parseInt(document.getElementById('artSlider').value);
+
+  document.getElementById('lightVal').textContent = light + '%';
+  document.getElementById('expVal').textContent = exp + '%';
+  document.getElementById('artVal').textContent = art + '%';
+
+  drawTone(light, exp, art);
+}
+
+function drawTone(light, exp, art) {
+  const canvas = document.getElementById('toneCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  const overallBright = (light * 0.4 + exp * 0.35 + art * 0.25) / 100;
+
+  // BG
+  const bgVal = Math.round(overallBright * 60);
+  ctx.fillStyle = `rgb(${bgVal},${bgVal},${bgVal + 3})`;
+  ctx.fillRect(0, 0, w, h);
+
+  // Floor
+  const floorVal = Math.round(overallBright * 40 + 10);
+  ctx.fillStyle = `rgb(${floorVal},${floorVal},${floorVal})`;
+  ctx.fillRect(0, h * 0.72, w, h * 0.28);
+
+  // Wall elements (art direction)
+  const artBright = art / 100;
+  for (let i = 0; i < 3; i++) {
+    const x = 80 + i * 200;
+    const elVal = Math.round(artBright * 80 + 15);
+    ctx.fillStyle = `rgb(${elVal},${elVal},${elVal - 5})`;
+    ctx.fillRect(x, h * 0.2, 80, h * 0.35);
+  }
+
+  // Window (exposure - blown highlights)
+  const expBright = exp / 100;
+  const winVal = Math.round(100 + expBright * 155);
+  ctx.fillStyle = `rgb(${winVal},${winVal},${Math.min(255, winVal + 10)})`;
+  ctx.fillRect(w * 0.65, h * 0.1, w * 0.25, h * 0.4);
+
+  // Window glow
+  const glowR = 80 + expBright * 120;
+  const grad = ctx.createRadialGradient(w * 0.775, h * 0.3, 20, w * 0.775, h * 0.3, glowR);
+  grad.addColorStop(0, `rgba(${winVal},${winVal},${Math.min(255,winVal+10)},0.3)`);
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Light source effect
+  const lightBright = light / 100;
+  if (lightBright > 0.3) {
+    const keyGrad = ctx.createRadialGradient(w * 0.3, h * 0.2, 10, w * 0.3, h * 0.2, 200 * lightBright);
+    keyGrad.addColorStop(0, `rgba(255,248,230,${lightBright * 0.15})`);
+    keyGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = keyGrad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // Figure
+  const cx = w * 0.38, cy = h * 0.45;
+  const figBright = Math.round(overallBright * 120 + 30);
+  const shadowBright = Math.round(figBright * (0.3 + lightBright * 0.3));
+
+  // Body
+  ctx.fillStyle = `rgb(${Math.round(artBright * 50 + 15)},${Math.round(artBright * 48 + 14)},${Math.round(artBright * 45 + 13)})`;
+  ctx.fillRect(cx - 22, cy + 20, 44, 90);
+
+  // Head - key side
+  ctx.beginPath();
+  ctx.arc(cx, cy, 22, -Math.PI/2, Math.PI/2);
+  ctx.fillStyle = `rgb(${figBright},${Math.round(figBright * 0.92)},${Math.round(figBright * 0.85)})`;
+  ctx.fill();
+
+  // Head - fill side
+  ctx.beginPath();
+  ctx.arc(cx, cy, 22, Math.PI/2, -Math.PI/2);
+  ctx.fillStyle = `rgb(${shadowBright},${Math.round(shadowBright * 0.92)},${Math.round(shadowBright * 0.85)})`;
+  ctx.fill();
+
+  // Second figure (further back)
+  const cx2 = w * 0.62, cy2 = h * 0.5;
+  const fig2Bright = Math.round(figBright * 0.6);
+  ctx.fillStyle = `rgb(${Math.round(artBright * 35 + 10)},${Math.round(artBright * 33 + 9)},${Math.round(artBright * 30 + 8)})`;
+  ctx.fillRect(cx2 - 16, cy2 + 14, 32, 65);
+  ctx.beginPath();
+  ctx.arc(cx2, cy2, 16, 0, Math.PI * 2);
+  ctx.fillStyle = `rgb(${fig2Bright},${Math.round(fig2Bright * 0.9)},${Math.round(fig2Bright * 0.85)})`;
+  ctx.fill();
+
+  // Mood text
+  let mood = 'Neutral';
+  if (overallBright < 0.25) mood = 'Dark / Noir';
+  else if (overallBright < 0.35) mood = 'Moody / Dramatic';
+  else if (overallBright < 0.5) mood = 'Balanced';
+  else if (overallBright < 0.7) mood = 'Open / Naturalistic';
+  else mood = 'Bright / High Key';
+
+  ctx.fillStyle = `rgba(255,255,255,${0.3 + overallBright * 0.4})`;
+  ctx.font = '600 11px Archivo';
+  ctx.textAlign = 'left';
+  ctx.fillText(mood.toUpperCase(), 16, h - 16);
+}
+
+updateTone();
+</script>
+
+</body>
+</html>

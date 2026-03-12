@@ -4,6 +4,7 @@ date: "2026-03-12"
 excerpt: "Six tools control how much light hits the sensor. In cinematography, five are constants. That leaves one variable where all creative decisions live. Here is how to build a repeatable system for exposure."
 category: "Cinematography"
 tags: ["exposure", "lighting", "ratios", "cinematography", "systems"]
+interactive: "/interactive/systems-based-exposure.html"
 featured: false
 ---
 

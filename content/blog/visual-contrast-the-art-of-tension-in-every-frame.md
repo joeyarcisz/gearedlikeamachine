@@ -4,6 +4,7 @@ date: "2026-03-12"
 excerpt: "Contrast is to visuals what conflict is to a script. Without it, there is no tension. Five pillars, three tools, and the production design principles that separate flat images from compelling ones."
 category: "Cinematography"
 tags: ["contrast", "lighting", "production design", "art direction", "tone"]
+interactive: "/interactive/visual-contrast.html"
 featured: false
 ---
 

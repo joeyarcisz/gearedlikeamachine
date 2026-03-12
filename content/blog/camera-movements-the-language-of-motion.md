@@ -4,6 +4,7 @@ date: "2026-03-12"
 excerpt: "Every camera movement is a word. Every combination is a sentence. Nine movements, their emotional functions, and the film scenes that prove why each one matters."
 category: "Cinematography"
 tags: ["camera movement", "dolly", "tracking", "filmmaking", "shot list"]
+interactive: "/interactive/camera-movements.html"
 featured: false
 ---
 

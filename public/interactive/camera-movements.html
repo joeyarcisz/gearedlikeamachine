@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Movements — The Filmmaker's Language of Motion</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0b0b0f;
+  --surface: #111118;
+  --surface2: #16161e;
+  --border: #22222e;
+  --text: #c0c0cc;
+  --dim: #55556a;
+  --accent: #eeeef2;
+  --move: #ff6b35;
+  --move-dim: rgba(255,107,53,0.1);
+  --still: #4488ff;
+  --still-dim: rgba(68,136,255,0.1);
+  --tension: #cc3355;
+  --tension-dim: rgba(204,51,85,0.1);
+  --reveal: #44cc88;
+  --reveal-dim: rgba(68,204,136,0.1);
+  --psych: #aa66ff;
+  --psych-dim: rgba(170,102,255,0.1);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 0 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-ep {
+  font-size: 0.55rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.hero h1 span { color: var(--move); }
+
+.hero-sub {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.85rem;
+  color: var(--dim);
+  max-width: 480px;
+  margin: 1.2rem auto 0;
+  line-height: 1.7;
+}
+
+.rule {
+  height: 1px;
+  background: var(--border);
+  margin: 3rem 0;
+}
+
+/* ── SECTION HEADERS ── */
+.sect-num {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.2rem;
+}
+
+.sect-title {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.sect-desc {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.8rem;
+  color: var(--dim);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 2rem;
+}
+
+/* ── MOVEMENT CARDS ── */
+.move-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  transition: border-color 0.3s;
+}
+
+.move-card:hover { border-color: #33334a; }
+
+.move-viz {
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 180px;
+}
+
+.move-viz canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.move-body {
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.move-num {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+.move-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.15rem;
+  letter-spacing: -0.02em;
+}
+
+.move-sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+.move-sub.motion { color: var(--move); }
+.move-sub.stillness { color: var(--still); }
+.move-sub.psychological { color: var(--psych); }
+.move-sub.reveal-c { color: var(--reveal); }
+.move-sub.tension-c { color: var(--tension); }
+
+.move-desc {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+}
+
+.move-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.m-tag {
+  font-size: 0.55rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  color: var(--dim);
+}
+
+.move-example {
+  font-size: 0.68rem;
+  color: var(--dim);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.move-example strong {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* ── VARIANT TAG ── */
+.variant-row {
+  padding: 0.6rem 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.variant {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.variant-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.variant-name {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.variant-desc {
+  font-size: 0.6rem;
+  color: var(--dim);
+}
+
+/* ── TAXONOMY ── */
+.taxonomy {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.tax-title {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.tax-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.tax-col {
+  text-align: center;
+}
+
+.tax-col-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.tax-col-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.tax-col-items {
+  list-style: none;
+  font-size: 0.6rem;
+  color: var(--dim);
+  line-height: 1.8;
+}
+
+/* ── DIRECTION DIAGRAM ── */
+.direction-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.direction-diagram {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.dir-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  z-index: 2;
+}
+
+.dir-label {
+  position: absolute;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dir-label .name { color: var(--accent); display: block; margin-bottom: 2px; }
+.dir-label .type { color: var(--dim); font-weight: 500; font-size: 0.5rem; }
+
+.dir-arrow {
+  position: absolute;
+  color: var(--move);
+  font-size: 1.2rem;
+}
+
+/* ── STORYTELLING MATRIX ── */
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.matrix-cell {
+  background: var(--surface);
+  padding: 1.5rem;
+}
+
+.matrix-cell-icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.matrix-cell-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.matrix-cell-moves {
+  font-size: 0.6rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.matrix-cell-moves.m-motion { color: var(--move); }
+.matrix-cell-moves.m-still { color: var(--still); }
+.matrix-cell-moves.m-psych { color: var(--psych); }
+.matrix-cell-moves.m-reveal { color: var(--reveal); }
+.matrix-cell-moves.m-tension { color: var(--tension); }
+
+.matrix-cell-desc {
+  font-size: 0.62rem;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+/* ── QUICK REF ── */
+.quick-ref {
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.quick-ref h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+}
+
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.qr-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: baseline;
+}
+
+.qr-arrow {
+  font-size: 0.8rem;
+}
+
+.qr-text {
+  font-size: 0.65rem;
+  line-height: 1.4;
+  opacity: 0.7;
+}
+
+.qr-text strong {
+  opacity: 1;
+  color: var(--bg);
+  display: block;
+  font-size: 0.72rem;
+}
+
+.footer {
+  text-align: center;
+  padding: 3rem 0 1rem;
+  font-size: 0.5rem;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .move-card { grid-template-columns: 1fr; }
+  .move-viz { min-height: 120px; }
+  .tax-grid { grid-template-columns: repeat(2, 1fr); }
+  .matrix { grid-template-columns: 1fr; }
+  .direction-wrap { padding: 1.5rem; }
+  .direction-diagram { width: 260px; height: 260px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-ep">The Shot List &middot; Episode 06</div>
+    <h1>Camera<br><span>Movement</span></h1>
+    <p class="hero-sub">
+      Every movement is a word. Every combination is a sentence.
+      Learn the language of motion and you'll never make a meaningless camera move again.
+    </p>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- 01: STATIC -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cStatic" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 01</div>
+      <div class="move-name">Static Shot</div>
+      <div class="move-sub stillness">Zero Movement</div>
+      <div class="move-desc">
+        Camera locked to tripod. No movement at all. Stillness is a deliberate choice: it traps characters,
+        creates precise compositions, and lets performance carry the frame. Sometimes the most powerful
+        move is no move.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Dialogue</span>
+        <span class="m-tag">Painterly composition</span>
+        <span class="m-tag">Helplessness</span>
+        <span class="m-tag">Trapping a character</span>
+      </div>
+      <div class="move-example">🎬 <strong>Twelve Years a Slave</strong> — Static hold on Solomon's lynching. We are not allowed to look away. Stillness amplifies cruelty.</div>
+    </div>
+  </div>
+
+  <!-- 02: PAN -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cPan" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 02</div>
+      <div class="move-name">Pan</div>
+      <div class="move-sub motion">Horizontal Rotation</div>
+      <div class="move-desc">
+        Rotates the camera left or right from a fixed position. Follows action, reveals information,
+        or connects subjects in space. Speed matters: slow builds anticipation, rapid (whip pan)
+        heightens energy.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Follow action</span>
+        <span class="m-tag">Reveal information</span>
+        <span class="m-tag">Connect characters</span>
+      </div>
+      <div class="move-example">🎬 <strong>La La Land</strong> — Whip pans create the growing synergy between Sebastian and Mia. Same technique in <strong>Whiplash</strong> for combative energy.</div>
+    </div>
+    <div class="variant-row">
+      <div class="variant"><div class="variant-dot" style="background:var(--move)"></div><div class="variant-name">Whip Pan</div><div class="variant-desc">Rapid pan. Energy, transitions, comedy.</div></div>
+      <div class="variant"><div class="variant-dot" style="background:var(--still)"></div><div class="variant-name">Slow Pan</div><div class="variant-desc">Anticipation, tension, discovery.</div></div>
+    </div>
+  </div>
+
+  <!-- 03: TILT -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cTilt" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 03</div>
+      <div class="move-name">Tilt</div>
+      <div class="move-sub motion">Vertical Rotation</div>
+      <div class="move-desc">
+        Directs the camera upward or downward. Captures verticality: dominance, vulnerability,
+        scale, or awe. Reveals character, setting, or the sheer magnitude of a world.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Dominance / vulnerability</span>
+        <span class="m-tag">Scale / awe</span>
+        <span class="m-tag">Vertical reveal</span>
+      </div>
+      <div class="move-example">🎬 <strong>Inception</strong> — Nolan tilts up as Ariadne folds the city. The visceral effect of looking upward at the impossible.</div>
+    </div>
+  </div>
+
+  <!-- 04: PUSH IN -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cPush" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 04</div>
+      <div class="move-name">Push In</div>
+      <div class="move-sub tension-c">Toward the Subject</div>
+      <div class="move-desc">
+        Moves the camera toward the subject. The universal signal for "this matters."
+        Emphasizes a moment, captures internal conflict, or directs attention to a crucial detail.
+        Slow push-ins build unbearable tension.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Emphasis</span>
+        <span class="m-tag">Internal conflict</span>
+        <span class="m-tag">Building tension</span>
+        <span class="m-tag">Decision moment</span>
+      </div>
+      <div class="move-example">🎬 <strong>The Godfather</strong> — Slow push-in on Michael in the restaurant. Wrestling with the decision that will change his life forever.</div>
+    </div>
+  </div>
+
+  <!-- 05: PULL OUT -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cPull" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 05</div>
+      <div class="move-name">Pull Out</div>
+      <div class="move-sub psychological">Away from Subject</div>
+      <div class="move-desc">
+        The opposite of push-in. De-emphasizes, disconnects, abandons. As subjects shrink,
+        we detach emotionally. Reveals context, setting, or underscores isolation and helplessness.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Abandonment</span>
+        <span class="m-tag">Isolation</span>
+        <span class="m-tag">Context reveal</span>
+        <span class="m-tag">Scene / film ending</span>
+      </div>
+      <div class="move-example">🎬 <strong>Joker</strong> — Camera pulls away from Arthur at his most vulnerable. Todd Phillips abandons his character. We feel the distance.</div>
+    </div>
+  </div>
+
+  <!-- 06: ZOOM -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cZoom" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 06</div>
+      <div class="move-name">Zoom</div>
+      <div class="move-sub psychological">Focal Length Change</div>
+      <div class="move-desc">
+        Changes focal length without moving the camera. Uniquely unnatural: our eyes can't zoom.
+        This makes it inherently unsettling, which is why horror and thriller filmmakers love it.
+        Slow zooms create uneasiness. Crash zooms create energy.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Uneasiness</span>
+        <span class="m-tag">Unnatural attention</span>
+        <span class="m-tag">Comedy or drama</span>
+      </div>
+      <div class="move-example">🎬 <strong>The Shining</strong> — Kubrick's slow zoom on Jack. Descent into madness rendered through the lens itself.</div>
+    </div>
+    <div class="variant-row">
+      <div class="variant"><div class="variant-dot" style="background:var(--tension)"></div><div class="variant-name">Slow Zoom</div><div class="variant-desc">Dread, madness, uneasiness.</div></div>
+      <div class="variant"><div class="variant-dot" style="background:var(--move)"></div><div class="variant-name">Crash Zoom</div><div class="variant-desc">Comedy, shock, punctuation.</div></div>
+    </div>
+  </div>
+
+  <!-- 07: DOLLY ZOOM -->
+  <div class="move-card" style="border-color:var(--psych);">
+    <div class="move-viz">
+      <canvas id="cDolly" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 07</div>
+      <div class="move-name">Dolly Zoom</div>
+      <div class="move-sub psychological">The Vertigo Effect</div>
+      <div class="move-desc">
+        Combines physical dolly movement with an opposing zoom. Creates a warping, reality-bending
+        effect named after Hitchcock's Vertigo. Two methods, two different feelings:
+        dolly in + zoom out (background grows, internal conflict), or dolly out + zoom in
+        (subject dominates, tunnel vision).
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Internal conflict</span>
+        <span class="m-tag">External threat</span>
+        <span class="m-tag">Tunnel vision</span>
+        <span class="m-tag">Intimacy</span>
+      </div>
+      <div class="move-example">🎬 <strong>Raging Bull</strong> — Dolly zoom pushes the crowd away. We're no longer watching the fight. We're in it. <strong>Bohemian Rhapsody</strong> — Audience drawn closer to Freddie through dolly zoom intimacy.</div>
+    </div>
+    <div class="variant-row">
+      <div class="variant"><div class="variant-dot" style="background:var(--psych)"></div><div class="variant-name">Dolly In + Zoom Out</div><div class="variant-desc">BG grows. Conflict. Dread.</div></div>
+      <div class="variant"><div class="variant-dot" style="background:var(--reveal)"></div><div class="variant-name">Dolly Out + Zoom In</div><div class="variant-desc">Subject dominates. Tunnel vision. Intimacy.</div></div>
+    </div>
+  </div>
+
+  <!-- 08: ROLL -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cRoll" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 08</div>
+      <div class="move-name">Camera Roll</div>
+      <div class="move-sub tension-c">Axial Rotation</div>
+      <div class="move-desc">
+        Rotates the camera on its long axis. Instantly disorienting, unsettling our equilibrium.
+        Matches character movement in panic or conflict. Can reinforce dramatic power shifts
+        in the narrative.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Disorientation</span>
+        <span class="m-tag">Power reversal</span>
+        <span class="m-tag">Panic</span>
+        <span class="m-tag">Thematic reinforcement</span>
+      </div>
+      <div class="move-example">🎬 <strong>The Dark Knight</strong> — Joker hangs upside down, camera slowly rolls. He's captured, but he still has the upper hand. Power reversal in a single rotation.</div>
+    </div>
+  </div>
+
+  <!-- 09: TRACKING -->
+  <div class="move-card">
+    <div class="move-viz">
+      <canvas id="cTrack" width="320" height="360"></canvas>
+    </div>
+    <div class="move-body">
+      <div class="move-num">Movement 09</div>
+      <div class="move-name">Tracking Shot</div>
+      <div class="move-sub motion">Moving With the Subject</div>
+      <div class="move-desc">
+        Physically moves the camera through a scene with a subject. Not toward or away (that's push/pull),
+        but alongside. Generates two questions: Where is this character going? What will happen
+        when they get there? Perfect for long takes and immersion.
+      </div>
+      <div class="move-tags">
+        <span class="m-tag">Long takes</span>
+        <span class="m-tag">Immersion</span>
+        <span class="m-tag">Building tension</span>
+        <span class="m-tag">Journey / destination</span>
+      </div>
+      <div class="move-example">🎬 <strong>Elephant</strong> — Steadicam tracks through endless corridors. Dreadful anticipation. <strong>Three Billboards</strong> — Handheld tracking creates visceral documentary feel.</div>
+    </div>
+    <div class="variant-row">
+      <div class="variant"><div class="variant-dot" style="background:var(--move)"></div><div class="variant-name">Tracking</div><div class="variant-desc">Following or leading subject forward.</div></div>
+      <div class="variant"><div class="variant-dot" style="background:var(--reveal)"></div><div class="variant-name">Trucking</div><div class="variant-desc">Lateral movement, left or right.</div></div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- DIRECTION COMPASS -->
+  <div class="sect-num">Movement Map</div>
+  <div class="sect-title">Every Direction Means Something</div>
+
+  <div class="direction-wrap">
+    <div class="direction-diagram">
+      <div class="dir-center">CAM</div>
+
+      <div class="dir-label" style="top:8px; left:50%; transform:translateX(-50%);">
+        <span class="name">Tilt Up</span>
+        <span class="type">Awe / Scale / Power</span>
+      </div>
+      <div class="dir-arrow" style="top:50px; left:50%; transform:translateX(-50%);">↑</div>
+
+      <div class="dir-label" style="bottom:8px; left:50%; transform:translateX(-50%);">
+        <span class="name">Tilt Down</span>
+        <span class="type">Vulnerability / Reveal</span>
+      </div>
+      <div class="dir-arrow" style="bottom:50px; left:50%; transform:translateX(-50%);">↓</div>
+
+      <div class="dir-label" style="top:50%; left:8px; transform:translateY(-50%);">
+        <span class="name">Pan L</span>
+        <span class="type">Reveal</span>
+      </div>
+      <div class="dir-arrow" style="top:50%; left:68px; transform:translateY(-50%);">←</div>
+
+      <div class="dir-label" style="top:50%; right:8px; transform:translateY(-50%);">
+        <span class="name">Pan R</span>
+        <span class="type">Follow</span>
+      </div>
+      <div class="dir-arrow" style="top:50%; right:68px; transform:translateY(-50%);">→</div>
+
+      <div class="dir-label" style="top:22px; right:18px;">
+        <span class="name">Push In</span>
+        <span class="type">Emphasis</span>
+      </div>
+
+      <div class="dir-label" style="bottom:22px; left:18px;">
+        <span class="name">Pull Out</span>
+        <span class="type">Disconnect</span>
+      </div>
+
+      <div class="dir-label" style="top:22px; left:18px;">
+        <span class="name">Roll</span>
+        <span class="type">Disorient</span>
+      </div>
+
+      <div class="dir-label" style="bottom:22px; right:18px;">
+        <span class="name">Track</span>
+        <span class="type">Immerse</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- STORYTELLING MATRIX -->
+  <div class="sect-num">Emotional Function</div>
+  <div class="sect-title">What Story Does the Movement Tell?</div>
+  <p class="sect-desc">Every camera movement creates a specific emotional response. Match the movement to the story beat.</p>
+
+  <div class="matrix">
+    <div class="matrix-cell">
+      <div class="matrix-cell-icon">⚡</div>
+      <div class="matrix-cell-name">Emphasis</div>
+      <div class="matrix-cell-moves m-tension">Push In · Zoom In · Crash Zoom</div>
+      <div class="matrix-cell-desc">"Pay attention. This matters." Draws the eye to what's important.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="matrix-cell-icon">🔓</div>
+      <div class="matrix-cell-name">Reveal</div>
+      <div class="matrix-cell-moves m-reveal">Pan · Tilt · Pull Out · Truck</div>
+      <div class="matrix-cell-desc">"There's more than you think." Unveils information, context, or surprise.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="matrix-cell-icon">🧠</div>
+      <div class="matrix-cell-name">Psychology</div>
+      <div class="matrix-cell-moves m-psych">Dolly Zoom · Slow Zoom · Roll</div>
+      <div class="matrix-cell-desc">"Something is wrong." Internal conflict, unreality, power shifts.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="matrix-cell-icon">🏃</div>
+      <div class="matrix-cell-name">Immersion</div>
+      <div class="matrix-cell-moves m-motion">Tracking · Handheld Track</div>
+      <div class="matrix-cell-desc">"You're in this." Puts the audience inside the scene, moving with the subject.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="matrix-cell-icon">💨</div>
+      <div class="matrix-cell-name">Energy</div>
+      <div class="matrix-cell-moves m-motion">Whip Pan · Crash Zoom · Fast Track</div>
+      <div class="matrix-cell-desc">"Feel the speed." Heightens pace, comedy, adrenaline.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="matrix-cell-icon">🧊</div>
+      <div class="matrix-cell-name">Stillness</div>
+      <div class="matrix-cell-moves m-still">Static · Locked Tripod</div>
+      <div class="matrix-cell-desc">"You can't look away." Traps characters and audience. Amplifies through restraint.</div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- QUICK REFERENCE -->
+  <div class="quick-ref">
+    <h3>🎬 Camera Movement Quick Reference</h3>
+    <div class="qr-grid">
+      <div class="qr-item"><div class="qr-arrow">⊞</div><div class="qr-text"><strong>Static</strong>No movement. Performance, precision, helplessness.</div></div>
+      <div class="qr-item"><div class="qr-arrow">↔</div><div class="qr-text"><strong>Pan</strong>Horizontal rotation. Follow action, reveal, connect.</div></div>
+      <div class="qr-item"><div class="qr-arrow">↕</div><div class="qr-text"><strong>Tilt</strong>Vertical rotation. Scale, power, vulnerability, awe.</div></div>
+      <div class="qr-item"><div class="qr-arrow">→●</div><div class="qr-text"><strong>Push In</strong>Toward subject. "This matters." Tension, emphasis.</div></div>
+      <div class="qr-item"><div class="qr-arrow">●→</div><div class="qr-text"><strong>Pull Out</strong>Away from subject. Disconnect, isolation, ending.</div></div>
+      <div class="qr-item"><div class="qr-arrow">⊕</div><div class="qr-text"><strong>Zoom</strong>Focal length change. Unnatural. Dread or comedy.</div></div>
+      <div class="qr-item"><div class="qr-arrow">⊗</div><div class="qr-text"><strong>Dolly Zoom</strong>Vertigo effect. Internal/external conflict. Reality warp.</div></div>
+      <div class="qr-item"><div class="qr-arrow">↻</div><div class="qr-text"><strong>Roll</strong>Axial rotation. Disorientation, power shift, panic.</div></div>
+      <div class="qr-item"><div class="qr-arrow">⟿</div><div class="qr-text"><strong>Tracking</strong>Move with subject. Immersion, journey, long takes.</div></div>
+      <div class="qr-item"><div class="qr-arrow">⇆</div><div class="qr-text"><strong>Trucking</strong>Lateral movement. Wes Anderson. Spatial reveal.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">The Shot List &middot; Episode 06 &middot; Camera Movement</div>
+
+<script>
+// Simple animated canvas illustrations for each movement
+function drawMovement(id, drawFn) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  let frame = 0;
+
+  function draw() {
+    ctx.fillStyle = '#0b0b0f';
+    ctx.fillRect(0,0,w,h);
+    drawFn(ctx, w, h, frame);
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function drawFigure(ctx, x, y, size, color) {
+  color = color || '#2a2a3a';
+  const headR = size * 0.15;
+  ctx.fillStyle = color;
+  ctx.fillRect(x - size*0.12, y + headR*2 + 2, size*0.24, size*0.6);
+  ctx.beginPath();
+  ctx.arc(x, y + headR, headR, 0, Math.PI*2);
+  ctx.fill();
+}
+
+// Static - perfectly still frame
+drawMovement('cStatic', (ctx, w, h, f) => {
+  ctx.strokeStyle = '#4488ff';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([]);
+  ctx.strokeRect(30, 40, w-60, h-80);
+  drawFigure(ctx, w/2, h/2 - 30, 80, '#3a3a50');
+  ctx.fillStyle = '#4488ff';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('LOCKED', w/2, h - 25);
+});
+
+// Pan - horizontal sweep
+drawMovement('cPan', (ctx, w, h, f) => {
+  const sweep = Math.sin(f * 0.02) * 40;
+  ctx.save();
+  ctx.translate(sweep, 0);
+  drawFigure(ctx, w/2 - 40, h/2 - 20, 70, '#2a2a3a');
+  drawFigure(ctx, w/2 + 40, h/2 - 20, 70, '#2a2a3a');
+  ctx.restore();
+  // Arrow
+  ctx.strokeStyle = 'var(--move)';
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w/2 - 50, h - 40);
+  ctx.lineTo(w/2 + 50, h - 40);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w/2 + 45, h - 45);
+  ctx.lineTo(w/2 + 50, h - 40);
+  ctx.lineTo(w/2 + 45, h - 35);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w/2 - 45, h - 45);
+  ctx.lineTo(w/2 - 50, h - 40);
+  ctx.lineTo(w/2 - 45, h - 35);
+  ctx.stroke();
+  ctx.fillStyle = '#ff6b35';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('PAN', w/2, h - 22);
+});
+
+// Tilt - vertical sweep
+drawMovement('cTilt', (ctx, w, h, f) => {
+  const sweep = Math.sin(f * 0.02) * 30;
+  ctx.save();
+  ctx.translate(0, sweep);
+  drawFigure(ctx, w/2, h/2 - 20, 80, '#2a2a3a');
+  // Building
+  ctx.fillStyle = '#1a1a2a';
+  ctx.fillRect(w/2 - 50, 20, 100, 100);
+  ctx.restore();
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w - 30, h/2 - 40);
+  ctx.lineTo(w - 30, h/2 + 40);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w - 35, h/2 - 35);
+  ctx.lineTo(w - 30, h/2 - 40);
+  ctx.lineTo(w - 25, h/2 - 35);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w - 35, h/2 + 35);
+  ctx.lineTo(w - 30, h/2 + 40);
+  ctx.lineTo(w - 25, h/2 + 35);
+  ctx.stroke();
+  ctx.save();
+  ctx.translate(w - 30, h/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#ff6b35';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('TILT', 0, -10);
+  ctx.restore();
+});
+
+// Push In - growing figure
+drawMovement('cPush', (ctx, w, h, f) => {
+  const scale = 0.8 + Math.sin(f * 0.015) * 0.2;
+  drawFigure(ctx, w/2, h/2 - 30 * scale, 80 * scale, '#2a2a3a');
+  ctx.strokeStyle = '#cc3355';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w/2, h - 50);
+  ctx.lineTo(w/2, h - 20);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w/2 - 5, h - 45);
+  ctx.lineTo(w/2, h - 50);
+  ctx.lineTo(w/2 + 5, h - 45);
+  ctx.stroke();
+  ctx.fillStyle = '#cc3355';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('PUSH IN', w/2, h - 8);
+});
+
+// Pull Out - shrinking figure
+drawMovement('cPull', (ctx, w, h, f) => {
+  const scale = 1.0 - Math.sin(f * 0.015) * 0.25;
+  drawFigure(ctx, w/2, h/2 - 30 * scale, 80 * scale, '#2a2a3a');
+  ctx.strokeStyle = '#aa66ff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w/2, h - 20);
+  ctx.lineTo(w/2, h - 50);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w/2 - 5, h - 25);
+  ctx.lineTo(w/2, h - 20);
+  ctx.lineTo(w/2 + 5, h - 25);
+  ctx.stroke();
+  ctx.fillStyle = '#aa66ff';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('PULL OUT', w/2, h - 8);
+});
+
+// Zoom - focal length change
+drawMovement('cZoom', (ctx, w, h, f) => {
+  const z = Math.sin(f * 0.02);
+  const fov = 60 + z * 30;
+  ctx.strokeStyle = '#aa66ff';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,4]);
+  // FOV lines
+  const cx = w/2, cy = h - 60;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx - fov, 40);
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + fov, 40);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  drawFigure(ctx, w/2, 80, 60 + z * 15, '#2a2a3a');
+  ctx.fillStyle = '#aa66ff';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('ZOOM', w/2, h - 15);
+});
+
+// Dolly Zoom - warping
+drawMovement('cDolly', (ctx, w, h, f) => {
+  const phase = Math.sin(f * 0.015);
+  // BG rect grows
+  const bgSize = 80 + phase * 30;
+  ctx.fillStyle = '#1a1a28';
+  ctx.fillRect(w/2 - bgSize/2, h/2 - bgSize/2 - 10, bgSize, bgSize);
+  // Figure stays same
+  drawFigure(ctx, w/2, h/2 - 30, 70, '#3a3a50');
+  ctx.strokeStyle = '#aa66ff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(w/2 - 45, h/2 - 55, 90, 90);
+  ctx.fillStyle = '#aa66ff';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('DOLLY ZOOM', w/2, h - 15);
+});
+
+// Roll - rotating frame
+drawMovement('cRoll', (ctx, w, h, f) => {
+  const angle = Math.sin(f * 0.012) * 0.25;
+  ctx.save();
+  ctx.translate(w/2, h/2);
+  ctx.rotate(angle);
+  ctx.translate(-w/2, -h/2);
+  drawFigure(ctx, w/2, h/2 - 30, 80, '#2a2a3a');
+  ctx.strokeStyle = '#cc3355';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(40, 50, w - 80, h - 100);
+  ctx.restore();
+  ctx.fillStyle = '#cc3355';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('ROLL', w/2, h - 15);
+});
+
+// Tracking - figure moving with camera
+drawMovement('cTrack', (ctx, w, h, f) => {
+  const offset = (f * 0.5) % 60;
+  // Floor lines moving
+  for (let i = 0; i < 8; i++) {
+    const x = ((i * 50 - offset) % (w + 50)) - 25;
+    ctx.fillStyle = '#15151f';
+    ctx.fillRect(x, h * 0.7, 2, h * 0.3);
+  }
+  // Figure stays centered
+  drawFigure(ctx, w/2, h/2 - 30, 75, '#2a2a3a');
+  // Arrows showing environment moving
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w/2 + 60, h - 35);
+  ctx.lineTo(w/2 - 60, h - 35);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w/2 + 55, h - 40);
+  ctx.lineTo(w/2 + 60, h - 35);
+  ctx.lineTo(w/2 + 55, h - 30);
+  ctx.stroke();
+  ctx.fillStyle = '#ff6b35';
+  ctx.font = '600 9px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('TRACKING', w/2, h - 15);
+});
+</script>
+
+</body>
+</html>

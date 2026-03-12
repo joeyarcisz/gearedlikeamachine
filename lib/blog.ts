@@ -14,6 +14,7 @@ export interface BlogPost {
   category: string;
   tags: string[];
   featured?: boolean;
+  interactive?: string;
   content: string;
 }
 
@@ -25,6 +26,7 @@ export interface BlogPostMeta {
   category: string;
   tags: string[];
   featured?: boolean;
+  interactive?: string;
 }
 
 function parseFrontmatter(fileName: string): BlogPostMeta | null {
@@ -42,6 +44,7 @@ function parseFrontmatter(fileName: string): BlogPostMeta | null {
     category: data.category || "Production",
     tags: data.tags || [],
     featured: data.featured || false,
+    interactive: data.interactive || undefined,
   };
 }
 
@@ -81,6 +84,7 @@ export async function getPostBySlug(
     category: data.category || "Production",
     tags: data.tags || [],
     featured: data.featured || false,
+    interactive: data.interactive || undefined,
     content: result.toString(),
   };
 }

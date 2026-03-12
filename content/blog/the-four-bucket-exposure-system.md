@@ -4,6 +4,7 @@ date: "2026-03-12"
 excerpt: "Every exposure decision reduces to four elements measured in stops relative to key. Master these four numbers and you can see, predict, and reproduce any cinematic look."
 category: "Cinematography"
 tags: ["exposure", "four buckets", "lighting", "stops", "false color"]
+interactive: "/interactive/four-bucket-exposure-system.html"
 featured: false
 ---
 

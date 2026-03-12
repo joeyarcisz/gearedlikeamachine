@@ -4,6 +4,7 @@ date: "2026-03-12"
 excerpt: "A deep dive into the nine shot sizes that form the visual vocabulary of every film ever made. From establishing shots to extreme close-ups, each is a tool with a specific purpose."
 category: "Filmmaking"
 tags: ["shot sizes", "the shot list", "composition", "cinematography", "directing"]
+interactive: "/interactive/essential-shot-sizes.html"
 featured: false
 draft: true
 ---

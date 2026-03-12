@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essential Shot Sizes — The Filmmaker's Toolbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #f8f6f2;
+  --surface: #fff;
+  --surface2: #f0ede7;
+  --border: #ddd8cf;
+  --text: #1c1a17;
+  --dim: #7a756c;
+  --accent: #111;
+  --film: #c82020;
+  --film-light: #fceaea;
+  --teal: #1a7a6a;
+  --teal-light: #e6f5f2;
+  --amber: #b88520;
+  --amber-light: #fdf5e6;
+  --slate: #3a4a5c;
+  --slate-light: #e8ecf0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Overpass Mono', monospace;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: end;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 2rem;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1.0;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--film);
+  font-weight: 400;
+}
+
+.hero-meta {
+  text-align: right;
+}
+
+.hero-meta .ep {
+  font-size: 0.55rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+.hero-meta .series {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--accent);
+  font-style: italic;
+}
+
+.hero-intro {
+  padding: 2rem 0;
+  font-size: 0.75rem;
+  color: var(--dim);
+  line-height: 1.8;
+  max-width: 700px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── SHOT CARDS ── */
+.shots {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.shot-entry {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  border-bottom: 1px solid var(--border);
+  min-height: 280px;
+}
+
+.shot-entry:nth-child(even) {
+  background: var(--surface2);
+}
+
+.shot-visual {
+  border-right: 1px solid var(--border);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.shot-figure {
+  width: 140px;
+  height: 180px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Figure silhouette using CSS */
+.figure-body {
+  position: absolute;
+  bottom: 0;
+  width: 36px;
+  background: var(--border);
+  border-radius: 4px 4px 0 0;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.figure-head {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Frame indicator */
+.frame-box {
+  position: absolute;
+  border: 2px solid var(--film);
+  border-radius: 2px;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.frame-corners .frame-box::before,
+.frame-corners .frame-box::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--film);
+  border-style: solid;
+}
+
+.shot-abbr {
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-top: 1rem;
+}
+
+.shot-content {
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.shot-number {
+  font-size: 0.5rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.5rem;
+}
+
+.shot-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 0.2rem;
+}
+
+.shot-aka {
+  font-size: 0.6rem;
+  color: var(--dim);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.shot-desc {
+  font-size: 0.7rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  max-width: 500px;
+}
+
+.shot-use {
+  margin-top: auto;
+}
+
+.shot-use-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.4rem;
+}
+
+.shot-use-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.shot-use-list li {
+  font-size: 0.6rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--dim);
+}
+
+.shot-example {
+  margin-top: 0.8rem;
+  font-size: 0.6rem;
+  color: var(--dim);
+  font-style: italic;
+}
+
+.shot-example strong {
+  color: var(--text);
+  font-style: normal;
+}
+
+/* ── SCALE DIAGRAM ── */
+.scale-section {
+  padding: 3rem 0;
+}
+
+.scale-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.5rem;
+}
+
+.scale-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.scale-desc {
+  font-size: 0.75rem;
+  color: var(--dim);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 2rem;
+}
+
+.scale-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+.scale-track {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 700px;
+  height: 200px;
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.scale-track::before {
+  content: '';
+  position: absolute;
+  bottom: 38px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.scale-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.scale-item:hover { transform: translateY(-3px); }
+
+.scale-block {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  transition: all 0.4s;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.scale-block-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.1em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.scale-item-label {
+  position: absolute;
+  bottom: 0;
+  font-size: 0.55rem;
+  color: var(--dim);
+  text-align: center;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+
+/* ── STORYTELLING SPECTRUM ── */
+.spectrum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.spectrum-card {
+  background: var(--surface);
+  padding: 1.5rem;
+}
+
+.spectrum-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.spectrum-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.spectrum-shots {
+  font-size: 0.6rem;
+  color: var(--dim);
+  margin-bottom: 0.6rem;
+}
+
+.spectrum-desc {
+  font-size: 0.65rem;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+/* ── HIERARCHY QUOTE ── */
+.hierarchy {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2.5rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.hierarchy-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.hierarchy-item {
+  padding: 0.8rem 1.5rem;
+  position: relative;
+}
+
+.hierarchy-item + .hierarchy-item::before {
+  content: '→';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--border);
+  font-size: 1rem;
+}
+
+.hierarchy-level {
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.2rem;
+}
+
+.hierarchy-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ── CHEAT SHEET ── */
+.cheat {
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 6px;
+  padding: 2.5rem;
+  margin-top: 2rem;
+}
+
+.cheat h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+}
+
+.cheat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.cheat-item {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+}
+
+.cheat-abbr {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--film);
+  min-width: 36px;
+  padding-top: 2px;
+}
+
+.cheat-text {
+  font-size: 0.62rem;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+.cheat-text strong {
+  opacity: 1;
+  color: var(--bg);
+  display: block;
+  font-size: 0.7rem;
+  margin-bottom: 2px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 3rem 0 1rem;
+  font-size: 0.5rem;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-meta { text-align: left; }
+  .shot-entry { grid-template-columns: 1fr; }
+  .shot-visual { border-right: none; border-bottom: 1px solid var(--border); padding: 1.5rem; min-height: auto; }
+  .shot-figure { height: 120px; }
+  .spectrum-grid { grid-template-columns: 1fr; }
+  .hierarchy-chain { flex-direction: column; }
+  .hierarchy-item + .hierarchy-item::before { content: '↓'; left: 50%; top: -6px; transform: translateX(-50%); }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Essential<br><em>Shot Sizes</em></h1>
+    <div class="hero-meta">
+      <div class="ep">Episode 01</div>
+      <div class="series">The Shot List</div>
+    </div>
+  </div>
+
+  <div class="hero-intro">
+    Films are made of sequences. Sequences are made of scenes. Scenes are made of shots.
+    Shot choices establish the rhythm, tone, and meaning of a scene. Knowing which shot is
+    most aesthetically and dramatically valuable should be the highest priority for both
+    a director and a DP.
+  </div>
+
+  <!-- HIERARCHY -->
+  <div class="hierarchy">
+    <div class="hierarchy-chain">
+      <div class="hierarchy-item">
+        <div class="hierarchy-level">Macro</div>
+        <div class="hierarchy-name">Film</div>
+      </div>
+      <div class="hierarchy-item">
+        <div class="hierarchy-level">Structure</div>
+        <div class="hierarchy-name">Sequences</div>
+      </div>
+      <div class="hierarchy-item">
+        <div class="hierarchy-level">Unit</div>
+        <div class="hierarchy-name">Scenes</div>
+      </div>
+      <div class="hierarchy-item">
+        <div class="hierarchy-level">Atom</div>
+        <div class="hierarchy-name">Shots</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHOT ENTRIES -->
+  <div class="shots" id="shots">
+
+    <!-- ESTABLISHING -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:30px; bottom:20px; width:8px; background:#bbb8b0;"></div>
+          <div class="figure-head" style="width:6px; height:6px; bottom:52px; background:#bbb8b0;"></div>
+          <div class="frame-box" style="inset:0; border-color:var(--film);"></div>
+          <!-- environment hints -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:20px;background:var(--surface2);border-top:1px solid var(--border);"></div>
+          <div style="position:absolute;top:10px;left:10px;width:20px;height:30px;background:var(--surface2);border:1px solid var(--border);border-radius:1px;"></div>
+          <div style="position:absolute;top:15px;right:15px;width:25px;height:25px;background:var(--surface2);border:1px solid var(--border);border-radius:1px;"></div>
+          <div style="position:absolute;top:8px;left:50px;width:35px;height:40px;background:var(--surface2);border:1px solid var(--border);border-radius:1px;"></div>
+        </div>
+        <div class="shot-abbr">ES</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 01</div>
+        <div class="shot-name">Establishing Shot</div>
+        <div class="shot-aka">The World Builder</div>
+        <div class="shot-desc">
+          The most common visual element to open a scene or film. Wide enough to establish geography,
+          time of day, and the scale of subjects relative to their environment. Often used to
+          transition between scenes. In sci-fi, where entire worlds need introducing, it's crucial.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Opening a scene</li>
+            <li>Transitioning locations</li>
+            <li>Establishing time of day</li>
+            <li>World-building</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>Blade Runner 2049</strong> — Industrial farms outside the city. First impression of near-future Earth.</div>
+      </div>
+    </div>
+
+    <!-- MASTER -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:70px; bottom:10px; width:18px; left:35px; background:#c8c4bc;"></div>
+          <div class="figure-head" style="width:12px; height:12px; bottom:82px; left:38px; background:#c8c4bc;"></div>
+          <div class="figure-body" style="height:68px; bottom:10px; width:18px; left:75px; background:#b8b4ac;"></div>
+          <div class="figure-head" style="width:12px; height:12px; bottom:80px; left:78px; background:#b8b4ac;"></div>
+          <div class="frame-box" style="inset:5px; border-color:var(--film);"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:10px;background:var(--surface2);"></div>
+        </div>
+        <div class="shot-abbr">MS (Master)</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 02</div>
+        <div class="shot-name">Master Shot</div>
+        <div class="shot-aka">The Safety Net</div>
+        <div class="shot-desc">
+          Confirms location and geography while clarifying which characters are in the scene and their
+          spatial relationships. Captures the entire scene playing out, giving the editor something to
+          cut back to if needed. The master is your safety net.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Full scene coverage</li>
+            <li>Character relationships</li>
+            <li>Editor safety</li>
+            <li>Emphasis on group dynamic</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>The Godfather Part II</strong> — Corleone family at the dinner table. Played in the master to emphasize closeness, then Michael's split is felt when he's alone in the frame.</div>
+      </div>
+    </div>
+
+    <!-- WIDE -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:45px; bottom:10px; width:12px; background:#c0bcb4;"></div>
+          <div class="figure-head" style="width:9px; height:9px; bottom:57px; background:#c0bcb4;"></div>
+          <div class="frame-box" style="inset:0; border-color:var(--film);"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:10px;background:var(--surface2);"></div>
+        </div>
+        <div class="shot-abbr">WS</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 03</div>
+        <div class="shot-name">Wide Shot</div>
+        <div class="shot-aka">The Scale Statement</div>
+        <div class="shot-desc">
+          Positions subjects far from camera to represent their relationship to environment. Distinct
+          from the establishing shot: the wide is principally concerned with the scale of the subject,
+          not just location. Makes subjects appear lost, lonely, or overwhelmed.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Subject feels small</li>
+            <li>Isolation / loneliness</li>
+            <li>Environment relationship</li>
+            <li>Distance statement</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>Phantom Thread</strong> — Alma and Reynolds dwarfed by a messy ballroom. Together, yet isolated from the world.</div>
+      </div>
+    </div>
+
+    <!-- FULL -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:100px; bottom:10px; width:28px; background:#c0bcb4;"></div>
+          <div class="figure-head" style="width:16px; height:16px; bottom:112px; background:#c0bcb4;"></div>
+          <div class="frame-box" style="left:20px; right:20px; top:15px; bottom:5px; border-color:var(--film);"></div>
+        </div>
+        <div class="shot-abbr">FS</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 04</div>
+        <div class="shot-name">Full Shot</div>
+        <div class="shot-aka">Head to Toe</div>
+        <div class="shot-desc">
+          The subject's entire body fills from top to bottom edges of frame. Tight enough to tell a
+          story with the face, but wide enough to observe entire body, posture, and wardrobe.
+          Presents a character in all their glory.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Physicality matters</li>
+            <li>Wardrobe storytelling</li>
+            <li>Character entrance</li>
+            <li>Body language</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- COWBOY -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:110px; bottom:0; width:30px; background:#c0bcb4;"></div>
+          <div class="figure-head" style="width:17px; height:17px; bottom:112px; background:#c0bcb4;"></div>
+          <div class="frame-box" style="left:15px; right:15px; top:10px; bottom:40px; border-color:var(--film);"></div>
+        </div>
+        <div class="shot-abbr">MFS / Cowboy</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 05</div>
+        <div class="shot-name">Medium Full Shot</div>
+        <div class="shot-aka">The Cowboy</div>
+        <div class="shot-desc">
+          Arranged from top of head to just below the waist. Named for the height of gun holsters
+          in westerns. Reads as confident, dangerous, or confrontational. Strong power-posing framing,
+          especially when weapons are deployed.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Confrontation</li>
+            <li>Power / confidence</li>
+            <li>Weapons visible</li>
+            <li>Standoff tension</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>The Favourite</strong> — Lady Sarah in cowboy framing with a firearm. Not a western, but unmistakably confrontational.</div>
+      </div>
+    </div>
+
+    <!-- MEDIUM -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:130px; bottom:0; width:34px; background:#c0bcb4;"></div>
+          <div class="figure-head" style="width:18px; height:18px; bottom:132px; background:#c0bcb4;"></div>
+          <div class="frame-box" style="left:10px; right:10px; top:8px; bottom:70px; border-color:var(--film);"></div>
+        </div>
+        <div class="shot-abbr">MS</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 06</div>
+        <div class="shot-name">Medium Shot</div>
+        <div class="shot-aka">The Workhorse</div>
+        <div class="shot-desc">
+          The most popular shot size in cinema. Neutral: neither dramatic like a close-up nor
+          distancing like a wide. Captures the subject at a size similar to how we interact with
+          people in real life. Above the waist, below the chest, just above the head.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Dialogue scenes</li>
+            <li>Neutral storytelling</li>
+            <li>Eyes + physicality</li>
+            <li>Intimate but not jarring</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>Coco</strong> — Miguel watching his idol on TV. The medium accommodates shrine props, TV detail, and Miguel's reactions in one frame.</div>
+      </div>
+    </div>
+
+    <!-- MCU -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:150px; bottom:0; width:38px; background:#c0bcb4;"></div>
+          <div class="figure-head" style="width:20px; height:20px; bottom:152px; background:#c0bcb4;"></div>
+          <div class="frame-box" style="left:5px; right:5px; top:5px; bottom:100px; border-color:var(--film);"></div>
+        </div>
+        <div class="shot-abbr">MCU</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 07</div>
+        <div class="shot-name">Medium Close-Up</div>
+        <div class="shot-aka">The Focus Pull</div>
+        <div class="shot-desc">
+          Mid-chest to just above the head. Reduces distraction and prioritizes story and
+          character details. Close enough for emotion, wide enough to include key props or
+          actions happening at chest/hand level.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Reducing distraction</li>
+            <li>Character + prop together</li>
+            <li>Reaction capture</li>
+            <li>Intimate without losing body</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>Avengers: Endgame</strong> — Thanos snaps his fingers. MCU frames both the Infinity Gauntlet and his look of cruel satisfaction.</div>
+      </div>
+    </div>
+
+    <!-- CLOSE-UP -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-body" style="height:170px; bottom:0; width:50px; background:#c0bcb4; border-radius:6px 6px 0 0;"></div>
+          <div class="figure-head" style="width:26px; height:26px; bottom:172px; background:#c0bcb4;"></div>
+          <div class="frame-box" style="left:0; right:0; top:0; bottom:130px; border-color:var(--film); border-width:3px;"></div>
+        </div>
+        <div class="shot-abbr">CU</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 08</div>
+        <div class="shot-name">Close-Up</div>
+        <div class="shot-aka">The Empathy Engine</div>
+        <div class="shot-desc">
+          The most powerful visual weapon for highlighting emotion or dramatic beats. Most often
+          arranged at eye level to dig into the windows of the soul. Front row seat for a
+          character's thoughts and feelings. About empathy.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Emotional turning point</li>
+            <li>Decision moment</li>
+            <li>Anxiety / tension</li>
+            <li>Empathy connection</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>The Shining</strong> — "Here's Johnny." Close-up as the ultimate weapon for dramatic revelation.</div>
+      </div>
+    </div>
+
+    <!-- ECU -->
+    <div class="shot-entry">
+      <div class="shot-visual">
+        <div class="shot-figure">
+          <div class="figure-head" style="width:60px; height:60px; bottom:60px; background:#c0bcb4;"></div>
+          <!-- eyes -->
+          <div style="position:absolute;bottom:82px;left:48px;width:10px;height:5px;background:var(--accent);border-radius:50%;"></div>
+          <div style="position:absolute;bottom:82px;left:78px;width:10px;height:5px;background:var(--accent);border-radius:50%;"></div>
+          <div class="frame-box" style="left:30px; right:30px; top:48px; bottom:62px; border-color:var(--film); border-width:3px;"></div>
+        </div>
+        <div class="shot-abbr">ECU / Insert</div>
+      </div>
+      <div class="shot-content">
+        <div class="shot-number">Shot 09</div>
+        <div class="shot-name">Extreme Close-Up</div>
+        <div class="shot-aka">The Scalpel</div>
+        <div class="shot-desc">
+          Isolates a specific area: lips, ears, nose, but typically the eyes. The most intimate,
+          dramatic, and potentially startling of all shot sizes. The insert shot variant isolates
+          props or details crucial to the narrative.
+        </div>
+        <div class="shot-use">
+          <div class="shot-use-label">Use When</div>
+          <ul class="shot-use-list">
+            <li>Maximum emphasis</li>
+            <li>Crucial detail / prop</li>
+            <li>Startling reveal</li>
+            <li>Heightened tension</li>
+          </ul>
+        </div>
+        <div class="shot-example"><strong>Kill Bill Vol. 1</strong> — The Bride's frantic eyes as the Crazy 88 swarm. Cut between entry points and ECU eyes.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCALE VISUALIZATION -->
+  <div class="scale-section">
+    <div class="scale-label">The Complete Spectrum</div>
+    <div class="scale-title">Distance to Intimacy</div>
+    <div class="scale-desc">
+      Every shot size exists on a spectrum from maximum distance to maximum intimacy.
+      Moving along this scale shifts the audience's emotional relationship to the subject.
+    </div>
+
+    <div class="scale-bar">
+      <div class="scale-track">
+        <div class="scale-item">
+          <div class="scale-block" style="height:40px; background:#8a756c;">
+            <div class="scale-block-label">ES</div>
+          </div>
+          <div class="scale-item-label">Establishing</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:55px; background:#7a6a5c;">
+            <div class="scale-block-label">Master</div>
+          </div>
+          <div class="scale-item-label">Master</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:70px; background:#6a5e50;">
+            <div class="scale-block-label">WS</div>
+          </div>
+          <div class="scale-item-label">Wide</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:85px; background:#5a5244;">
+            <div class="scale-block-label">FS</div>
+          </div>
+          <div class="scale-item-label">Full</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:100px; background:#4a4638;">
+            <div class="scale-block-label">MFS</div>
+          </div>
+          <div class="scale-item-label">Cowboy</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:115px; background:#3a3a2e;">
+            <div class="scale-block-label">MS</div>
+          </div>
+          <div class="scale-item-label">Medium</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:130px; background:#2e2e24;">
+            <div class="scale-block-label">MCU</div>
+          </div>
+          <div class="scale-item-label">Med CU</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:148px; background:var(--film);">
+            <div class="scale-block-label">CU</div>
+          </div>
+          <div class="scale-item-label">Close-Up</div>
+        </div>
+        <div class="scale-item">
+          <div class="scale-block" style="height:160px; background:#8a1515;">
+            <div class="scale-block-label">ECU</div>
+          </div>
+          <div class="scale-item-label">Extreme CU</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:1rem;font-size:0.55rem;color:var(--dim);padding:0 0.5rem;">
+        <span>← Distance / Context / Geography</span>
+        <span>Intimacy / Emotion / Detail →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORYTELLING FUNCTION -->
+  <div class="scale-label">Storytelling Function</div>
+  <div class="scale-title" style="margin-bottom:1.5rem;">Three Zones of Purpose</div>
+
+  <div class="spectrum-grid">
+    <div class="spectrum-card">
+      <div class="spectrum-icon">🌍</div>
+      <div class="spectrum-name">Context Zone</div>
+      <div class="spectrum-shots">ES · Master · WS</div>
+      <div class="spectrum-desc">
+        Where is this? Who's here? What's the spatial relationship?
+        These shots answer geography, scale, and orientation questions.
+        They distance the audience to show the big picture.
+      </div>
+    </div>
+    <div class="spectrum-card">
+      <div class="spectrum-icon">🤝</div>
+      <div class="spectrum-name">Engagement Zone</div>
+      <div class="spectrum-shots">FS · MFS · MS</div>
+      <div class="spectrum-desc">
+        The conversational range. How we see people in real life.
+        Body language, posture, wardrobe, physicality. The workhorse
+        territory where most of a film's runtime lives.
+      </div>
+    </div>
+    <div class="spectrum-card">
+      <div class="spectrum-icon">💔</div>
+      <div class="spectrum-name">Intimacy Zone</div>
+      <div class="spectrum-shots">MCU · CU · ECU</div>
+      <div class="spectrum-desc">
+        Emotion, revelation, emphasis. The audience is pulled into
+        a character's inner world. Thoughts, feelings, micro-expressions.
+        Maximum dramatic power. Use deliberately.
+      </div>
+    </div>
+  </div>
+
+  <!-- CHEAT SHEET -->
+  <div class="cheat">
+    <h3>Quick Reference Cheat Sheet</h3>
+    <div class="cheat-grid">
+      <div class="cheat-item">
+        <div class="cheat-abbr">ES</div>
+        <div class="cheat-text"><strong>Establishing</strong>Geography, time of day, world-building. Scene opener.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">MS*</div>
+        <div class="cheat-text"><strong>Master</strong>Full scene coverage. Safety net. Character positions.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">WS</div>
+        <div class="cheat-text"><strong>Wide</strong>Subject scale vs environment. Isolation. Distance.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">FS</div>
+        <div class="cheat-text"><strong>Full</strong>Head to toe. Physicality. Wardrobe. Entrance.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">MFS</div>
+        <div class="cheat-text"><strong>Cowboy</strong>Head to mid-thigh. Power. Confrontation. Holsters.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">MS</div>
+        <div class="cheat-text"><strong>Medium</strong>Waist up. The workhorse. Neutral. Conversational.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">MCU</div>
+        <div class="cheat-text"><strong>Med Close-Up</strong>Chest up. Reduce distraction. Character + props.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">CU</div>
+        <div class="cheat-text"><strong>Close-Up</strong>Face. Empathy engine. Emotion. Decision points.</div>
+      </div>
+      <div class="cheat-item">
+        <div class="cheat-abbr">ECU</div>
+        <div class="cheat-text"><strong>Extreme CU</strong>Eyes / detail. Maximum emphasis. The scalpel.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">The Shot List &middot; Episode 01 &middot; Shot Size</div>
+
+</body>
+</html>

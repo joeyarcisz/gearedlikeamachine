@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Systems-Based Exposure Ratios</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #08090b;
+  --surface: #0e1014;
+  --surface2: #13151a;
+  --border: #1a1d25;
+  --text: #b8bcc8;
+  --dim: #4a4e5c;
+  --accent: #e4e0d8;
+  --warm: #d4a054;
+  --locked: #2a5040;
+  --locked-text: #4aaa70;
+  --active: #d4a054;
+  --active-glow: rgba(212,160,84,0.15);
+  --red: #c04040;
+  --blue: #4070c0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scanline overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+/* ── HEADER ── */
+.hero {
+  padding: 5rem 0 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-size: 0.55rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  color: var(--accent);
+  line-height: 1.15;
+  margin-bottom: 0.8rem;
+}
+
+.hero h1 span { color: var(--warm); }
+
+.hero-sub {
+  font-size: 0.75rem;
+  color: var(--dim);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 3rem 0;
+}
+
+/* ── SECTIONS ── */
+.sect {
+  padding: 3rem 0;
+}
+
+.sect-num {
+  font-size: 0.5rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sect-num::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.sect h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 400;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.sect-desc {
+  font-size: 0.75rem;
+  color: var(--dim);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+/* ── THE SIX TOOLS ── */
+.tools-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tool-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 80px;
+  gap: 0;
+  align-items: stretch;
+  min-height: 56px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.tool-row:hover {
+  border-color: #2a2d35;
+}
+
+.tool-row.locked {
+  opacity: 0.55;
+}
+
+.tool-row.locked:hover {
+  opacity: 0.75;
+}
+
+.tool-row.the-one {
+  border-color: var(--warm);
+  box-shadow: 0 0 20px var(--active-glow), inset 0 0 20px var(--active-glow);
+}
+
+.tool-name {
+  background: var(--surface);
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-right: 1px solid var(--border);
+}
+
+.tool-name .num {
+  color: var(--dim);
+  font-size: 0.6rem;
+  width: 1.2rem;
+}
+
+.tool-row.locked .tool-name { color: var(--locked-text); }
+.tool-row.the-one .tool-name { color: var(--warm); }
+
+.tool-info {
+  background: var(--surface2);
+  padding: 1rem 1.2rem;
+  font-size: 0.65rem;
+  color: var(--dim);
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+}
+
+.tool-status {
+  background: var(--surface);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border);
+}
+
+.status-badge {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.status-badge.const {
+  background: rgba(42,80,64,0.3);
+  color: var(--locked-text);
+  border: 1px solid rgba(74,170,112,0.2);
+}
+
+.status-badge.variable {
+  background: rgba(212,160,84,0.15);
+  color: var(--warm);
+  border: 1px solid rgba(212,160,84,0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,160,84,0); }
+  50% { box-shadow: 0 0 8px 2px rgba(212,160,84,0.2); }
+}
+
+/* ── FUNNEL VISUAL ── */
+.funnel-viz {
+  margin-top: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.funnel-title {
+  font-size: 0.55rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.funnel-stages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  position: relative;
+}
+
+.funnel-stage {
+  text-align: center;
+  position: relative;
+  flex: 1;
+  max-width: 140px;
+}
+
+.funnel-block {
+  margin: 0 auto;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.funnel-block.wide {
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(192,64,64,0.15), rgba(192,64,64,0.05));
+  border: 1px solid rgba(192,64,64,0.2);
+  color: var(--red);
+}
+
+.funnel-block.mid {
+  width: 75%;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(64,112,192,0.15), rgba(64,112,192,0.05));
+  border: 1px solid rgba(64,112,192,0.2);
+  color: var(--blue);
+}
+
+.funnel-block.narrow {
+  width: 50%;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(74,170,112,0.15), rgba(74,170,112,0.05));
+  border: 1px solid rgba(74,170,112,0.2);
+  color: var(--locked-text);
+}
+
+.funnel-block.single {
+  width: 30%;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(212,160,84,0.2), rgba(212,160,84,0.05));
+  border: 1px solid rgba(212,160,84,0.4);
+  color: var(--warm);
+  box-shadow: 0 0 15px rgba(212,160,84,0.1);
+}
+
+.funnel-arrow {
+  color: var(--dim);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  width: 30px;
+  text-align: center;
+}
+
+.funnel-label {
+  margin-top: 0.8rem;
+  font-size: 0.55rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+.funnel-count {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ── RATIO EXPLORER ── */
+.ratio-explorer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ratio-header {
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ratio-header h3 {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+.ratio-readout {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--warm);
+}
+
+.ratio-frame {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+.ratio-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.ratio-controls {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.ratio-sliders {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.ratio-slider {
+  text-align: center;
+}
+
+.ratio-slider label {
+  display: block;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--dim);
+  margin-bottom: 0.5rem;
+}
+
+.ratio-slider .val {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.ratio-slider input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.ratio-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--warm);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+/* ── DEPTH SPECTRUM ── */
+.depth-spectrum {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.depth-card {
+  background: var(--surface);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.depth-card:hover {
+  background: var(--surface2);
+}
+
+.depth-card.active {
+  background: var(--surface2);
+}
+
+.depth-card.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--warm);
+}
+
+.depth-bar-wrap {
+  height: 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 1rem;
+}
+
+.depth-bar {
+  width: 8px;
+  border-radius: 1px 1px 0 0;
+  transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.depth-card-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+.depth-card-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+/* ── PHILOSOPHY CARDS ── */
+.phil-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.phil-card {
+  background: var(--surface);
+  padding: 2rem;
+  position: relative;
+}
+
+.phil-card::before {
+  content: attr(data-num);
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--border);
+  font-family: 'DM Serif Display', serif;
+}
+
+.phil-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.phil-body {
+  font-size: 0.7rem;
+  color: var(--dim);
+  line-height: 1.7;
+}
+
+.phil-body em {
+  color: var(--warm);
+  font-style: normal;
+}
+
+/* ── QUOTE BLOCK ── */
+.quote-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--warm);
+  border-radius: 0 2px 2px 0;
+  padding: 2.5rem 3rem;
+  position: relative;
+}
+
+.quote-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-style: italic;
+  color: var(--accent);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.quote-text span { color: var(--warm); }
+
+.quote-attr {
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── MENTAL MODEL ── */
+.mental-model {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2.5rem;
+}
+
+.model-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.model-node {
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  text-align: center;
+  min-width: 120px;
+  transition: all 0.3s;
+}
+
+.model-node:hover {
+  border-color: var(--warm);
+  background: rgba(212,160,84,0.05);
+}
+
+.model-node-label {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+.model-node-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+.model-arrow {
+  color: var(--dim);
+  padding: 0 0.8rem;
+  font-size: 1rem;
+}
+
+/* ── EFFICIENCY METER ── */
+.efficiency-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2rem 2.5rem;
+}
+
+.eff-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eff-row:last-child { margin-bottom: 0; }
+
+.eff-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.eff-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.eff-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.eff-val {
+  font-size: 0.7rem;
+  font-weight: 500;
+  width: 40px;
+  text-align: right;
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 0.55rem;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .tool-row { grid-template-columns: 1fr; }
+  .tool-status { justify-content: flex-start; border-left: none; border-top: 1px solid var(--border); }
+  .funnel-stages { flex-direction: column; gap: 0.5rem; }
+  .funnel-arrow { transform: rotate(90deg); }
+  .funnel-stage { max-width: 200px; }
+  .ratio-sliders { grid-template-columns: 1fr; }
+  .depth-spectrum { grid-template-columns: repeat(3, 1fr); }
+  .model-flow { flex-direction: column; }
+  .model-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Cinematography Lecture</div>
+    <h1>Systems-Based<br><span>Exposure Ratios</span></h1>
+    <p class="hero-sub">
+      Six tools. Five locked. One variable. Remove complexity until what remains
+      is a repeatable system for creating depth, mood, and emotion through light.
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 1: THE SIX TOOLS -->
+  <div class="sect">
+    <div class="sect-num">01 &mdash; The Six Tools</div>
+    <h2>Lock Five. Master One.</h2>
+    <p class="sect-desc">
+      Six elements control how much light hits the sensor. In cinematography, five are set
+      as constants scene-to-scene. That leaves one variable where 99% of creative decisions live.
+    </p>
+
+    <div class="tools-funnel">
+      <div class="tool-row locked">
+        <div class="tool-name"><span class="num">01</span> Frame Rate</div>
+        <div class="tool-info">24 or 25fps. Set once, rarely changed within a scene. Locked.</div>
+        <div class="tool-status"><span class="status-badge const">Constant</span></div>
+      </div>
+      <div class="tool-row locked">
+        <div class="tool-name"><span class="num">02</span> ISO / ASA</div>
+        <div class="tool-info">Sensor sensitivity. Set per scene or project. Don't chase it mid-build.</div>
+        <div class="tool-status"><span class="status-badge const">Constant</span></div>
+      </div>
+      <div class="tool-row locked">
+        <div class="tool-name"><span class="num">03</span> Shutter Speed</div>
+        <div class="tool-info">180° shutter rule. Changed only for intentional motion effects (1% of cases).</div>
+        <div class="tool-status"><span class="status-badge const">Constant</span></div>
+      </div>
+      <div class="tool-row locked">
+        <div class="tool-name"><span class="num">04</span> Aperture</div>
+        <div class="tool-info">Set for depth of field and maintained across a scene. Foundation layer.</div>
+        <div class="tool-status"><span class="status-badge const">Constant</span></div>
+      </div>
+      <div class="tool-row locked">
+        <div class="tool-name"><span class="num">05</span> ND / Filtration</div>
+        <div class="tool-info">Neutral density set at scene start. Changing mid-build is the #1 gaffer frustration.</div>
+        <div class="tool-status"><span class="status-badge const">Constant</span></div>
+      </div>
+      <div class="tool-row the-one">
+        <div class="tool-name"><span class="num">06</span> Light</div>
+        <div class="tool-info">The only variable. Ratios, distribution, depth. This is where cinematography lives.</div>
+        <div class="tool-status"><span class="status-badge variable">Variable</span></div>
+      </div>
+    </div>
+
+    <!-- FUNNEL VISUALIZATION -->
+    <div class="funnel-viz">
+      <div class="funnel-title">Variable Elimination Funnel</div>
+      <div class="funnel-stages">
+        <div class="funnel-stage">
+          <div class="funnel-block wide"><div class="funnel-count">∞</div></div>
+          <div class="funnel-label">All possibilities</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-stage">
+          <div class="funnel-block mid"><div class="funnel-count">6</div></div>
+          <div class="funnel-label">Exposure tools</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-stage">
+          <div class="funnel-block narrow"><div class="funnel-count">5</div></div>
+          <div class="funnel-label">Locked constants</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-stage">
+          <div class="funnel-block single"><div class="funnel-count">1</div></div>
+          <div class="funnel-label">Light (ratios)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2: THE CORE PHILOSOPHY -->
+  <div class="sect">
+    <div class="sect-num">02 &mdash; The Core Idea</div>
+    <h2>The Look Is the Exposure</h2>
+    <p class="sect-desc">
+      Exposure isn't a technical checkbox. It's the creative decision that defines how an image feels.
+      Ratios between light levels create depth, and depth creates compelling images.
+    </p>
+
+    <div class="quote-block">
+      <div class="quote-text">
+        "Flat is boring. I don't like looking at boring things. I like to be drawn in with <span>depth</span>,
+        and depth requires <span>contrast</span>, and it requires <span>control</span>,
+        and it requires different light levels spread across the sensor <span>in a pattern</span>."
+      </div>
+      <div class="quote-attr">On why ratios matter</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3: DEPTH THROUGH RATIOS -->
+  <div class="sect">
+    <div class="sect-num">03 &mdash; Depth Spectrum</div>
+    <h2>Flat to Deep. Ratios Control Everything.</h2>
+    <p class="sect-desc">
+      The relationship between light levels across the frame determines depth.
+      More contrast between areas = more depth = more compelling image.
+    </p>
+
+    <div class="depth-spectrum" id="depthSpectrum">
+      <div class="depth-card active" data-preset="flat" onclick="setDepth('flat')">
+        <div class="depth-bar-wrap">
+          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
+          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
+          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
+          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
+        </div>
+        <div class="depth-card-label">No Contrast</div>
+        <div class="depth-card-name">Flat</div>
+      </div>
+      <div class="depth-card" data-preset="subtle" onclick="setDepth('subtle')">
+        <div class="depth-bar-wrap">
+          <div class="depth-bar" style="height:45px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:35px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:48px; background:var(--red)"></div>
+          <div class="depth-bar" style="height:38px; background:var(--locked-text)"></div>
+        </div>
+        <div class="depth-card-label">Low Contrast</div>
+        <div class="depth-card-name">Subtle</div>
+      </div>
+      <div class="depth-card" data-preset="shaped" onclick="setDepth('shaped')">
+        <div class="depth-bar-wrap">
+          <div class="depth-bar" style="height:50px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:28px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:55px; background:var(--red)"></div>
+          <div class="depth-bar" style="height:22px; background:var(--locked-text)"></div>
+        </div>
+        <div class="depth-card-label">Medium</div>
+        <div class="depth-card-name">Shaped</div>
+      </div>
+      <div class="depth-card" data-preset="dramatic" onclick="setDepth('dramatic')">
+        <div class="depth-bar-wrap">
+          <div class="depth-bar" style="height:55px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:18px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:58px; background:var(--red)"></div>
+          <div class="depth-bar" style="height:12px; background:var(--locked-text)"></div>
+        </div>
+        <div class="depth-card-label">High Contrast</div>
+        <div class="depth-card-name">Dramatic</div>
+      </div>
+      <div class="depth-card" data-preset="extreme" onclick="setDepth('extreme')">
+        <div class="depth-bar-wrap">
+          <div class="depth-bar" style="height:58px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:8px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:60px; background:var(--red)"></div>
+          <div class="depth-bar" style="height:5px; background:var(--locked-text)"></div>
+        </div>
+        <div class="depth-card-label">Extreme</div>
+        <div class="depth-card-name">Chiaroscuro</div>
+      </div>
+    </div>
+
+    <!-- RATIO EXPLORER -->
+    <div class="ratio-explorer" style="margin-top:2rem;">
+      <div class="ratio-header">
+        <h3>Ratio Visualizer</h3>
+        <div class="ratio-readout" id="ratioReadout">Key:Fill 2:1 &middot; Key:BG 4:1</div>
+      </div>
+      <div class="ratio-frame">
+        <canvas class="ratio-canvas" id="ratioCanvas"></canvas>
+      </div>
+      <div class="ratio-controls">
+        <div class="ratio-sliders">
+          <div class="ratio-slider">
+            <label>Key : Fill Ratio</label>
+            <div class="val" id="kfVal">2:1</div>
+            <input type="range" min="1" max="8" value="2" id="kfSlider" oninput="updateRatio()">
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--dim);margin-top:4px;">
+              <span>1:1 flat</span><span>8:1 extreme</span>
+            </div>
+          </div>
+          <div class="ratio-slider">
+            <label>Key : Back Ratio</label>
+            <div class="val" id="kbVal">1:2</div>
+            <input type="range" min="0" max="6" value="2" id="kbSlider" oninput="updateRatio()">
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--dim);margin-top:4px;">
+              <span>no rim</span><span>hot rim</span>
+            </div>
+          </div>
+          <div class="ratio-slider">
+            <label>Key : BG Ratio</label>
+            <div class="val" id="kgVal">4:1</div>
+            <input type="range" min="1" max="8" value="4" id="kgSlider" oninput="updateRatio()">
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--dim);margin-top:4px;">
+              <span>1:1 bright</span><span>8:1 dark</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4: THE WORKFLOW -->
+  <div class="sect">
+    <div class="sect-num">04 &mdash; The Workflow</div>
+    <h2>Vision to Sensor. The Translation.</h2>
+    <p class="sect-desc">
+      The process: see the final image in your mind, work backward to the ratios that create it,
+      then execute on set. The camera's language is exposure. Learn to speak it fluently.
+    </p>
+
+    <div class="mental-model">
+      <div class="model-flow">
+        <div class="model-node">
+          <div class="model-node-label">Step 1</div>
+          <div class="model-node-text">Vision</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node">
+          <div class="model-node-label">Step 2</div>
+          <div class="model-node-text">Ratios</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node">
+          <div class="model-node-label">Step 3</div>
+          <div class="model-node-text">The Box</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node">
+          <div class="model-node-label">Step 4</div>
+          <div class="model-node-text">Distribution</div>
+        </div>
+        <div class="model-arrow">→</div>
+        <div class="model-node">
+          <div class="model-node-label">Result</div>
+          <div class="model-node-text" style="color:var(--warm)">The Look</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5: WHY SYSTEMS -->
+  <div class="sect">
+    <div class="sect-num">05 &mdash; Why Systems</div>
+    <h2>Free Your Mind for What Matters</h2>
+    <p class="sect-desc">
+      A film set is a time-poor environment. The faster exposure becomes automatic,
+      the more mental bandwidth you have for everything else.
+    </p>
+
+    <div class="efficiency-wrap" style="margin-bottom:2rem;">
+      <div style="font-size:0.55rem;text-transform:uppercase;letter-spacing:0.3em;color:var(--dim);margin-bottom:1.5rem;">Mental Energy Allocation</div>
+
+      <div class="eff-row">
+        <div class="eff-label" style="color:var(--red)">Without System</div>
+        <div class="eff-track">
+          <div class="eff-fill" style="width:70%;background:linear-gradient(90deg,var(--red),#a03030)"></div>
+        </div>
+        <div class="eff-val" style="color:var(--red)">70%</div>
+      </div>
+      <div style="font-size:0.55rem;color:var(--dim);margin:-0.5rem 0 1rem 116px;">Energy burned on exposure decisions</div>
+
+      <div class="eff-row">
+        <div class="eff-label" style="color:var(--locked-text)">With System</div>
+        <div class="eff-track">
+          <div class="eff-fill" style="width:10%;background:linear-gradient(90deg,var(--locked-text),#2a5040)"></div>
+        </div>
+        <div class="eff-val" style="color:var(--locked-text)">10%</div>
+      </div>
+      <div style="font-size:0.55rem;color:var(--dim);margin:-0.5rem 0 1rem 116px;">Automatic, like tying your shoes</div>
+
+      <div class="eff-row">
+        <div class="eff-label" style="color:var(--warm)">Freed Up</div>
+        <div class="eff-track">
+          <div class="eff-fill" style="width:60%;background:linear-gradient(90deg,var(--warm),#b08030)"></div>
+        </div>
+        <div class="eff-val" style="color:var(--warm)">60%</div>
+      </div>
+      <div style="font-size:0.55rem;color:var(--dim);margin:-0.5rem 0 0 116px;">Available for composition, direction, communication, problem-solving</div>
+    </div>
+
+    <div class="phil-grid">
+      <div class="phil-card" data-num="01">
+        <div class="phil-title">Eliminate Variables</div>
+        <div class="phil-body">
+          Lock five tools as constants. Every variable you remove <em>narrows the window</em>
+          from infinite possibilities to a manageable set of repeatable options.
+        </div>
+      </div>
+      <div class="phil-card" data-num="02">
+        <div class="phil-title">Build a Rolodex</div>
+        <div class="phil-body">
+          Study work you admire. Reverse-engineer the ratios. <em>Light cannot lie</em>.
+          The exposure values in the final image are exactly what was there on the day or in the grade.
+        </div>
+      </div>
+      <div class="phil-card" data-num="03">
+        <div class="phil-title">Reproduce Results</div>
+        <div class="phil-body">
+          Same ratios = same feeling. Different composition, different lens, different subject,
+          but <em>the same exposure recipe produces the same emotional result</em>. Every time.
+        </div>
+      </div>
+      <div class="phil-card" data-num="04">
+        <div class="phil-title">Tie Your Shoes</div>
+        <div class="phil-body">
+          Once you see light this way, <em>you can't unsee it</em>. Exposure becomes unconscious.
+          That's when you become truly valuable on set, because your mind is free.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FINAL QUOTE -->
+  <div class="sect">
+    <div class="quote-block" style="border-left-color:var(--warm);">
+      <div class="quote-text">
+        "As soon as you understand these concepts, you will never be the same.
+        You will see the world <span>the way the camera sees the world</span>,
+        and you will be interpreting light <span>the way the camera interprets light</span>."
+      </div>
+      <div class="quote-attr">The transformation</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Systems-Based Exposure &middot; Lock Constants &middot; Master Light</div>
+
+<script>
+// ═══ DEPTH SPECTRUM ═══
+function setDepth(preset) {
+  document.querySelectorAll('.depth-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[data-preset="${preset}"]`).classList.add('active');
+
+  const presets = {
+    flat:     { kf: 1, kb: 0, kg: 1 },
+    subtle:   { kf: 2, kb: 1, kg: 2 },
+    shaped:   { kf: 3, kb: 2, kg: 4 },
+    dramatic: { kf: 5, kb: 3, kg: 6 },
+    extreme:  { kf: 8, kb: 5, kg: 8 }
+  };
+
+  const p = presets[preset];
+  document.getElementById('kfSlider').value = p.kf;
+  document.getElementById('kbSlider').value = p.kb;
+  document.getElementById('kgSlider').value = p.kg;
+  updateRatio();
+}
+
+// ═══ RATIO VISUALIZER ═══
+function updateRatio() {
+  const kf = parseInt(document.getElementById('kfSlider').value);
+  const kb = parseInt(document.getElementById('kbSlider').value);
+  const kg = parseInt(document.getElementById('kgSlider').value);
+
+  document.getElementById('kfVal').textContent = `${kf}:1`;
+  document.getElementById('kbVal').textContent = kb === 0 ? 'none' : `1:${kb}`;
+  document.getElementById('kgVal').textContent = `${kg}:1`;
+  document.getElementById('ratioReadout').textContent = `Key:Fill ${kf}:1 · Key:BG ${kg}:1`;
+
+  drawRatioScene(kf, kb, kg);
+}
+
+function drawRatioScene(kf, kb, kg) {
+  const canvas = document.getElementById('ratioCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Size canvas
+  canvas.width = canvas.offsetWidth * 2;
+  canvas.height = canvas.offsetHeight * 2;
+  ctx.scale(2, 2);
+  const w = canvas.offsetWidth;
+  const h = canvas.offsetHeight;
+
+  // Background brightness inversely proportional to kg ratio
+  const bgBright = Math.max(8, 60 - (kg * 7));
+  ctx.fillStyle = `rgb(${bgBright},${bgBright},${bgBright + 4})`;
+  ctx.fillRect(0, 0, w, h);
+
+  // Add some bg variation
+  for (let i = 0; i < 8; i++) {
+    const v = bgBright + (Math.random() * 20 - 10);
+    ctx.fillStyle = `rgba(${v},${v},${v + 3},0.3)`;
+    ctx.fillRect(Math.random() * w, Math.random() * h, 40 + Math.random() * 80, 30 + Math.random() * 60);
+  }
+
+  // Subject
+  const cx = w * 0.5;
+  const cy = h * 0.45;
+  const headR = Math.min(w, h) * 0.18;
+
+  // Key brightness (face lit side)
+  const keyBright = 180;
+  // Fill brightness based on ratio
+  const fillBright = Math.max(15, keyBright / kf);
+  // Back brightness
+  const backBright = kb === 0 ? bgBright : Math.min(255, keyBright + kb * 30);
+
+  // Backlight glow
+  if (kb > 0) {
+    const grad = ctx.createRadialGradient(cx, cy - headR * 0.3, headR * 0.8, cx, cy - headR * 0.3, headR * 1.8);
+    grad.addColorStop(0, `rgba(${backBright},${backBright},${backBright - 20},0.3)`);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // Head - fill side (left)
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, headR, headR * 1.3, 0, Math.PI * 0.5, Math.PI * 1.5);
+  ctx.closePath();
+  ctx.fillStyle = `rgb(${fillBright},${fillBright * 0.95},${fillBright * 0.9})`;
+  ctx.fill();
+  ctx.restore();
+
+  // Head - key side (right)
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, headR, headR * 1.3, 0, -Math.PI * 0.5, Math.PI * 0.5);
+  ctx.closePath();
+  ctx.fillStyle = `rgb(${keyBright},${keyBright * 0.95},${keyBright * 0.9})`;
+  ctx.fill();
+  ctx.restore();
+
+  // Gradient blend between key and fill
+  const blendGrad = ctx.createLinearGradient(cx - headR * 0.3, 0, cx + headR * 0.3, 0);
+  blendGrad.addColorStop(0, `rgba(${fillBright},${fillBright * 0.95},${fillBright * 0.9},0.8)`);
+  blendGrad.addColorStop(0.4, 'transparent');
+  blendGrad.addColorStop(0.6, 'transparent');
+  blendGrad.addColorStop(1, `rgba(${keyBright},${keyBright * 0.95},${keyBright * 0.9},0.3)`);
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, headR, headR * 1.3, 0, 0, Math.PI * 2);
+  ctx.fillStyle = blendGrad;
+  ctx.fill();
+  ctx.restore();
+
+  // Backlight rim
+  if (kb > 0) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, headR, headR * 1.3, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(${backBright},${backBright},${backBright - 30},${Math.min(0.8, kb * 0.2)})`;
+    ctx.lineWidth = 2 + kb;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Shoulders
+  ctx.fillStyle = `rgb(${Math.round(keyBright * 0.4)},${Math.round(keyBright * 0.38)},${Math.round(keyBright * 0.36)})`;
+  ctx.beginPath();
+  ctx.moveTo(cx - headR * 1.8, cy + headR * 1.3 + 30);
+  ctx.quadraticCurveTo(cx - headR * 0.5, cy + headR * 1.1, cx, cy + headR * 1.3);
+  ctx.quadraticCurveTo(cx + headR * 0.5, cy + headR * 1.1, cx + headR * 1.8, cy + headR * 1.3 + 30);
+  ctx.lineTo(cx + headR * 1.8, h);
+  ctx.lineTo(cx - headR * 1.8, h);
+  ctx.fill();
+
+  // Ratio labels
+  ctx.font = '500 11px IBM Plex Mono';
+  ctx.fillStyle = 'rgba(212,160,84,0.8)';
+  ctx.textAlign = 'center';
+  ctx.fillText(`Key ${kf}:1 Fill`, cx, h - 12);
+
+  if (kb > 0) {
+    ctx.fillStyle = 'rgba(192,64,64,0.7)';
+    ctx.fillText(`Rim 1:${kb}`, cx, cy - headR * 1.3 - 8);
+  }
+
+  ctx.fillStyle = 'rgba(74,170,112,0.6)';
+  ctx.fillText(`BG ${kg}:1`, 40, 20);
+}
+
+// ═══ INIT ═══
+updateRatio();
+
+// Animate efficiency bars on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.eff-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => { bar.style.width = w; }, 100);
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+const effWrap = document.querySelector('.efficiency-wrap');
+if (effWrap) observer.observe(effWrap);
+</script>
+
+</body>
+</html>

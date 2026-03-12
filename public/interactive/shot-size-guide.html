@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Only Shot Size Guide You'll Ever Need</title>
+<meta property="og:title" content="The Only Shot Size Guide You'll Ever Need">
+<meta property="og:description" content="9 essential shots every filmmaker must master. With film examples, use cases, and a cheat sheet.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #fff;
+  color: #0f1419;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.article {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+/* ── HEADER ── */
+.article-header {
+  margin-bottom: 2rem;
+}
+
+.article-header h1 {
+  font-size: 1.75rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #0f1419;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.6rem;
+}
+
+.article-header .subtitle {
+  font-size: 0.95rem;
+  color: #536471;
+  line-height: 1.5;
+}
+
+.article-header .byline {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #536471;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.byline-dot {
+  width: 3px;
+  height: 3px;
+  background: #536471;
+  border-radius: 50%;
+}
+
+.article-divider {
+  height: 1px;
+  background: #eff3f4;
+  margin: 1.5rem 0;
+}
+
+/* ── BODY TEXT ── */
+.article p {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: #0f1419;
+  margin-bottom: 1.25rem;
+}
+
+.article p strong { font-weight: 700; }
+
+.article p em { color: #536471; }
+
+.lead {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #0f1419;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+/* ── SHOT CARDS ── */
+.shot-card {
+  background: #f7f9f9;
+  border: 1px solid #eff3f4;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.shot-card-top {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  min-height: 140px;
+}
+
+.shot-card-viz {
+  background: #0f1419;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.shot-card-viz canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.shot-card-body {
+  padding: 1.25rem;
+}
+
+.shot-card-num {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #536471;
+  margin-bottom: 0.2rem;
+}
+
+.shot-card-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f1419;
+  margin-bottom: 0.15rem;
+}
+
+.shot-card-aka {
+  font-size: 0.75rem;
+  color: #1d9bf0;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.shot-card-desc {
+  font-size: 0.8rem;
+  color: #536471;
+  line-height: 1.6;
+}
+
+.shot-card-footer {
+  padding: 0.8rem 1.25rem;
+  border-top: 1px solid #eff3f4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.use-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  background: #eff3f4;
+  color: #536471;
+}
+
+.shot-card-example {
+  padding: 0.6rem 1.25rem 1rem;
+  font-size: 0.75rem;
+  color: #536471;
+  border-top: 1px solid #eff3f4;
+}
+
+.shot-card-example strong {
+  color: #0f1419;
+}
+
+/* ── SPECTRUM BAR ── */
+.spectrum-visual {
+  background: #0f1419;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.spectrum-title {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #536471;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.spectrum-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 140px;
+  padding-bottom: 28px;
+  position: relative;
+}
+
+.spectrum-bars::before {
+  content: '';
+  position: absolute;
+  bottom: 26px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #2f3336;
+}
+
+.s-bar {
+  width: 54px;
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.s-bar:hover { opacity: 0.85; }
+
+.s-bar-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.05em;
+}
+
+.s-bar-name {
+  position: absolute;
+  bottom: -22px;
+  font-size: 0.5rem;
+  color: #536471;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.spectrum-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.55rem;
+  color: #536471;
+  padding: 0 0.5rem;
+}
+
+/* ── ZONE CARDS ── */
+.zones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.zone-card {
+  background: #f7f9f9;
+  border: 1px solid #eff3f4;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.zone-emoji {
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.zone-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f1419;
+  margin-bottom: 0.15rem;
+}
+
+.zone-shots {
+  font-size: 0.65rem;
+  color: #1d9bf0;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.zone-desc {
+  font-size: 0.68rem;
+  color: #536471;
+  line-height: 1.5;
+}
+
+/* ── CHEAT SHEET ── */
+.cheat {
+  background: #0f1419;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.cheat h3 {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #e7e9ea;
+  margin-bottom: 1rem;
+}
+
+.cheat-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #2f3336;
+  align-items: baseline;
+}
+
+.cheat-row:last-child { border-bottom: none; }
+
+.cheat-abbr {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1d9bf0;
+}
+
+.cheat-info {
+  font-size: 0.72rem;
+  color: #71767b;
+  line-height: 1.5;
+}
+
+.cheat-info strong {
+  color: #e7e9ea;
+  font-weight: 700;
+}
+
+/* ── PULL QUOTE ── */
+.pull-quote {
+  border-left: 3px solid #1d9bf0;
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.pull-quote p {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f1419;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* ── SECTION HEADERS ── */
+.section-num {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1d9bf0;
+  margin-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+.section-head {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f1419;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+/* ── FOOTER ── */
+.article-footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eff3f4;
+  text-align: center;
+}
+
+.article-footer p {
+  font-size: 0.8rem;
+  color: #536471;
+  line-height: 1.6;
+}
+
+.save-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  background: #0f1419;
+  color: #fff;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .shot-card-top { grid-template-columns: 80px 1fr; }
+  .zones { grid-template-columns: 1fr; }
+  .s-bar { width: 40px; }
+}
+</style>
+</head>
+<body>
+
+<div class="article">
+
+  <!-- HEADER -->
+  <div class="article-header">
+    <h1>The Only Shot Size Guide You'll Ever Need</h1>
+    <div class="subtitle">9 essential shots every filmmaker must master. What they do, when to use them, and the film scenes that prove it.</div>
+  </div>
+
+  <div class="article-divider"></div>
+
+  <!-- INTRO -->
+  <p class="lead">Films are made of sequences. Sequences are made of scenes. Scenes are made of shots. Every shot choice shapes rhythm, tone, and meaning.</p>
+
+  <p>Shot selection should be the highest priority for both a director and a DP. The wrong shot at the wrong moment kills a scene. The right one makes it unforgettable.</p>
+
+  <p>Here are the 9 shot sizes that make up every film ever made, from Blade Runner to Coco. Each one is a tool with a specific purpose. Master all nine and you'll never be stuck on set wondering what to shoot.</p>
+
+  <!-- SHOT 1: ESTABLISHING -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c1" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 01</div>
+        <div class="shot-card-name">Establishing Shot</div>
+        <div class="shot-card-aka">The World Builder</div>
+        <div class="shot-card-desc">Wide enough to establish geography, time of day, and the scale of subjects in their environment. The most common way to open a scene or an entire film.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Scene opener</span>
+      <span class="use-tag">Location transition</span>
+      <span class="use-tag">World-building</span>
+      <span class="use-tag">Time of day</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>Blade Runner 2049</strong> opens with establishing shots of industrial farms. First impression of near-future Earth.</div>
+  </div>
+
+  <!-- SHOT 2: MASTER -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c2" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 02</div>
+        <div class="shot-card-name">Master Shot</div>
+        <div class="shot-card-aka">The Safety Net</div>
+        <div class="shot-card-desc">Captures the entire scene playing out. Confirms who's in it, where they are, and their spatial relationships. The editor's fallback.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Full scene coverage</span>
+      <span class="use-tag">Group dynamics</span>
+      <span class="use-tag">Editor safety</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>The Godfather Part II</strong> — Family dinner in the master emphasizes closeness. Then Michael sits alone and the emptiness hits.</div>
+  </div>
+
+  <!-- SHOT 3: WIDE -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c3" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 03</div>
+        <div class="shot-card-name">Wide Shot</div>
+        <div class="shot-card-aka">The Scale Statement</div>
+        <div class="shot-card-desc">Subject far from camera. Not about location (that's establishing), it's about scale. Makes subjects feel small, lost, overwhelmed, or isolated.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Isolation</span>
+      <span class="use-tag">Loneliness</span>
+      <span class="use-tag">Environment scale</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>Phantom Thread</strong> — Alma and Reynolds dwarfed by a messy ballroom. Together, yet isolated from the world.</div>
+  </div>
+
+  <div class="pull-quote">
+    <p>The establishing shot says "here's where we are." The wide shot says "here's how small we are inside it."</p>
+  </div>
+
+  <!-- SHOT 4: FULL -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c4" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 04</div>
+        <div class="shot-card-name">Full Shot</div>
+        <div class="shot-card-aka">Head to Toe</div>
+        <div class="shot-card-desc">Subject fills the frame from top to bottom. Tight enough for facial storytelling but wide enough for full body, posture, and wardrobe.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Physicality</span>
+      <span class="use-tag">Wardrobe</span>
+      <span class="use-tag">Character entrance</span>
+    </div>
+  </div>
+
+  <!-- SHOT 5: COWBOY -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c5" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 05</div>
+        <div class="shot-card-name">Medium Full / Cowboy</div>
+        <div class="shot-card-aka">The Power Stance</div>
+        <div class="shot-card-desc">Head to just below the waist. Named for gun holster height. Reads as confident, dangerous, confrontational. The standoff framing.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Confrontation</span>
+      <span class="use-tag">Power</span>
+      <span class="use-tag">Weapons drawn</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>The Favourite</strong> — Lady Sarah in cowboy framing with a firearm. Not a western, still unmistakably a standoff.</div>
+  </div>
+
+  <!-- SHOT 6: MEDIUM -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c6" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 06</div>
+        <div class="shot-card-name">Medium Shot</div>
+        <div class="shot-card-aka">The Workhorse</div>
+        <div class="shot-card-desc">The most popular shot in cinema. Waist to above the head. Similar to how we see people in conversation. Neutral: neither dramatic nor distancing.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Dialogue</span>
+      <span class="use-tag">Neutral ground</span>
+      <span class="use-tag">Eyes + body</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>Coco</strong> — Miguel's medium shot captures his shrine, the TV, and his reaction all in one intimate frame.</div>
+  </div>
+
+  <div class="pull-quote">
+    <p>The medium shot is cinema's default because it mirrors how humans actually see each other. It's the handshake distance.</p>
+  </div>
+
+  <!-- SHOT 7: MCU -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c7" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 07</div>
+        <div class="shot-card-name">Medium Close-Up</div>
+        <div class="shot-card-aka">The Focus Pull</div>
+        <div class="shot-card-desc">Chest to above the head. Strips away distraction. Close enough for emotion, wide enough to include hands, props, or actions at chest level.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Reduce distraction</span>
+      <span class="use-tag">Character + prop</span>
+      <span class="use-tag">Reaction</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>Avengers: Endgame</strong> — Thanos's snap. MCU frames both the gauntlet and his face. When he fails, we see it all.</div>
+  </div>
+
+  <!-- SHOT 8: CLOSE-UP -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c8" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 08</div>
+        <div class="shot-card-name">Close-Up</div>
+        <div class="shot-card-aka">The Empathy Engine</div>
+        <div class="shot-card-desc">The most powerful visual weapon for emotion and dramatic beats. Typically at eye level. Front row seat for thoughts and feelings. This is about empathy.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Emotional turn</span>
+      <span class="use-tag">Decision moment</span>
+      <span class="use-tag">Anxiety</span>
+      <span class="use-tag">Empathy</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>The Shining</strong> — "Here's Johnny." The close-up as cinema's most devastating weapon.</div>
+  </div>
+
+  <!-- SHOT 9: ECU -->
+  <div class="shot-card">
+    <div class="shot-card-top">
+      <div class="shot-card-viz">
+        <canvas id="c9" width="200" height="280"></canvas>
+      </div>
+      <div class="shot-card-body">
+        <div class="shot-card-num">Shot 09</div>
+        <div class="shot-card-name">Extreme Close-Up</div>
+        <div class="shot-card-aka">The Scalpel</div>
+        <div class="shot-card-desc">Isolates a specific area: eyes, lips, a prop. The most intimate, dramatic, and potentially startling shot size. Maximum emphasis. Use deliberately.</div>
+      </div>
+    </div>
+    <div class="shot-card-footer">
+      <span class="use-tag">Maximum emphasis</span>
+      <span class="use-tag">Crucial detail</span>
+      <span class="use-tag">Startling reveal</span>
+    </div>
+    <div class="shot-card-example">🎬 <strong>Kill Bill Vol. 1</strong> — The Bride's frantic eyes as the Crazy 88 swarm. Pure adrenaline through the eyes alone.</div>
+  </div>
+
+  <!-- SPECTRUM -->
+  <div class="section-num">The Spectrum</div>
+  <div class="section-head">Distance to Intimacy</div>
+
+  <p>Every shot lives on a scale. One end is maximum distance and context. The other end is maximum intimacy and emotion. Moving along it shifts the audience's relationship to the subject.</p>
+
+  <div class="spectrum-visual">
+    <div class="spectrum-title">Emotional Distance Scale</div>
+    <div class="spectrum-bars">
+      <div class="s-bar" style="height:32px; background:#536471;"><div class="s-bar-label">ES</div><div class="s-bar-name">Establishing</div></div>
+      <div class="s-bar" style="height:44px; background:#4a5c68;"><div class="s-bar-label">MS*</div><div class="s-bar-name">Master</div></div>
+      <div class="s-bar" style="height:56px; background:#3e5260;"><div class="s-bar-label">WS</div><div class="s-bar-name">Wide</div></div>
+      <div class="s-bar" style="height:68px; background:#334858;"><div class="s-bar-label">FS</div><div class="s-bar-name">Full</div></div>
+      <div class="s-bar" style="height:80px; background:#283e50;"><div class="s-bar-label">MFS</div><div class="s-bar-name">Cowboy</div></div>
+      <div class="s-bar" style="height:92px; background:#1d3448;"><div class="s-bar-label">MS</div><div class="s-bar-name">Medium</div></div>
+      <div class="s-bar" style="height:104px; background:#152a40;"><div class="s-bar-label">MCU</div><div class="s-bar-name">Med CU</div></div>
+      <div class="s-bar" style="height:118px; background:#1d9bf0;"><div class="s-bar-label">CU</div><div class="s-bar-name">Close-Up</div></div>
+      <div class="s-bar" style="height:130px; background:#0c7cd5;"><div class="s-bar-label">ECU</div><div class="s-bar-name">Extreme</div></div>
+    </div>
+    <div class="spectrum-axis">
+      <span>← Context / Geography</span>
+      <span>Emotion / Intimacy →</span>
+    </div>
+  </div>
+
+  <!-- ZONES -->
+  <div class="section-num">Three Zones</div>
+  <div class="section-head">Every Shot Has a Job</div>
+
+  <div class="zones">
+    <div class="zone-card">
+      <div class="zone-emoji">🌍</div>
+      <div class="zone-name">Context</div>
+      <div class="zone-shots">ES · Master · WS</div>
+      <div class="zone-desc">Where are we? Who's here? What's the scale? The orientation shots.</div>
+    </div>
+    <div class="zone-card">
+      <div class="zone-emoji">🤝</div>
+      <div class="zone-name">Engagement</div>
+      <div class="zone-shots">FS · MFS · MS</div>
+      <div class="zone-desc">Conversational range. Body language, posture, wardrobe. Where most runtime lives.</div>
+    </div>
+    <div class="zone-card">
+      <div class="zone-emoji">💔</div>
+      <div class="zone-name">Intimacy</div>
+      <div class="zone-shots">MCU · CU · ECU</div>
+      <div class="zone-desc">Emotion, revelation, emphasis. The audience enters the character's inner world.</div>
+    </div>
+  </div>
+
+  <!-- CHEAT SHEET -->
+  <div class="section-num">Save This</div>
+  <div class="section-head">The Cheat Sheet</div>
+
+  <div class="cheat">
+    <h3>🎬 Shot Size Quick Reference</h3>
+    <div class="cheat-row"><div class="cheat-abbr">ES</div><div class="cheat-info"><strong>Establishing</strong> Geography, time, world. Scene opener.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">MS*</div><div class="cheat-info"><strong>Master</strong> Full scene coverage. Editor's safety net.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">WS</div><div class="cheat-info"><strong>Wide</strong> Subject scale vs environment. Isolation.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">FS</div><div class="cheat-info"><strong>Full</strong> Head to toe. Physicality and wardrobe.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">MFS</div><div class="cheat-info"><strong>Cowboy</strong> Head to mid-thigh. Power. Confrontation.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">MS</div><div class="cheat-info"><strong>Medium</strong> Waist up. The workhorse. Conversational.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">MCU</div><div class="cheat-info"><strong>Med Close-Up</strong> Chest up. Focus. Character + props.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">CU</div><div class="cheat-info"><strong>Close-Up</strong> Face. The empathy engine. Emotion.</div></div>
+    <div class="cheat-row"><div class="cheat-abbr">ECU</div><div class="cheat-info"><strong>Extreme CU</strong> Eyes or detail. The scalpel. Max emphasis.</div></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="article-footer">
+    <p>9 shots. That's every tool you need. The rest is knowing when to use which one.</p>
+    <div class="save-line">🔖 Bookmark this. You'll need it on set.</div>
+  </div>
+
+</div>
+
+<script>
+// Draw simple figure silhouettes in each card canvas
+const shots = [
+  { id:'c1', figH:0.15, figY:0.7, frameInset:0, env:true },
+  { id:'c2', figH:0.45, figY:0.5, frameInset:0.05, multi:true },
+  { id:'c3', figH:0.25, figY:0.6, frameInset:0 },
+  { id:'c4', figH:0.7, figY:0.48, frameInset:0.1 },
+  { id:'c5', figH:0.7, figY:0.42, frameInset:0.1, cropBot:0.25 },
+  { id:'c6', figH:0.8, figY:0.38, frameInset:0.08, cropBot:0.38 },
+  { id:'c7', figH:0.9, figY:0.32, frameInset:0.05, cropBot:0.5 },
+  { id:'c8', figH:1.1, figY:0.22, frameInset:0, cropBot:0.62 },
+  { id:'c9', figH:1.5, figY:0.1, frameInset:0, cropBot:0.72, cropTop:0.15 },
+];
+
+shots.forEach(cfg => {
+  const canvas = document.getElementById(cfg.id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  // BG
+  ctx.fillStyle = '#0f1419';
+  ctx.fillRect(0,0,w,h);
+
+  // Environment hints for establishing
+  if (cfg.env) {
+    ctx.fillStyle = '#1a2028';
+    ctx.fillRect(10,40,40,60);
+    ctx.fillRect(60,50,50,50);
+    ctx.fillRect(130,30,50,70);
+    ctx.fillStyle = '#151c22';
+    ctx.fillRect(0,h*0.8,w,h*0.2);
+  }
+
+  const cx = w/2;
+  const figH = h * cfg.figH;
+  const figW = figH * 0.28;
+  const headR = figW * 0.45;
+  const figTop = h * cfg.figY;
+
+  // Draw figure(s)
+  const drawFigure = (x, brightness) => {
+    const c = brightness || '#3a4a58';
+    // Body
+    ctx.fillStyle = c;
+    ctx.fillRect(x - figW/2, figTop + headR*2 + 4, figW, figH - headR*2 - 4);
+    // Head
+    ctx.beginPath();
+    ctx.arc(x, figTop + headR, headR, 0, Math.PI*2);
+    ctx.fillStyle = c;
+    ctx.fill();
+  };
+
+  if (cfg.multi) {
+    drawFigure(cx - figW*1.2, '#2a3a48');
+    drawFigure(cx + figW*1.2, '#2a3a48');
+  }
+  drawFigure(cx, '#3a4a58');
+
+  // Frame line
+  const cropBot = cfg.cropBot || 0;
+  const cropTop = cfg.cropTop || 0;
+  const fl = w * cfg.frameInset;
+  const ft = h * cropTop;
+  const fb = h - h * cropBot;
+
+  ctx.strokeStyle = '#1d9bf0';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([]);
+  ctx.strokeRect(fl, ft, w - fl*2, fb - ft);
+
+  // Dim outside frame
+  ctx.fillStyle = 'rgba(15,20,25,0.5)';
+  if (cropBot > 0) ctx.fillRect(0, fb, w, h - fb);
+  if (cropTop > 0) ctx.fillRect(0, 0, w, ft);
+});
+</script>
+
+</body>
+</html>

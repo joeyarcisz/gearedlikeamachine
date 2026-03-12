@@ -42,6 +42,43 @@ export default async function BlogPostPage({
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  // Interactive posts render in a full-viewport iframe
+  if (post.interactive) {
+    return (
+      <>
+        <Navbar />
+        <main className="pt-20 bg-black min-h-screen flex flex-col">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
+            <Link
+              href="/blog"
+              className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
+            >
+              &larr; All Posts
+            </Link>
+            <div className="flex items-center gap-3">
+              <span className="text-steel text-[10px] uppercase tracking-widest font-[family-name:var(--font-heading)] font-semibold">
+                {post.category}
+              </span>
+              <span className="text-card-border hidden sm:inline">|</span>
+              <span className="text-muted text-[10px] uppercase tracking-widest hidden sm:inline">
+                {post.title}
+              </span>
+            </div>
+          </div>
+          <iframe
+            src={post.interactive}
+            className="flex-1 w-full border-0"
+            style={{ minHeight: "calc(100vh - 7rem)" }}
+            title={post.title}
+          />
+        </main>
+      </>
+    );
+  }
+
+  // Standard markdown posts
+  const postContent = post.content;
+
   return (
     <>
       <Navbar />
@@ -84,10 +121,10 @@ export default async function BlogPostPage({
           {/* Divider */}
           <div className="border-t border-card-border mb-10" />
 
-          {/* Content */}
+          {/* Content - rendered from trusted local markdown files only */}
           <div
             className="blog-content text-white"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: postContent }}
           />
 
           {/* Footer nav */}
