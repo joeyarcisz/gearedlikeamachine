@@ -1,26 +1,10 @@
-import type { EstimateBreakdown, ScopeSummary, LineItemCategory } from "@/lib/scope-types";
+import { formatCurrency, CATEGORY_ORDER } from "@/lib/scope-types";
+import type { EstimateBreakdown, ScopeSummary } from "@/lib/scope-types";
 
 interface Props {
   summary: ScopeSummary;
   estimate: EstimateBreakdown;
 }
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-const CATEGORY_ORDER: LineItemCategory[] = [
-  "Pre-Production",
-  "Crew",
-  "Gear",
-  "Post-Production",
-  "Additional",
-];
 
 export default function PrintableEstimate({ summary, estimate }: Props) {
   const groupedItems = CATEGORY_ORDER.map((cat) => ({
@@ -71,7 +55,7 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
         Cost Estimate
       </h2>
 
-      <table className="w-full text-sm border-collapse" style={{ tableLayout: "fixed" }}>
+      <table className="w-full text-sm border-collapse table-fixed">
         <colgroup>
           <col style={{ width: "46%" }} />
           <col style={{ width: "14%" }} />
@@ -105,7 +89,7 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
       </table>
 
       {/* Totals */}
-      <div className="mt-8 pt-6 border-t-2 border-black" style={{ breakInside: "avoid" }}>
+      <div className="mt-8 pt-6 border-t-2 border-black break-inside-avoid">
         <div className="space-y-2 max-w-xs ml-auto">
           <div className="flex justify-between text-sm">
             <span>Subtotal</span>
@@ -166,17 +150,16 @@ function PrintGroup({
 }) {
   return (
     <>
-      <tr style={{ breakInside: "avoid" }}>
+      <tr className="break-inside-avoid">
         <td
           colSpan={4}
-          className="pt-6 pb-2 text-xs font-bold uppercase tracking-wide border-b border-black"
-          style={{ fontSize: "11px", letterSpacing: "0.1em" }}
+          className="pt-6 pb-2 text-[11px] font-bold uppercase tracking-widest border-b border-black"
         >
           {group.category}
         </td>
       </tr>
-      {group.items.map((item, idx) => (
-        <tr key={idx} className="border-b border-gray-200" style={{ breakInside: "avoid" }}>
+      {group.items.map((item) => (
+        <tr key={item.name} className="border-b border-gray-200 break-inside-avoid">
           <td className="py-2 pr-4">{item.name}</td>
           <td className="py-2 pr-4 text-right text-gray-800">
             {item.quantity} {item.unit}
@@ -187,15 +170,11 @@ function PrintGroup({
           <td className="py-2 text-right">{formatCurrency(item.total)}</td>
         </tr>
       ))}
-      <tr className="border-b-2 border-gray-400" style={{ breakInside: "avoid" }}>
-        <td colSpan={3} className="py-2 text-right text-xs font-bold uppercase tracking-wide text-gray-800"
-          style={{ backgroundColor: "#f5f5f5" }}
-        >
+      <tr className="border-b-2 border-gray-400 break-inside-avoid">
+        <td colSpan={3} className="py-2 text-right text-xs font-bold uppercase tracking-wide text-gray-800 bg-gray-100">
           {group.category} Total
         </td>
-        <td className="py-2 text-right font-bold"
-          style={{ backgroundColor: "#f5f5f5" }}
-        >
+        <td className="py-2 text-right font-bold bg-gray-100">
           {formatCurrency(categoryTotal)}
         </td>
       </tr>

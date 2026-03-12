@@ -1,3 +1,4 @@
+import { formatCurrency, CATEGORY_ORDER } from "@/lib/scope-types";
 import type { EstimateBreakdown, ScopeSummary, LineItemCategory } from "@/lib/scope-types";
 
 interface Props {
@@ -5,23 +6,6 @@ interface Props {
   estimate: EstimateBreakdown;
   onStartOver: () => void;
 }
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-const CATEGORY_ORDER: LineItemCategory[] = [
-  "Pre-Production",
-  "Crew",
-  "Gear",
-  "Post-Production",
-  "Additional",
-];
 
 export default function EstimateOutput({ summary, estimate, onStartOver }: Props) {
   const groupedItems = CATEGORY_ORDER.map((cat) => ({

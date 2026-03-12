@@ -54,6 +54,7 @@ model Contact {
 
   opportunities Opportunity[]
   activities    Activity[]
+  projects      Project[]
 }
 
 model Opportunity {
@@ -111,6 +112,197 @@ model CrewMember {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   activities  Activity[]
+
+  crewCalls              CrewCall[]
+  scheduleAssignments    ScheduleCrewAssignment[]
+  projectCrew            ProjectCrew[]
+}
+
+// ═══════════════════════════════════════════════════════
+// PRODUCTION MANAGEMENT
+// ═══════════════════════════════════════════════════════
+
+enum ProjectStatus {
+  pre_production
+  production
+  post_production
+  wrap
+  archived
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  title         String
+  clientName    String?
+  contactId     String?
+  contact       Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  status        ProjectStatus @default(pre_production)
+  projectType   String?
+  description   String?
+  startDate     DateTime?
+  endDate       DateTime?
+  budgetLow     Int?
+  budgetHigh    Int?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  callSheets       CallSheet[]
+  shotLists        ShotList[]
+  scheduleDays     ScheduleDay[]
+  projectCrew      ProjectCrew[]
+  projectEquipment ProjectEquipment[]
+}
+
+// ── Call Sheets ──
+
+enum CallSheetStatus {
+  draft
+  sent
+  confirmed
+}
+
+model CallSheet {
+  id                  String          @id @default(cuid())
+  projectId           String
+  project             Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  shootDate           DateTime
+  callTime            String
+  wrapTime            String?
+  locationName        String?
+  locationAddress     String?
+  parkingNotes        String?
+  nearestHospital     String?
+  weatherSummary      String?
+  weatherTemp         String?
+  sunrise             String?
+  sunset              String?
+  generalNotes        String?
+  specialInstructions String?
+  status              CallSheetStatus @default(draft)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  crewCalls CrewCall[]
+}
+
+model CrewCall {
+  id           String      @id @default(cuid())
+  callSheetId  String
+  callSheet    CallSheet   @relation(fields: [callSheetId], references: [id], onDelete: Cascade)
+  crewMemberId String?
+  crewMember   CrewMember? @relation(fields: [crewMemberId], references: [id], onDelete: SetNull)
+  name         String
+  role         String
+  callTime     String
+  notes        String?
+}
+
+// ── Shot Lists ──
+
+model ShotList {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  sceneNumber String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  shots Shot[]
+}
+
+model Shot {
+  id          String   @id @default(cuid())
+  shotListId  String
+  shotList    ShotList @relation(fields: [shotListId], references: [id], onDelete: Cascade)
+  shotNumber  String
+  size        String?
+  movement    String?
+  angle       String?
+  lens        String?
+  frameRate   String?
+  equipment   String?
+  lighting    String?
+  description String
+  imageUrl    String?
+  notes       String?
+  completed   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Scheduling ──
+
+model ScheduleDay {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date            DateTime
+  startTime       String
+  wrapTime        String?
+  locationName    String?
+  locationAddress String?
+  notes           String?
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  crewAssignments      ScheduleCrewAssignment[]
+  equipmentAssignments ScheduleEquipmentAssignment[]
+}
+
+model ScheduleCrewAssignment {
+  id            String      @id @default(cuid())
+  scheduleDayId String
+  scheduleDay   ScheduleDay @relation(fields: [scheduleDayId], references: [id], onDelete: Cascade)
+  crewMemberId  String?
+  crewMember    CrewMember? @relation(fields: [crewMemberId], references: [id], onDelete: SetNull)
+  name          String
+  role          String
+  callTime      String?
+  rate          Int?
+  notes         String?
+}
+
+model ScheduleEquipmentAssignment {
+  id            String      @id @default(cuid())
+  scheduleDayId String
+  scheduleDay   ScheduleDay @relation(fields: [scheduleDayId], references: [id], onDelete: Cascade)
+  itemName      String
+  category      String?
+  quantity      Int         @default(1)
+  notes         String?
+}
+
+// ── Project Team & Gear ──
+
+model ProjectCrew {
+  id           String      @id @default(cuid())
+  projectId    String
+  project      Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  crewMemberId String?
+  crewMember   CrewMember? @relation(fields: [crewMemberId], references: [id], onDelete: SetNull)
+  name         String
+  role         String
+  dayRate      Int?
+  kitFee       Int?
+  notes        String?
+  createdAt    DateTime    @default(now())
+}
+
+model ProjectEquipment {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  itemName  String
+  category  String?
+  dailyRate Int?
+  quantity  Int      @default(1)
+  notes     String?
+  createdAt DateTime @default(now())
 }
 
 model AdminSession {

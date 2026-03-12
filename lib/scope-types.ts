@@ -213,3 +213,24 @@ export interface ScopeSummary {
   postProduction: string;
   timeline: string;
 }
+
+/* ── Shared Constants ── */
+
+export const CATEGORY_ORDER: LineItemCategory[] = [
+  "Pre-Production",
+  "Crew",
+  "Gear",
+  "Post-Production",
+  "Additional",
+];
+
+/* ── Shared Utilities ── */
+
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
