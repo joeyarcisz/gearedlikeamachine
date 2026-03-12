@@ -3,34 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Systems-Based Exposure Ratios</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Systems-Based Exposure: Lock Five, Master One</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #08090b;
-  --surface: #0e1014;
-  --surface2: #13151a;
-  --border: #1a1d25;
-  --text: #b8bcc8;
-  --dim: #4a4e5c;
-  --accent: #e4e0d8;
+  --bg: #0A0A0A;
+  --surface: #0F0F0F;
+  --border: #303030;
+  --steel: #E0E0E0;
+  --chrome: #999999;
+  --muted: #707070;
   --warm: #d4a054;
-  --locked: #2a5040;
-  --locked-text: #4aaa70;
-  --active: #d4a054;
-  --active-glow: rgba(212,160,84,0.15);
+  --warm-glow: rgba(212,160,84,0.15);
+  --locked: #4aaa70;
+  --locked-bg: rgba(42,80,64,0.3);
   --red: #c04040;
   --blue: #4070c0;
 }
 
+html { font-size: 16px; scroll-behavior: smooth; }
+
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: 'IBM Plex Mono', monospace;
+  color: var(--steel);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   min-height: 100vh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Film grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
 }
 
 /* Scanline overlay */
@@ -49,28 +61,42 @@ body::after {
   z-index: 9999;
 }
 
-.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+.page { max-width: 1000px; margin: 0 auto; padding: 0 2rem 4rem; }
 
-/* ── HEADER ── */
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── HERO ── */
 .hero {
   padding: 5rem 0 3rem;
   text-align: center;
-  position: relative;
 }
 
 .hero-eyebrow {
-  font-size: 0.55rem;
-  letter-spacing: 0.5em;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: var(--muted);
   margin-bottom: 1.5rem;
 }
 
 .hero h1 {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 400;
-  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--steel);
   line-height: 1.15;
   margin-bottom: 0.8rem;
 }
@@ -78,9 +104,11 @@ body::after {
 .hero h1 span { color: var(--warm); }
 
 .hero-sub {
-  font-size: 0.75rem;
-  color: var(--dim);
-  max-width: 520px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 0.78rem;
+  color: var(--chrome);
+  max-width: 540px;
   margin: 0 auto;
   line-height: 1.7;
 }
@@ -91,16 +119,16 @@ body::after {
   margin: 3rem 0;
 }
 
-/* ── SECTIONS ── */
-.sect {
-  padding: 3rem 0;
-}
+/* ── SECTION STRUCTURE ── */
+.sect { padding: 3rem 0; }
 
 .sect-num {
-  font-size: 0.5rem;
-  letter-spacing: 0.5em;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: var(--muted);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -115,17 +143,20 @@ body::after {
 }
 
 .sect h2 {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-  font-weight: 400;
-  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.5vw, 1.7rem);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--steel);
   margin-bottom: 0.6rem;
 }
 
 .sect-desc {
-  font-size: 0.75rem;
-  color: var(--dim);
-  max-width: 560px;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--chrome);
+  max-width: 580px;
   line-height: 1.7;
   margin-bottom: 2rem;
 }
@@ -139,8 +170,7 @@ body::after {
 
 .tool-row {
   display: grid;
-  grid-template-columns: 140px 1fr 80px;
-  gap: 0;
+  grid-template-columns: 150px 1fr 90px;
   align-items: stretch;
   min-height: 56px;
   border: 1px solid var(--border);
@@ -149,21 +179,13 @@ body::after {
   transition: all 0.3s;
 }
 
-.tool-row:hover {
-  border-color: #2a2d35;
-}
-
-.tool-row.locked {
-  opacity: 0.55;
-}
-
-.tool-row.locked:hover {
-  opacity: 0.75;
-}
+.tool-row.locked { opacity: 0.5; }
+.tool-row.locked:hover { opacity: 0.72; }
 
 .tool-row.the-one {
+  opacity: 1;
   border-color: var(--warm);
-  box-shadow: 0 0 20px var(--active-glow), inset 0 0 20px var(--active-glow);
+  box-shadow: 0 0 24px var(--warm-glow), inset 0 0 24px var(--warm-glow);
 }
 
 .tool-name {
@@ -172,25 +194,29 @@ body::after {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   border-right: 1px solid var(--border);
 }
 
 .tool-name .num {
-  color: var(--dim);
+  color: var(--muted);
   font-size: 0.6rem;
   width: 1.2rem;
 }
 
-.tool-row.locked .tool-name { color: var(--locked-text); }
+.tool-row.locked .tool-name { color: var(--locked); }
 .tool-row.the-one .tool-name { color: var(--warm); }
 
 .tool-info {
-  background: var(--surface2);
+  background: rgba(15,15,15,0.6);
   padding: 1rem 1.2rem;
-  font-size: 0.65rem;
-  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 300;
+  color: var(--muted);
   line-height: 1.6;
   display: flex;
   align-items: center;
@@ -206,22 +232,23 @@ body::after {
 }
 
 .status-badge {
+  font-family: 'Rajdhani', sans-serif;
   font-size: 0.55rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   padding: 0.3rem 0.6rem;
   border-radius: 2px;
-  font-weight: 500;
 }
 
 .status-badge.const {
-  background: rgba(42,80,64,0.3);
-  color: var(--locked-text);
+  background: var(--locked-bg);
+  color: var(--locked);
   border: 1px solid rgba(74,170,112,0.2);
 }
 
 .status-badge.variable {
-  background: rgba(212,160,84,0.15);
+  background: var(--warm-glow);
   color: var(--warm);
   border: 1px solid rgba(212,160,84,0.3);
   animation: pulse 2s ease-in-out infinite;
@@ -229,199 +256,65 @@ body::after {
 
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(212,160,84,0); }
-  50% { box-shadow: 0 0 8px 2px rgba(212,160,84,0.2); }
+  50% { box-shadow: 0 0 10px 3px rgba(212,160,84,0.25); }
 }
 
-/* ── FUNNEL VISUAL ── */
-.funnel-viz {
+/* ── FUNNEL CANVAS ── */
+.funnel-canvas-wrap {
   margin-top: 2.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 2px;
-  padding: 2.5rem;
+  padding: 1.5rem 1.5rem 1rem;
   position: relative;
   overflow: hidden;
 }
 
-.funnel-title {
+.funnel-canvas-title {
+  font-family: 'Rajdhani', sans-serif;
   font-size: 0.55rem;
+  font-weight: 600;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 2rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
   text-align: center;
 }
 
-.funnel-stages {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  position: relative;
-}
-
-.funnel-stage {
-  text-align: center;
-  position: relative;
-  flex: 1;
-  max-width: 140px;
-}
-
-.funnel-block {
-  margin: 0 auto;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  transition: all 0.3s;
-  position: relative;
-}
-
-.funnel-block.wide {
+#funnelCanvas {
   width: 100%;
-  height: 80px;
-  background: linear-gradient(135deg, rgba(192,64,64,0.15), rgba(192,64,64,0.05));
-  border: 1px solid rgba(192,64,64,0.2);
-  color: var(--red);
+  height: 220px;
+  display: block;
 }
 
-.funnel-block.mid {
-  width: 75%;
-  height: 80px;
-  background: linear-gradient(135deg, rgba(64,112,192,0.15), rgba(64,112,192,0.05));
-  border: 1px solid rgba(64,112,192,0.2);
-  color: var(--blue);
-}
-
-.funnel-block.narrow {
-  width: 50%;
-  height: 80px;
-  background: linear-gradient(135deg, rgba(74,170,112,0.15), rgba(74,170,112,0.05));
-  border: 1px solid rgba(74,170,112,0.2);
-  color: var(--locked-text);
-}
-
-.funnel-block.single {
-  width: 30%;
-  height: 80px;
-  background: linear-gradient(135deg, rgba(212,160,84,0.2), rgba(212,160,84,0.05));
-  border: 1px solid rgba(212,160,84,0.4);
-  color: var(--warm);
-  box-shadow: 0 0 15px rgba(212,160,84,0.1);
-}
-
-.funnel-arrow {
-  color: var(--dim);
-  font-size: 1.2rem;
-  flex-shrink: 0;
-  width: 30px;
-  text-align: center;
-}
-
-.funnel-label {
-  margin-top: 0.8rem;
-  font-size: 0.55rem;
-  color: var(--dim);
-  letter-spacing: 0.1em;
-}
-
-.funnel-count {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-/* ── RATIO EXPLORER ── */
-.ratio-explorer {
+/* ── QUOTE BLOCK ── */
+.quote-block {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
+  border-left: 3px solid var(--warm);
+  border-radius: 0 2px 2px 0;
+  padding: 2.5rem 3rem;
 }
 
-.ratio-header {
-  padding: 1.2rem 2rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.quote-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+  color: var(--steel);
+  line-height: 1.65;
+  margin-bottom: 1rem;
 }
 
-.ratio-header h3 {
-  font-family: 'DM Serif Display', serif;
-  font-weight: 400;
-  font-size: 1rem;
-  color: var(--accent);
-}
+.quote-text span { color: var(--warm); font-weight: 400; }
 
-.ratio-readout {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--warm);
-}
-
-.ratio-frame {
-  position: relative;
-  aspect-ratio: 16/9;
-  background: #000;
-  overflow: hidden;
-}
-
-.ratio-canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.ratio-controls {
-  padding: 1.5rem 2rem;
-  border-top: 1px solid var(--border);
-}
-
-.ratio-sliders {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.ratio-slider {
-  text-align: center;
-}
-
-.ratio-slider label {
-  display: block;
+.quote-attr {
+  font-family: 'Rajdhani', sans-serif;
   font-size: 0.55rem;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: var(--dim);
-  margin-bottom: 0.5rem;
-}
-
-.ratio-slider .val {
-  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-.ratio-slider input[type="range"] {
-  width: 100%;
-  -webkit-appearance: none;
-  appearance: none;
-  height: 3px;
-  background: var(--border);
-  border-radius: 2px;
-  outline: none;
-}
-
-.ratio-slider input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--warm);
-  cursor: pointer;
-  border: 2px solid var(--bg);
+  color: var(--muted);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
 }
 
 /* ── DEPTH SPECTRUM ── */
@@ -437,20 +330,15 @@ body::after {
 
 .depth-card {
   background: var(--surface);
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0.8rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s;
   position: relative;
 }
 
-.depth-card:hover {
-  background: var(--surface2);
-}
-
-.depth-card.active {
-  background: var(--surface2);
-}
+.depth-card:hover { background: #141414; }
+.depth-card.active { background: #141414; }
 
 .depth-card.active::after {
   content: '';
@@ -477,24 +365,275 @@ body::after {
   transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.depth-card-label {
+.depth-card-ratio {
+  font-family: 'Rajdhani', sans-serif;
   font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--dim);
-  margin-bottom: 0.3rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
 }
 
 .depth-card-name {
-  font-family: 'DM Serif Display', serif;
-  font-size: 0.9rem;
-  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
 }
 
-/* ── PHILOSOPHY CARDS ── */
+/* ── RATIO EXPLORER ── */
+.ratio-explorer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ratio-header {
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ratio-header h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+}
+
+.ratio-readout {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--warm);
+  letter-spacing: 0.05em;
+}
+
+.ratio-frame {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+#ratioCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ratio-controls {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.ratio-sliders {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.ratio-slider { text-align: center; }
+
+.ratio-slider label {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.ratio-slider .val {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--steel);
+  margin-bottom: 0.5rem;
+}
+
+.ratio-slider input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.ratio-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--warm);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+.ratio-slider input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--warm);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+.slider-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.5rem;
+  font-weight: 300;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── WORKFLOW FLOW ── */
+.workflow-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2.5rem;
+  overflow-x: auto;
+}
+
+.workflow-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 600px;
+}
+
+.workflow-node {
+  padding: 1.2rem 1.8rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  text-align: center;
+  min-width: 110px;
+  transition: all 0.3s;
+  background: var(--bg);
+}
+
+.workflow-node:hover {
+  border-color: var(--warm);
+  background: rgba(212,160,84,0.03);
+}
+
+.workflow-node.final {
+  border-color: var(--warm);
+  box-shadow: 0 0 16px var(--warm-glow);
+}
+
+.workflow-node-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+
+.workflow-node-text {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+}
+
+.workflow-node.final .workflow-node-text { color: var(--warm); }
+
+.workflow-arrow {
+  color: var(--muted);
+  padding: 0 0.8rem;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ── EFFICIENCY METERS ── */
+.efficiency-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2rem 2.5rem;
+}
+
+.efficiency-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--muted);
+  margin-bottom: 1.8rem;
+}
+
+.eff-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.eff-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.eff-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(48,48,48,0.5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.eff-fill {
+  height: 100%;
+  border-radius: 4px;
+  width: 0%;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.eff-val {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: 44px;
+  text-align: right;
+}
+
+.eff-note {
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: var(--muted);
+  margin: -0.2rem 0 1.4rem;
+  padding-left: calc(110px + 1rem);
+}
+
+/* ── FOUR PRINCIPLES ── */
 .phil-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -504,185 +643,77 @@ body::after {
 
 .phil-card {
   background: var(--surface);
-  padding: 2rem;
+  padding: 2.2rem 2rem;
   position: relative;
+  overflow: hidden;
 }
 
 .phil-card::before {
   content: attr(data-num);
   position: absolute;
-  top: 1rem;
-  right: 1.2rem;
-  font-size: 2rem;
-  font-weight: 300;
-  color: var(--border);
-  font-family: 'DM Serif Display', serif;
+  top: 0.6rem;
+  right: 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: rgba(48,48,48,0.25);
+  line-height: 1;
 }
 
 .phil-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1rem;
-  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
   margin-bottom: 0.6rem;
+  position: relative;
 }
 
 .phil-body {
-  font-size: 0.7rem;
-  color: var(--dim);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--chrome);
   line-height: 1.7;
+  position: relative;
 }
 
 .phil-body em {
   color: var(--warm);
   font-style: normal;
-}
-
-/* ── QUOTE BLOCK ── */
-.quote-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--warm);
-  border-radius: 0 2px 2px 0;
-  padding: 2.5rem 3rem;
-  position: relative;
-}
-
-.quote-text {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  font-style: italic;
-  color: var(--accent);
-  line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-.quote-text span { color: var(--warm); }
-
-.quote-attr {
-  font-size: 0.6rem;
-  color: var(--dim);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-/* ── MENTAL MODEL ── */
-.mental-model {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 2.5rem;
-}
-
-.model-flow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  flex-wrap: wrap;
-}
-
-.model-node {
-  padding: 1rem 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  text-align: center;
-  min-width: 120px;
-  transition: all 0.3s;
-}
-
-.model-node:hover {
-  border-color: var(--warm);
-  background: rgba(212,160,84,0.05);
-}
-
-.model-node-label {
-  font-size: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: var(--dim);
-  margin-bottom: 0.3rem;
-}
-
-.model-node-text {
-  font-family: 'DM Serif Display', serif;
-  font-size: 0.9rem;
-  color: var(--accent);
-}
-
-.model-arrow {
-  color: var(--dim);
-  padding: 0 0.8rem;
-  font-size: 1rem;
-}
-
-/* ── EFFICIENCY METER ── */
-.efficiency-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 2rem 2.5rem;
-}
-
-.eff-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.eff-row:last-child { margin-bottom: 0; }
-
-.eff-label {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--dim);
-  width: 100px;
-  flex-shrink: 0;
-}
-
-.eff-track {
-  flex: 1;
-  height: 6px;
-  background: var(--bg);
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
-}
-
-.eff-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.eff-val {
-  font-size: 0.7rem;
-  font-weight: 500;
-  width: 40px;
-  text-align: right;
+  font-weight: 400;
 }
 
 /* ── FOOTER ── */
 .footer {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 4rem 2rem 3rem;
+  font-family: 'Rajdhani', sans-serif;
   font-size: 0.55rem;
-  color: var(--dim);
-  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.4em;
   text-transform: uppercase;
 }
 
+/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .tool-row { grid-template-columns: 1fr; }
   .tool-status { justify-content: flex-start; border-left: none; border-top: 1px solid var(--border); }
-  .funnel-stages { flex-direction: column; gap: 0.5rem; }
-  .funnel-arrow { transform: rotate(90deg); }
-  .funnel-stage { max-width: 200px; }
+  .tool-name { border-right: none; }
   .ratio-sliders { grid-template-columns: 1fr; }
   .depth-spectrum { grid-template-columns: repeat(3, 1fr); }
-  .model-flow { flex-direction: column; }
-  .model-arrow { transform: rotate(90deg); }
+  .phil-grid { grid-template-columns: 1fr; }
+  .workflow-flow { justify-content: flex-start; }
+  .eff-label { width: 80px; font-size: 0.55rem; }
+  .eff-note { padding-left: calc(80px + 1rem); }
+  #funnelCanvas { height: 180px; }
+}
+
+@media (max-width: 480px) {
+  .depth-spectrum { grid-template-columns: repeat(2, 1fr); }
+  .depth-card:last-child { grid-column: span 2; }
 }
 </style>
 </head>
@@ -691,19 +722,20 @@ body::after {
 <div class="page">
 
   <!-- HERO -->
-  <div class="hero">
-    <div class="hero-eyebrow">Cinematography Lecture</div>
-    <h1>Systems-Based<br><span>Exposure Ratios</span></h1>
+  <div class="hero reveal">
+    <div class="hero-eyebrow">GLM Cinematography</div>
+    <h1>Systems-Based<br><span>Exposure</span></h1>
     <p class="hero-sub">
-      Six tools. Five locked. One variable. Remove complexity until what remains
-      is a repeatable system for creating depth, mood, and emotion through light.
+      Six tools control how much light hits the sensor. Five are locked as constants.
+      One variable remains. Remove complexity until what stays is a repeatable system
+      for creating depth, mood, and emotion through light.
     </p>
   </div>
 
   <div class="divider"></div>
 
   <!-- SECTION 1: THE SIX TOOLS -->
-  <div class="sect">
+  <div class="sect reveal">
     <div class="sect-num">01 &mdash; The Six Tools</div>
     <h2>Lock Five. Master One.</h2>
     <p class="sect-desc">
@@ -719,12 +751,12 @@ body::after {
       </div>
       <div class="tool-row locked">
         <div class="tool-name"><span class="num">02</span> ISO / ASA</div>
-        <div class="tool-info">Sensor sensitivity. Set per scene or project. Don't chase it mid-build.</div>
+        <div class="tool-info">Sensor sensitivity. Set per scene or project. Do not chase it mid-build.</div>
         <div class="tool-status"><span class="status-badge const">Constant</span></div>
       </div>
       <div class="tool-row locked">
         <div class="tool-name"><span class="num">03</span> Shutter Speed</div>
-        <div class="tool-info">180° shutter rule. Changed only for intentional motion effects (1% of cases).</div>
+        <div class="tool-info">180-degree shutter rule. Changed only for intentional motion effects (1% of cases).</div>
         <div class="tool-status"><span class="status-badge const">Constant</span></div>
       </div>
       <div class="tool-row locked">
@@ -744,47 +776,27 @@ body::after {
       </div>
     </div>
 
-    <!-- FUNNEL VISUALIZATION -->
-    <div class="funnel-viz">
-      <div class="funnel-title">Variable Elimination Funnel</div>
-      <div class="funnel-stages">
-        <div class="funnel-stage">
-          <div class="funnel-block wide"><div class="funnel-count">∞</div></div>
-          <div class="funnel-label">All possibilities</div>
-        </div>
-        <div class="funnel-arrow">→</div>
-        <div class="funnel-stage">
-          <div class="funnel-block mid"><div class="funnel-count">6</div></div>
-          <div class="funnel-label">Exposure tools</div>
-        </div>
-        <div class="funnel-arrow">→</div>
-        <div class="funnel-stage">
-          <div class="funnel-block narrow"><div class="funnel-count">5</div></div>
-          <div class="funnel-label">Locked constants</div>
-        </div>
-        <div class="funnel-arrow">→</div>
-        <div class="funnel-stage">
-          <div class="funnel-block single"><div class="funnel-count">1</div></div>
-          <div class="funnel-label">Light (ratios)</div>
-        </div>
-      </div>
+    <!-- ANIMATED FUNNEL CANVAS -->
+    <div class="funnel-canvas-wrap reveal">
+      <div class="funnel-canvas-title">Variable Elimination Funnel</div>
+      <canvas id="funnelCanvas"></canvas>
     </div>
   </div>
 
   <div class="divider"></div>
 
   <!-- SECTION 2: THE CORE PHILOSOPHY -->
-  <div class="sect">
+  <div class="sect reveal">
     <div class="sect-num">02 &mdash; The Core Idea</div>
     <h2>The Look Is the Exposure</h2>
     <p class="sect-desc">
-      Exposure isn't a technical checkbox. It's the creative decision that defines how an image feels.
+      Exposure is not a technical checkbox. It is the creative decision that defines how an image feels.
       Ratios between light levels create depth, and depth creates compelling images.
     </p>
 
     <div class="quote-block">
       <div class="quote-text">
-        "Flat is boring. I don't like looking at boring things. I like to be drawn in with <span>depth</span>,
+        "Flat is boring. I do not like looking at boring things. I like to be drawn in with <span>depth</span>,
         and depth requires <span>contrast</span>, and it requires <span>control</span>,
         and it requires different light levels spread across the sensor <span>in a pattern</span>."
       </div>
@@ -795,101 +807,97 @@ body::after {
   <div class="divider"></div>
 
   <!-- SECTION 3: DEPTH THROUGH RATIOS -->
-  <div class="sect">
+  <div class="sect reveal">
     <div class="sect-num">03 &mdash; Depth Spectrum</div>
     <h2>Flat to Deep. Ratios Control Everything.</h2>
     <p class="sect-desc">
       The relationship between light levels across the frame determines depth.
-      More contrast between areas = more depth = more compelling image.
+      More contrast between areas means more depth, which means a more compelling image.
+      The key-to-fill ratio is the primary control. The key-to-background ratio controls subject separation.
     </p>
 
+    <!-- DEPTH SPECTRUM PRESETS -->
     <div class="depth-spectrum" id="depthSpectrum">
       <div class="depth-card active" data-preset="flat" onclick="setDepth('flat')">
         <div class="depth-bar-wrap">
-          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
-          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
-          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
-          <div class="depth-bar" style="height:40px; background:var(--dim)"></div>
+          <div class="depth-bar" style="height:38px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:38px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:38px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:38px; background:var(--chrome)"></div>
         </div>
-        <div class="depth-card-label">No Contrast</div>
+        <div class="depth-card-ratio">1:1</div>
         <div class="depth-card-name">Flat</div>
       </div>
       <div class="depth-card" data-preset="subtle" onclick="setDepth('subtle')">
         <div class="depth-bar-wrap">
-          <div class="depth-bar" style="height:45px; background:var(--warm)"></div>
-          <div class="depth-bar" style="height:35px; background:var(--blue)"></div>
-          <div class="depth-bar" style="height:48px; background:var(--red)"></div>
-          <div class="depth-bar" style="height:38px; background:var(--locked-text)"></div>
+          <div class="depth-bar" style="height:46px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:34px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:40px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:36px; background:var(--locked)"></div>
         </div>
-        <div class="depth-card-label">Low Contrast</div>
+        <div class="depth-card-ratio">2:1</div>
         <div class="depth-card-name">Subtle</div>
       </div>
       <div class="depth-card" data-preset="shaped" onclick="setDepth('shaped')">
         <div class="depth-bar-wrap">
-          <div class="depth-bar" style="height:50px; background:var(--warm)"></div>
-          <div class="depth-bar" style="height:28px; background:var(--blue)"></div>
-          <div class="depth-bar" style="height:55px; background:var(--red)"></div>
-          <div class="depth-bar" style="height:22px; background:var(--locked-text)"></div>
+          <div class="depth-bar" style="height:52px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:26px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:44px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:20px; background:var(--locked)"></div>
         </div>
-        <div class="depth-card-label">Medium</div>
+        <div class="depth-card-ratio">4:1</div>
         <div class="depth-card-name">Shaped</div>
       </div>
       <div class="depth-card" data-preset="dramatic" onclick="setDepth('dramatic')">
         <div class="depth-bar-wrap">
-          <div class="depth-bar" style="height:55px; background:var(--warm)"></div>
-          <div class="depth-bar" style="height:18px; background:var(--blue)"></div>
-          <div class="depth-bar" style="height:58px; background:var(--red)"></div>
-          <div class="depth-bar" style="height:12px; background:var(--locked-text)"></div>
+          <div class="depth-bar" style="height:56px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:16px; background:var(--blue)"></div>
+          <div class="depth-bar" style="height:48px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:12px; background:var(--locked)"></div>
         </div>
-        <div class="depth-card-label">High Contrast</div>
+        <div class="depth-card-ratio">4:1 - 8:1</div>
         <div class="depth-card-name">Dramatic</div>
       </div>
-      <div class="depth-card" data-preset="extreme" onclick="setDepth('extreme')">
+      <div class="depth-card" data-preset="chiaroscuro" onclick="setDepth('chiaroscuro')">
         <div class="depth-bar-wrap">
-          <div class="depth-bar" style="height:58px; background:var(--warm)"></div>
+          <div class="depth-bar" style="height:60px; background:var(--warm)"></div>
           <div class="depth-bar" style="height:8px; background:var(--blue)"></div>
-          <div class="depth-bar" style="height:60px; background:var(--red)"></div>
-          <div class="depth-bar" style="height:5px; background:var(--locked-text)"></div>
+          <div class="depth-bar" style="height:54px; background:var(--chrome)"></div>
+          <div class="depth-bar" style="height:5px; background:var(--locked)"></div>
         </div>
-        <div class="depth-card-label">Extreme</div>
+        <div class="depth-card-ratio">8:1+</div>
         <div class="depth-card-name">Chiaroscuro</div>
       </div>
     </div>
 
-    <!-- RATIO EXPLORER -->
-    <div class="ratio-explorer" style="margin-top:2rem;">
+    <!-- RATIO VISUALIZER -->
+    <div class="ratio-explorer reveal" style="margin-top:2rem;">
       <div class="ratio-header">
-        <h3>Ratio Visualizer</h3>
-        <div class="ratio-readout" id="ratioReadout">Key:Fill 2:1 &middot; Key:BG 4:1</div>
+        <h3>Interactive Ratio Visualizer</h3>
+        <div class="ratio-readout" id="ratioReadout">Key:Fill 1:1 &middot; Key:BG 1:1</div>
       </div>
       <div class="ratio-frame">
-        <canvas class="ratio-canvas" id="ratioCanvas"></canvas>
+        <canvas id="ratioCanvas"></canvas>
       </div>
       <div class="ratio-controls">
         <div class="ratio-sliders">
           <div class="ratio-slider">
             <label>Key : Fill Ratio</label>
-            <div class="val" id="kfVal">2:1</div>
-            <input type="range" min="1" max="8" value="2" id="kfSlider" oninput="updateRatio()">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--dim);margin-top:4px;">
-              <span>1:1 flat</span><span>8:1 extreme</span>
-            </div>
+            <div class="val" id="kfVal">1:1</div>
+            <input type="range" min="1" max="8" step="0.1" value="1" id="kfSlider" oninput="updateRatio()">
+            <div class="slider-range"><span>1:1 flat</span><span>8:1 extreme</span></div>
           </div>
           <div class="ratio-slider">
             <label>Key : Back Ratio</label>
-            <div class="val" id="kbVal">1:2</div>
-            <input type="range" min="0" max="6" value="2" id="kbSlider" oninput="updateRatio()">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--dim);margin-top:4px;">
-              <span>no rim</span><span>hot rim</span>
-            </div>
+            <div class="val" id="kbVal">none</div>
+            <input type="range" min="0" max="6" step="0.1" value="0" id="kbSlider" oninput="updateRatio()">
+            <div class="slider-range"><span>no rim</span><span>hot rim</span></div>
           </div>
           <div class="ratio-slider">
             <label>Key : BG Ratio</label>
-            <div class="val" id="kgVal">4:1</div>
-            <input type="range" min="1" max="8" value="4" id="kgSlider" oninput="updateRatio()">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--dim);margin-top:4px;">
-              <span>1:1 bright</span><span>8:1 dark</span>
-            </div>
+            <div class="val" id="kgVal">1:1</div>
+            <input type="range" min="1" max="8" step="0.1" value="1" id="kgSlider" oninput="updateRatio()">
+            <div class="slider-range"><span>1:1 bright</span><span>8:1 dark</span></div>
           </div>
         </div>
       </div>
@@ -899,7 +907,7 @@ body::after {
   <div class="divider"></div>
 
   <!-- SECTION 4: THE WORKFLOW -->
-  <div class="sect">
+  <div class="sect reveal">
     <div class="sect-num">04 &mdash; The Workflow</div>
     <h2>Vision to Sensor. The Translation.</h2>
     <p class="sect-desc">
@@ -907,31 +915,31 @@ body::after {
       then execute on set. The camera's language is exposure. Learn to speak it fluently.
     </p>
 
-    <div class="mental-model">
-      <div class="model-flow">
-        <div class="model-node">
-          <div class="model-node-label">Step 1</div>
-          <div class="model-node-text">Vision</div>
+    <div class="workflow-wrap">
+      <div class="workflow-flow">
+        <div class="workflow-node">
+          <div class="workflow-node-label">Step 1</div>
+          <div class="workflow-node-text">Vision</div>
         </div>
-        <div class="model-arrow">→</div>
-        <div class="model-node">
-          <div class="model-node-label">Step 2</div>
-          <div class="model-node-text">Ratios</div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node">
+          <div class="workflow-node-label">Step 2</div>
+          <div class="workflow-node-text">Ratios</div>
         </div>
-        <div class="model-arrow">→</div>
-        <div class="model-node">
-          <div class="model-node-label">Step 3</div>
-          <div class="model-node-text">The Box</div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node">
+          <div class="workflow-node-label">Step 3</div>
+          <div class="workflow-node-text">The Box</div>
         </div>
-        <div class="model-arrow">→</div>
-        <div class="model-node">
-          <div class="model-node-label">Step 4</div>
-          <div class="model-node-text">Distribution</div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node">
+          <div class="workflow-node-label">Step 4</div>
+          <div class="workflow-node-text">Distribution</div>
         </div>
-        <div class="model-arrow">→</div>
-        <div class="model-node">
-          <div class="model-node-label">Result</div>
-          <div class="model-node-text" style="color:var(--warm)">The Look</div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node final">
+          <div class="workflow-node-label">Result</div>
+          <div class="workflow-node-text">The Look</div>
         </div>
       </div>
     </div>
@@ -940,7 +948,7 @@ body::after {
   <div class="divider"></div>
 
   <!-- SECTION 5: WHY SYSTEMS -->
-  <div class="sect">
+  <div class="sect reveal">
     <div class="sect-num">05 &mdash; Why Systems</div>
     <h2>Free Your Mind for What Matters</h2>
     <p class="sect-desc">
@@ -948,38 +956,40 @@ body::after {
       the more mental bandwidth you have for everything else.
     </p>
 
-    <div class="efficiency-wrap" style="margin-bottom:2rem;">
-      <div style="font-size:0.55rem;text-transform:uppercase;letter-spacing:0.3em;color:var(--dim);margin-bottom:1.5rem;">Mental Energy Allocation</div>
+    <!-- EFFICIENCY METERS -->
+    <div class="efficiency-wrap" id="efficiencyWrap" style="margin-bottom:2rem;">
+      <div class="efficiency-title">Mental Energy Allocation</div>
 
       <div class="eff-row">
         <div class="eff-label" style="color:var(--red)">Without System</div>
         <div class="eff-track">
-          <div class="eff-fill" style="width:70%;background:linear-gradient(90deg,var(--red),#a03030)"></div>
+          <div class="eff-fill" data-width="70" style="background:linear-gradient(90deg,var(--red),#a03030)"></div>
         </div>
         <div class="eff-val" style="color:var(--red)">70%</div>
       </div>
-      <div style="font-size:0.55rem;color:var(--dim);margin:-0.5rem 0 1rem 116px;">Energy burned on exposure decisions</div>
+      <div class="eff-note">Energy burned on exposure decisions</div>
 
       <div class="eff-row">
-        <div class="eff-label" style="color:var(--locked-text)">With System</div>
+        <div class="eff-label" style="color:var(--locked)">With System</div>
         <div class="eff-track">
-          <div class="eff-fill" style="width:10%;background:linear-gradient(90deg,var(--locked-text),#2a5040)"></div>
+          <div class="eff-fill" data-width="10" style="background:linear-gradient(90deg,var(--locked),#2a5040)"></div>
         </div>
-        <div class="eff-val" style="color:var(--locked-text)">10%</div>
+        <div class="eff-val" style="color:var(--locked)">10%</div>
       </div>
-      <div style="font-size:0.55rem;color:var(--dim);margin:-0.5rem 0 1rem 116px;">Automatic, like tying your shoes</div>
+      <div class="eff-note">Automatic, like tying your shoes</div>
 
       <div class="eff-row">
         <div class="eff-label" style="color:var(--warm)">Freed Up</div>
         <div class="eff-track">
-          <div class="eff-fill" style="width:60%;background:linear-gradient(90deg,var(--warm),#b08030)"></div>
+          <div class="eff-fill" data-width="60" style="background:linear-gradient(90deg,var(--warm),#b08030)"></div>
         </div>
         <div class="eff-val" style="color:var(--warm)">60%</div>
       </div>
-      <div style="font-size:0.55rem;color:var(--dim);margin:-0.5rem 0 0 116px;">Available for composition, direction, communication, problem-solving</div>
+      <div class="eff-note">For composition, direction, communication, problem-solving</div>
     </div>
 
-    <div class="phil-grid">
+    <!-- FOUR PRINCIPLES -->
+    <div class="phil-grid reveal">
       <div class="phil-card" data-num="01">
         <div class="phil-title">Eliminate Variables</div>
         <div class="phil-body">
@@ -997,15 +1007,15 @@ body::after {
       <div class="phil-card" data-num="03">
         <div class="phil-title">Reproduce Results</div>
         <div class="phil-body">
-          Same ratios = same feeling. Different composition, different lens, different subject,
+          Same ratios produce the same feeling. Different composition, different lens, different subject,
           but <em>the same exposure recipe produces the same emotional result</em>. Every time.
         </div>
       </div>
       <div class="phil-card" data-num="04">
         <div class="phil-title">Tie Your Shoes</div>
         <div class="phil-body">
-          Once you see light this way, <em>you can't unsee it</em>. Exposure becomes unconscious.
-          That's when you become truly valuable on set, because your mind is free.
+          Once you see light this way, <em>you cannot unsee it</em>. Exposure becomes unconscious.
+          That is when you become truly valuable on set, because your mind is free.
         </div>
       </div>
     </div>
@@ -1014,8 +1024,8 @@ body::after {
   <div class="divider"></div>
 
   <!-- FINAL QUOTE -->
-  <div class="sect">
-    <div class="quote-block" style="border-left-color:var(--warm);">
+  <div class="sect reveal">
+    <div class="quote-block">
       <div class="quote-text">
         "As soon as you understand these concepts, you will never be the same.
         You will see the world <span>the way the camera sees the world</span>,
@@ -1030,36 +1040,81 @@ body::after {
 <div class="footer">Systems-Based Exposure &middot; Lock Constants &middot; Master Light</div>
 
 <script>
-// ═══ DEPTH SPECTRUM ═══
+// ============================================================
+//  SCROLL REVEAL (IntersectionObserver)
+// ============================================================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ============================================================
+//  EFFICIENCY BAR ANIMATION ON SCROLL
+// ============================================================
+let effAnimated = false;
+const effObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !effAnimated) {
+      effAnimated = true;
+      e.target.querySelectorAll('.eff-fill').forEach(bar => {
+        const w = bar.dataset.width;
+        bar.style.width = '0%';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            bar.style.width = w + '%';
+          });
+        });
+      });
+    }
+  });
+}, { threshold: 0.4 });
+
+const effWrap = document.getElementById('efficiencyWrap');
+if (effWrap) effObserver.observe(effWrap);
+
+// ============================================================
+//  DEPTH SPECTRUM PRESETS
+// ============================================================
+const depthPresets = {
+  flat:         { kf: 1, kb: 0, kg: 1 },
+  subtle:       { kf: 2, kb: 1, kg: 2 },
+  shaped:       { kf: 4, kb: 2, kg: 4 },
+  dramatic:     { kf: 6, kb: 3.5, kg: 6 },
+  chiaroscuro:  { kf: 8, kb: 5, kg: 8 }
+};
+
 function setDepth(preset) {
   document.querySelectorAll('.depth-card').forEach(c => c.classList.remove('active'));
-  document.querySelector(`[data-preset="${preset}"]`).classList.add('active');
+  const card = document.querySelector(`[data-preset="${preset}"]`);
+  if (card) card.classList.add('active');
 
-  const presets = {
-    flat:     { kf: 1, kb: 0, kg: 1 },
-    subtle:   { kf: 2, kb: 1, kg: 2 },
-    shaped:   { kf: 3, kb: 2, kg: 4 },
-    dramatic: { kf: 5, kb: 3, kg: 6 },
-    extreme:  { kf: 8, kb: 5, kg: 8 }
-  };
-
-  const p = presets[preset];
+  const p = depthPresets[preset];
   document.getElementById('kfSlider').value = p.kf;
   document.getElementById('kbSlider').value = p.kb;
   document.getElementById('kgSlider').value = p.kg;
   updateRatio();
 }
 
-// ═══ RATIO VISUALIZER ═══
-function updateRatio() {
-  const kf = parseInt(document.getElementById('kfSlider').value);
-  const kb = parseInt(document.getElementById('kbSlider').value);
-  const kg = parseInt(document.getElementById('kgSlider').value);
+// ============================================================
+//  RATIO VISUALIZER (Canvas portrait head with lighting)
+// ============================================================
+let ratioRAF = null;
 
-  document.getElementById('kfVal').textContent = `${kf}:1`;
-  document.getElementById('kbVal').textContent = kb === 0 ? 'none' : `1:${kb}`;
-  document.getElementById('kgVal').textContent = `${kg}:1`;
-  document.getElementById('ratioReadout').textContent = `Key:Fill ${kf}:1 · Key:BG ${kg}:1`;
+function updateRatio() {
+  const kf = parseFloat(document.getElementById('kfSlider').value);
+  const kb = parseFloat(document.getElementById('kbSlider').value);
+  const kg = parseFloat(document.getElementById('kgSlider').value);
+
+  document.getElementById('kfVal').textContent = kf === Math.floor(kf) ? `${kf}:1` : `${kf.toFixed(1)}:1`;
+  document.getElementById('kbVal').textContent = kb < 0.5 ? 'none' : (kb === Math.floor(kb) ? `1:${kb}` : `1:${kb.toFixed(1)}`);
+  document.getElementById('kgVal').textContent = kg === Math.floor(kg) ? `${kg}:1` : `${kg.toFixed(1)}:1`;
+  document.getElementById('ratioReadout').textContent =
+    `Key:Fill ${kf.toFixed(1)}:1 \u00b7 Key:BG ${kg.toFixed(1)}:1`;
 
   drawRatioScene(kf, kb, kg);
 }
@@ -1067,132 +1122,410 @@ function updateRatio() {
 function drawRatioScene(kf, kb, kg) {
   const canvas = document.getElementById('ratioCanvas');
   const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
 
-  // Size canvas
-  canvas.width = canvas.offsetWidth * 2;
-  canvas.height = canvas.offsetHeight * 2;
-  ctx.scale(2, 2);
-  const w = canvas.offsetWidth;
-  const h = canvas.offsetHeight;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
 
-  // Background brightness inversely proportional to kg ratio
-  const bgBright = Math.max(8, 60 - (kg * 7));
-  ctx.fillStyle = `rgb(${bgBright},${bgBright},${bgBright + 4})`;
+  // Background
+  const bgBright = Math.max(6, 55 - (kg * 6.5));
+  ctx.fillStyle = `rgb(${bgBright},${bgBright},${bgBright + 3})`;
   ctx.fillRect(0, 0, w, h);
 
-  // Add some bg variation
-  for (let i = 0; i < 8; i++) {
-    const v = bgBright + (Math.random() * 20 - 10);
-    ctx.fillStyle = `rgba(${v},${v},${v + 3},0.3)`;
-    ctx.fillRect(Math.random() * w, Math.random() * h, 40 + Math.random() * 80, 30 + Math.random() * 60);
+  // Background variation (subtle texture)
+  for (let i = 0; i < 12; i++) {
+    const v = bgBright + (Math.random() * 14 - 7);
+    ctx.fillStyle = `rgba(${v},${v},${v + 2},0.2)`;
+    const bx = Math.random() * w;
+    const by = Math.random() * h;
+    ctx.fillRect(bx, by, 30 + Math.random() * 100, 20 + Math.random() * 80);
   }
 
-  // Subject
+  // Background gradient to add depth (slightly lighter center)
+  const bgGrad = ctx.createRadialGradient(w * 0.5, h * 0.4, 0, w * 0.5, h * 0.4, w * 0.7);
+  bgGrad.addColorStop(0, `rgba(${bgBright + 8},${bgBright + 8},${bgBright + 10},0.3)`);
+  bgGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, w, h);
+
   const cx = w * 0.5;
-  const cy = h * 0.45;
-  const headR = Math.min(w, h) * 0.18;
+  const cy = h * 0.42;
+  const headRx = Math.min(w, h) * 0.15;
+  const headRy = headRx * 1.35;
 
-  // Key brightness (face lit side)
-  const keyBright = 180;
-  // Fill brightness based on ratio
-  const fillBright = Math.max(15, keyBright / kf);
-  // Back brightness
-  const backBright = kb === 0 ? bgBright : Math.min(255, keyBright + kb * 30);
+  // Key and fill brightness values
+  const keyBright = 195;
+  const fillBright = Math.max(12, keyBright / kf);
+  const backBright = kb < 0.5 ? 0 : Math.min(255, 100 + kb * 32);
 
-  // Backlight glow
-  if (kb > 0) {
-    const grad = ctx.createRadialGradient(cx, cy - headR * 0.3, headR * 0.8, cx, cy - headR * 0.3, headR * 1.8);
-    grad.addColorStop(0, `rgba(${backBright},${backBright},${backBright - 20},0.3)`);
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
+  // Warm skin tone bias
+  const skinR = 1.0;
+  const skinG = 0.92;
+  const skinB = 0.84;
+
+  // Backlight glow behind head
+  if (kb >= 0.5) {
+    const rimGrad = ctx.createRadialGradient(cx, cy - headRy * 0.2, headRx * 0.6, cx, cy - headRy * 0.2, headRx * 2.2);
+    rimGrad.addColorStop(0, `rgba(${backBright},${backBright * 0.95},${backBright * 0.85},${Math.min(0.35, kb * 0.08)})`);
+    rimGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = rimGrad;
     ctx.fillRect(0, 0, w, h);
   }
 
-  // Head - fill side (left)
-  ctx.save();
+  // Neck
+  const neckW = headRx * 0.55;
+  const neckTop = cy + headRy * 0.85;
+  const neckBot = cy + headRy * 1.5;
+  const neckMid = (keyBright + fillBright) * 0.35;
+  const neckGrad = ctx.createLinearGradient(cx - neckW, 0, cx + neckW, 0);
+  neckGrad.addColorStop(0, `rgb(${fillBright * 0.5 * skinR},${fillBright * 0.5 * skinG},${fillBright * 0.5 * skinB})`);
+  neckGrad.addColorStop(0.5, `rgb(${neckMid * skinR},${neckMid * skinG},${neckMid * skinB})`);
+  neckGrad.addColorStop(1, `rgb(${keyBright * 0.45 * skinR},${keyBright * 0.45 * skinG},${keyBright * 0.45 * skinB})`);
+  ctx.fillStyle = neckGrad;
   ctx.beginPath();
-  ctx.ellipse(cx, cy, headR, headR * 1.3, 0, Math.PI * 0.5, Math.PI * 1.5);
+  ctx.moveTo(cx - neckW, neckTop);
+  ctx.lineTo(cx - neckW * 1.1, neckBot);
+  ctx.lineTo(cx + neckW * 1.1, neckBot);
+  ctx.lineTo(cx + neckW, neckTop);
   ctx.closePath();
-  ctx.fillStyle = `rgb(${fillBright},${fillBright * 0.95},${fillBright * 0.9})`;
   ctx.fill();
-  ctx.restore();
 
-  // Head - key side (right)
-  ctx.save();
+  // Shoulders
+  const shoulderY = neckBot - 5;
+  const shoulderGrad = ctx.createLinearGradient(cx - headRx * 2.5, 0, cx + headRx * 2.5, 0);
+  shoulderGrad.addColorStop(0, `rgb(${fillBright * 0.3},${fillBright * 0.28},${fillBright * 0.25})`);
+  shoulderGrad.addColorStop(0.5, `rgb(${(keyBright + fillBright) * 0.2},${(keyBright + fillBright) * 0.18},${(keyBright + fillBright) * 0.16})`);
+  shoulderGrad.addColorStop(1, `rgb(${keyBright * 0.35},${keyBright * 0.33},${keyBright * 0.3})`);
+  ctx.fillStyle = shoulderGrad;
   ctx.beginPath();
-  ctx.ellipse(cx, cy, headR, headR * 1.3, 0, -Math.PI * 0.5, Math.PI * 0.5);
+  ctx.moveTo(cx - headRx * 2.5, shoulderY + 60);
+  ctx.quadraticCurveTo(cx - headRx * 0.8, shoulderY - 5, cx, shoulderY);
+  ctx.quadraticCurveTo(cx + headRx * 0.8, shoulderY - 5, cx + headRx * 2.5, shoulderY + 60);
+  ctx.lineTo(cx + headRx * 2.5, h);
+  ctx.lineTo(cx - headRx * 2.5, h);
   ctx.closePath();
-  ctx.fillStyle = `rgb(${keyBright},${keyBright * 0.95},${keyBright * 0.9})`;
   ctx.fill();
-  ctx.restore();
 
-  // Gradient blend between key and fill
-  const blendGrad = ctx.createLinearGradient(cx - headR * 0.3, 0, cx + headR * 0.3, 0);
-  blendGrad.addColorStop(0, `rgba(${fillBright},${fillBright * 0.95},${fillBright * 0.9},0.8)`);
-  blendGrad.addColorStop(0.4, 'transparent');
-  blendGrad.addColorStop(0.6, 'transparent');
-  blendGrad.addColorStop(1, `rgba(${keyBright},${keyBright * 0.95},${keyBright * 0.9},0.3)`);
-  ctx.save();
-  ctx.beginPath();
-  ctx.ellipse(cx, cy, headR, headR * 1.3, 0, 0, Math.PI * 2);
-  ctx.fillStyle = blendGrad;
-  ctx.fill();
-  ctx.restore();
-
-  // Backlight rim
-  if (kb > 0) {
+  // Backlight rim on shoulders
+  if (kb >= 0.5) {
     ctx.save();
+    ctx.strokeStyle = `rgba(${backBright},${backBright * 0.95},${backBright * 0.85},${Math.min(0.5, kb * 0.12)})`;
+    ctx.lineWidth = 1.5 + kb * 0.8;
     ctx.beginPath();
-    ctx.ellipse(cx, cy, headR, headR * 1.3, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(${backBright},${backBright},${backBright - 30},${Math.min(0.8, kb * 0.2)})`;
-    ctx.lineWidth = 2 + kb;
+    ctx.moveTo(cx - headRx * 2.5, shoulderY + 60);
+    ctx.quadraticCurveTo(cx - headRx * 0.8, shoulderY - 5, cx, shoulderY);
+    ctx.quadraticCurveTo(cx + headRx * 0.8, shoulderY - 5, cx + headRx * 2.5, shoulderY + 60);
     ctx.stroke();
     ctx.restore();
   }
 
-  // Shoulders
-  ctx.fillStyle = `rgb(${Math.round(keyBright * 0.4)},${Math.round(keyBright * 0.38)},${Math.round(keyBright * 0.36)})`;
+  // Head shape with gradient lighting
+  ctx.save();
   ctx.beginPath();
-  ctx.moveTo(cx - headR * 1.8, cy + headR * 1.3 + 30);
-  ctx.quadraticCurveTo(cx - headR * 0.5, cy + headR * 1.1, cx, cy + headR * 1.3);
-  ctx.quadraticCurveTo(cx + headR * 0.5, cy + headR * 1.1, cx + headR * 1.8, cy + headR * 1.3 + 30);
-  ctx.lineTo(cx + headR * 1.8, h);
-  ctx.lineTo(cx - headR * 1.8, h);
-  ctx.fill();
+  ctx.ellipse(cx, cy, headRx, headRy, 0, 0, Math.PI * 2);
+  ctx.clip();
 
-  // Ratio labels
-  ctx.font = '500 11px IBM Plex Mono';
-  ctx.fillStyle = 'rgba(212,160,84,0.8)';
-  ctx.textAlign = 'center';
-  ctx.fillText(`Key ${kf}:1 Fill`, cx, h - 12);
+  // Base fill side
+  ctx.fillStyle = `rgb(${fillBright * skinR},${fillBright * skinG},${fillBright * skinB})`;
+  ctx.fillRect(cx - headRx - 2, cy - headRy - 2, headRx * 2 + 4, headRy * 2 + 4);
 
-  if (kb > 0) {
-    ctx.fillStyle = 'rgba(192,64,64,0.7)';
-    ctx.fillText(`Rim 1:${kb}`, cx, cy - headR * 1.3 - 8);
+  // Key side gradient with smooth falloff
+  const keyGrad = ctx.createLinearGradient(cx - headRx * 0.6, 0, cx + headRx * 1.2, 0);
+  keyGrad.addColorStop(0, 'transparent');
+  keyGrad.addColorStop(0.3, `rgba(${keyBright * skinR},${keyBright * skinG},${keyBright * skinB},0.3)`);
+  keyGrad.addColorStop(0.55, `rgba(${keyBright * skinR},${keyBright * skinG},${keyBright * skinB},0.85)`);
+  keyGrad.addColorStop(1, `rgba(${keyBright * skinR},${keyBright * skinG},${keyBright * skinB},1)`);
+  ctx.fillStyle = keyGrad;
+  ctx.fillRect(cx - headRx - 2, cy - headRy - 2, headRx * 2 + 4, headRy * 2 + 4);
+
+  // Add vertical fall-off (slightly darker at top/bottom of face)
+  const vertGrad = ctx.createLinearGradient(0, cy - headRy, 0, cy + headRy);
+  vertGrad.addColorStop(0, `rgba(0,0,0,0.15)`);
+  vertGrad.addColorStop(0.35, 'transparent');
+  vertGrad.addColorStop(0.65, 'transparent');
+  vertGrad.addColorStop(1, `rgba(0,0,0,0.2)`);
+  ctx.fillStyle = vertGrad;
+  ctx.fillRect(cx - headRx - 2, cy - headRy - 2, headRx * 2 + 4, headRy * 2 + 4);
+
+  // Eye socket shadows (subtle)
+  const eyeY = cy - headRy * 0.1;
+  const eyeDepth = Math.min(0.4, (kf - 1) * 0.06);
+  if (eyeDepth > 0.02) {
+    // Left eye (fill side - darker)
+    const leGrad = ctx.createRadialGradient(cx - headRx * 0.32, eyeY, 0, cx - headRx * 0.32, eyeY, headRx * 0.22);
+    leGrad.addColorStop(0, `rgba(0,0,0,${eyeDepth * 1.2})`);
+    leGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = leGrad;
+    ctx.fillRect(cx - headRx, cy - headRy, headRx * 2, headRy * 2);
+
+    // Right eye (key side - lighter shadow)
+    const reGrad = ctx.createRadialGradient(cx + headRx * 0.32, eyeY, 0, cx + headRx * 0.32, eyeY, headRx * 0.2);
+    reGrad.addColorStop(0, `rgba(0,0,0,${eyeDepth * 0.5})`);
+    reGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = reGrad;
+    ctx.fillRect(cx - headRx, cy - headRy, headRx * 2, headRy * 2);
   }
 
-  ctx.fillStyle = 'rgba(74,170,112,0.6)';
-  ctx.fillText(`BG ${kg}:1`, 40, 20);
+  // Nose shadow (core shadow line)
+  if (kf > 1.5) {
+    const noseShadow = Math.min(0.35, (kf - 1.5) * 0.05);
+    const noseGrad = ctx.createLinearGradient(cx - headRx * 0.08, 0, cx + headRx * 0.05, 0);
+    noseGrad.addColorStop(0, `rgba(0,0,0,${noseShadow})`);
+    noseGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = noseGrad;
+    ctx.fillRect(cx - headRx * 0.1, cy - headRy * 0.15, headRx * 0.18, headRy * 0.55);
+  }
+
+  ctx.restore();
+
+  // Rim light on head
+  if (kb >= 0.5) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, headRx, headRy, 0, 0, Math.PI * 2);
+    const rimAlpha = Math.min(0.7, kb * 0.15);
+    ctx.strokeStyle = `rgba(${backBright},${backBright * 0.95},${backBright * 0.85},${rimAlpha})`;
+    ctx.lineWidth = 1.5 + kb * 1.2;
+    ctx.stroke();
+    ctx.restore();
+
+    // Concentrated rim on the edge (camera-right upper edge for backlight look)
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, headRx, headRy, 0, -0.8, 0.8);
+    ctx.strokeStyle = `rgba(${Math.min(255, backBright + 30)},${Math.min(255, backBright + 20)},${Math.min(255, backBright)},${Math.min(0.9, kb * 0.2)})`;
+    ctx.lineWidth = 2 + kb * 1.5;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Labels
+  ctx.font = '600 11px Rajdhani, sans-serif';
+  ctx.letterSpacing = '1px';
+  ctx.textAlign = 'center';
+
+  // Key:Fill label
+  ctx.fillStyle = 'rgba(212,160,84,0.85)';
+  ctx.fillText(`KEY ${kf.toFixed(1)}:1 FILL`, cx, h - 14);
+
+  // Rim label
+  if (kb >= 0.5) {
+    ctx.fillStyle = 'rgba(192,80,80,0.75)';
+    ctx.fillText(`RIM 1:${kb.toFixed(1)}`, cx, cy - headRy - 14);
+  }
+
+  // BG label
+  ctx.fillStyle = 'rgba(74,170,112,0.7)';
+  ctx.fillText(`BG ${kg.toFixed(1)}:1`, 50, 22);
 }
 
-// ═══ INIT ═══
-updateRatio();
+// ============================================================
+//  ANIMATED FUNNEL CANVAS (particles flowing through stages)
+// ============================================================
+const funnelCanvas = document.getElementById('funnelCanvas');
+const fCtx = funnelCanvas.getContext('2d');
 
-// Animate efficiency bars on scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('.eff-fill').forEach(bar => {
-        const w = bar.style.width;
-        bar.style.width = '0%';
-        setTimeout(() => { bar.style.width = w; }, 100);
-      });
+const funnelParticles = [];
+const FUNNEL_STAGES = [
+  { label: '\u221e', sub: 'All Possibilities', color: '#c04040', x: 0.12, w: 0.18, filterChance: 0 },
+  { label: '6', sub: 'Exposure Tools', color: '#4070c0', x: 0.35, w: 0.13, filterChance: 0.7 },
+  { label: '5', sub: 'Locked Constants', color: '#4aaa70', x: 0.58, w: 0.09, filterChance: 0.15 },
+  { label: '1', sub: 'Light (Ratios)', color: '#d4a054', x: 0.81, w: 0.06, filterChance: 0.8 }
+];
+
+class FunnelParticle {
+  constructor(w, h) {
+    this.reset(w, h);
+  }
+  reset(w, h) {
+    this.stage = 0;
+    this.x = FUNNEL_STAGES[0].x * w + (Math.random() - 0.5) * FUNNEL_STAGES[0].w * w;
+    this.y = h * 0.15 + Math.random() * h * 0.7;
+    this.targetX = this.x;
+    this.targetY = this.y;
+    this.speed = 0.4 + Math.random() * 0.8;
+    this.size = 1.2 + Math.random() * 1.8;
+    this.alpha = 0.3 + Math.random() * 0.5;
+    this.alive = true;
+    this.filtered = false;
+    this.fadeOut = 0;
+    this.color = FUNNEL_STAGES[0].color;
+    this.waiting = 30 + Math.random() * 80;
+  }
+  update(w, h) {
+    if (!this.alive) return;
+
+    if (this.waiting > 0) {
+      this.waiting -= 1;
+      return;
+    }
+
+    if (this.filtered) {
+      this.fadeOut += 0.03;
+      this.y += 1.5;
+      this.alpha = Math.max(0, this.alpha - 0.02);
+      if (this.alpha <= 0) this.alive = false;
+      return;
+    }
+
+    const stage = FUNNEL_STAGES[this.stage];
+    const nextStage = FUNNEL_STAGES[this.stage + 1];
+
+    if (!nextStage) {
+      // Final stage: drift and glow
+      this.x += (Math.random() - 0.5) * 0.5;
+      this.y += (Math.random() - 0.5) * 0.5;
+      this.alpha = 0.4 + Math.sin(Date.now() * 0.003 + this.x) * 0.2;
+      return;
+    }
+
+    // Move toward next stage
+    const tx = nextStage.x * w + (Math.random() - 0.5) * nextStage.w * w * 0.5;
+    const centerY = h * 0.5;
+    const ty = centerY + (Math.random() - 0.5) * nextStage.w * w * 2;
+
+    this.x += (tx - this.x) * 0.012 * this.speed;
+    this.y += (ty - this.y) * 0.008 * this.speed;
+
+    // Check if arrived at next stage zone
+    const dist = Math.abs(this.x - nextStage.x * w);
+    if (dist < nextStage.w * w * 0.8) {
+      // Chance to be filtered out
+      if (Math.random() < nextStage.filterChance * 0.02) {
+        this.filtered = true;
+        return;
+      }
+      this.stage++;
+      this.color = nextStage.color;
+      this.waiting = 10 + Math.random() * 30;
+    }
+  }
+  draw(ctx) {
+    if (!this.alive) return;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.filtered ? this.alpha * 0.5 : this.alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function initFunnelParticles(w, h) {
+  funnelParticles.length = 0;
+  for (let i = 0; i < 120; i++) {
+    funnelParticles.push(new FunnelParticle(w, h));
+  }
+}
+
+function drawFunnel() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = funnelCanvas.getBoundingClientRect();
+  funnelCanvas.width = rect.width * dpr;
+  funnelCanvas.height = rect.height * dpr;
+  fCtx.scale(dpr, dpr);
+  const w = rect.width;
+  const h = rect.height;
+
+  if (funnelParticles.length === 0) {
+    initFunnelParticles(w, h);
+  }
+
+  fCtx.clearRect(0, 0, w, h);
+
+  // Draw funnel stage zones
+  FUNNEL_STAGES.forEach((stage, i) => {
+    const sx = stage.x * w;
+    const sw = stage.w * w;
+    const topY = h * 0.1;
+    const botY = h * 0.75;
+
+    // Funnel trapezoid shape
+    fCtx.fillStyle = `rgba(${hexToRgb(stage.color)},0.06)`;
+    fCtx.strokeStyle = `rgba(${hexToRgb(stage.color)},0.15)`;
+    fCtx.lineWidth = 1;
+    fCtx.beginPath();
+    fCtx.moveTo(sx - sw, topY);
+    fCtx.lineTo(sx + sw, topY);
+    fCtx.lineTo(sx + sw * 0.7, botY);
+    fCtx.lineTo(sx - sw * 0.7, botY);
+    fCtx.closePath();
+    fCtx.fill();
+    fCtx.stroke();
+
+    // Stage number
+    fCtx.font = '700 28px Rajdhani, sans-serif';
+    fCtx.fillStyle = `rgba(${hexToRgb(stage.color)},0.35)`;
+    fCtx.textAlign = 'center';
+    fCtx.fillText(stage.label, sx, h * 0.48);
+
+    // Stage label
+    fCtx.font = '600 10px Rajdhani, sans-serif';
+    fCtx.fillStyle = `rgba(${hexToRgb(stage.color)},0.55)`;
+    fCtx.fillText(stage.sub.toUpperCase(), sx, h * 0.9);
+
+    // Arrow between stages
+    if (i < FUNNEL_STAGES.length - 1) {
+      const next = FUNNEL_STAGES[i + 1];
+      const ax1 = sx + sw + 5;
+      const ax2 = next.x * w - next.w * w - 5;
+      const ay = h * 0.43;
+      fCtx.strokeStyle = 'rgba(112,112,112,0.25)';
+      fCtx.lineWidth = 1;
+      fCtx.beginPath();
+      fCtx.moveTo(ax1, ay);
+      fCtx.lineTo(ax2, ay);
+      fCtx.stroke();
+      // Arrowhead
+      fCtx.beginPath();
+      fCtx.moveTo(ax2, ay);
+      fCtx.lineTo(ax2 - 5, ay - 3);
+      fCtx.moveTo(ax2, ay);
+      fCtx.lineTo(ax2 - 5, ay + 3);
+      fCtx.stroke();
     }
   });
-}, { threshold: 0.5 });
 
-const effWrap = document.querySelector('.efficiency-wrap');
-if (effWrap) observer.observe(effWrap);
+  // Update and draw particles
+  funnelParticles.forEach(p => {
+    p.update(w, h);
+    p.draw(fCtx);
+  });
+
+  // Recycle dead particles
+  funnelParticles.forEach(p => {
+    if (!p.alive) p.reset(w, h);
+  });
+
+  requestAnimationFrame(drawFunnel);
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `${r},${g},${b}`;
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+updateRatio();
+requestAnimationFrame(drawFunnel);
+
+// Handle resize for ratio canvas
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    updateRatio();
+    funnelParticles.length = 0; // reinit on next frame
+  }, 200);
+});
 </script>
 
 </body>
