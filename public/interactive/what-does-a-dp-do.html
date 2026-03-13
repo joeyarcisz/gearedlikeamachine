@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Does a Director of Photography Actually Do?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0f0f12;
+  --surface-2: #141418;
+  --border: #1e1e26;
+  --border-bright: #2e2e3a;
+  --text: #b8b8c4;
+  --text-dim: #4a4a58;
+  --text-bright: #e8e8f0;
+  --accent: #c8b882;
+  --accent-dim: #7a6e44;
+  --camera: #5878d0;
+  --light: #d0a040;
+  --grip: #40a878;
+  --dp: #c850a0;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.7;
+}
+
+/* HEADER */
+.header {
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: 'DP';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Fraunces', serif;
+  font-size: clamp(8rem, 20vw, 16rem);
+  font-weight: 700;
+  color: var(--dp);
+  opacity: 0.03;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dp);
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 300;
+  color: var(--text-bright);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.header h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.header-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.header-rule {
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(to bottom, var(--border-bright), transparent);
+  margin: 2.5rem auto 0;
+}
+
+/* SECTION BASE */
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 300;
+  color: var(--text-bright);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.section-body {
+  font-size: 0.78rem;
+  line-height: 1.9;
+  color: var(--text);
+  max-width: 640px;
+}
+
+.section-body p { margin-bottom: 1rem; }
+
+/* DIVIDER */
+.divider {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+/* ── DEPT EXPLORER ── */
+.dept-explorer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2.5rem;
+}
+
+.dept-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.dept-tab {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: all 0.2s ease;
+  position: relative;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dept-tab:hover { color: var(--text); background: var(--surface-2); }
+
+.dept-tab.active {
+  color: var(--text-bright);
+  background: var(--surface-2);
+}
+
+.dept-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.dept-tab[data-dept="camera"].active::after { background: var(--camera); }
+.dept-tab[data-dept="lighting"].active::after { background: var(--light); }
+.dept-tab[data-dept="grip"].active::after { background: var(--grip); }
+
+.dept-tab .tab-role {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+.dept-tab.active .tab-role { color: var(--text-dim); }
+
+.dept-panel {
+  display: none;
+  padding: 2rem;
+}
+
+.dept-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+@media (max-width: 640px) {
+  .dept-panel.active { grid-template-columns: 1fr; }
+  .dept-tabs { flex-direction: column; }
+  .dept-tab { border-bottom: 1px solid var(--border); }
+  .dept-tab::after { display: none; }
+}
+
+.dept-info h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.dept-info .dept-answers {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  padding: 0.3rem 0.6rem;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.dept-tab[data-dept="camera"] ~ .dept-panel[data-dept="camera"] .dept-answers,
+[data-dept="camera"] .dept-answers { background: rgba(88,120,208,0.12); color: var(--camera); }
+[data-dept="lighting"] .dept-answers { background: rgba(208,160,64,0.12); color: var(--light); }
+[data-dept="grip"] .dept-answers { background: rgba(64,168,120,0.12); color: var(--grip); }
+
+.dept-info p {
+  font-size: 0.75rem;
+  line-height: 1.85;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+}
+
+.dept-crew {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.dept-crew-title {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.crew-role {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  transition: border-color 0.2s;
+}
+
+.crew-role:hover { border-color: var(--border-bright); }
+
+.crew-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 0.3rem;
+  flex-shrink: 0;
+}
+
+[data-dept="camera"] .crew-dot { background: var(--camera); }
+[data-dept="lighting"] .crew-dot { background: var(--light); }
+[data-dept="grip"] .crew-dot { background: var(--grip); }
+
+.crew-role-name {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-bright);
+  margin-bottom: 0.2rem;
+}
+
+.crew-role-desc {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  margin-top: 2.5rem;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 1.25rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--dp), var(--border), transparent);
+}
+
+.timeline-item {
+  padding: 0 0 2rem 3.5rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: calc(1.25rem - 4px);
+  top: 0.35rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-bright);
+  transition: all 0.2s;
+}
+
+.timeline-item:hover::before,
+.timeline-item.open::before {
+  background: var(--dp);
+  border-color: var(--dp);
+  box-shadow: 0 0 8px rgba(200,80,160,0.4);
+}
+
+.timeline-phase {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dp);
+  margin-bottom: 0.3rem;
+  opacity: 0.7;
+}
+
+.timeline-heading {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-toggle {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s;
+}
+
+.timeline-item:hover .timeline-toggle,
+.timeline-item.open .timeline-toggle { color: var(--accent); }
+
+.timeline-toggle .arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+  font-size: 0.5rem;
+}
+
+.timeline-item.open .timeline-toggle .arrow { transform: rotate(90deg); }
+
+.timeline-expand {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.timeline-item.open .timeline-expand {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.timeline-expand-inner {
+  padding: 1rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.85;
+  color: var(--text);
+  border-left: 1px solid var(--border);
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.timeline-expand-inner strong {
+  color: var(--text-bright);
+  font-weight: 500;
+}
+
+/* ── IMAGE QUALITY DEMO ── */
+.quality-demo {
+  margin-top: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.quality-demo-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quality-demo-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.quality-toggle-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.quality-toggle {
+  background: none;
+  border: none;
+  padding: 0.4rem 0.9rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+
+.quality-toggle:first-child { border-right: 1px solid var(--border); }
+.quality-toggle:hover { color: var(--text); }
+.quality-toggle.active { background: var(--surface-2); color: var(--text-bright); }
+
+.quality-demo-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) { .quality-demo-body { grid-template-columns: 1fr; } }
+
+.quality-frame {
+  aspect-ratio: 16/9;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  border: 1px solid var(--border);
+}
+
+.quality-label {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  background: rgba(10,10,12,0.85);
+  color: var(--text-dim);
+  border-radius: 2px;
+}
+
+/* Scene: "with DP" version */
+.frame-with-dp {
+  background: linear-gradient(
+    160deg,
+    #0d0f1a 0%,
+    #1a1520 40%,
+    #0a0c10 100%
+  );
+}
+
+.frame-with-dp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 60% at 30% 40%, rgba(180,140,80,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 20% 30% at 75% 55%, rgba(80,100,180,0.12) 0%, transparent 60%);
+}
+
+.scene-subject {
+  position: absolute;
+  left: 28%;
+  top: 15%;
+  width: 18%;
+  height: 70%;
+  border-radius: 50% 50% 45% 45% / 40% 40% 60% 60%;
+  transition: all 0.5s ease;
+}
+
+.frame-with-dp .scene-subject {
+  background: linear-gradient(
+    to right,
+    rgba(20,16,12,0.9) 0%,
+    rgba(200,160,90,0.85) 30%,
+    rgba(220,180,110,0.9) 50%,
+    rgba(160,120,70,0.7) 70%,
+    rgba(10,8,6,0.95) 100%
+  );
+  box-shadow: 2px 0 12px rgba(200,160,90,0.15), inset -2px 0 4px rgba(0,0,0,0.8);
+}
+
+.frame-without-dp .scene-subject {
+  background: linear-gradient(
+    to right,
+    rgba(80,80,80,0.6) 0%,
+    rgba(130,130,130,0.7) 50%,
+    rgba(80,80,80,0.6) 100%
+  );
+}
+
+.frame-without-dp {
+  background: linear-gradient(160deg, #1a1a1a 0%, #222222 50%, #1c1c1c 100%);
+}
+
+.frame-without-dp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(200,200,200,0.08) 0%, transparent 70%);
+}
+
+.scene-bg-element {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 55%;
+  height: 100%;
+  transition: all 0.5s ease;
+}
+
+.frame-with-dp .scene-bg-element {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(20,18,28,0.6) 30%,
+    rgba(12,14,22,0.9) 100%
+  );
+}
+
+.frame-without-dp .scene-bg-element {
+  background: linear-gradient(90deg, transparent 0%, rgba(50,50,50,0.3) 100%);
+}
+
+.scene-rim {
+  position: absolute;
+  left: 44%;
+  top: 10%;
+  width: 3%;
+  height: 80%;
+  border-radius: 50%;
+  transition: all 0.5s ease;
+  filter: blur(2px);
+}
+
+.frame-with-dp .scene-rim {
+  background: rgba(120,140,220,0.5);
+  box-shadow: 0 0 12px rgba(120,140,220,0.3);
+}
+
+.frame-without-dp .scene-rim {
+  background: transparent;
+}
+
+.scene-overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(200,200,220,0.5);
+  pointer-events: none;
+}
+
+/* quality annotations */
+.qa-list {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+@media (max-width: 600px) { .qa-list { grid-template-columns: 1fr; } }
+
+.qa-item {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  align-items: flex-start;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.qa-item:last-child { border-bottom: none; }
+
+.qa-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-top: 0.3rem;
+  flex-shrink: 0;
+}
+
+.qa-dot.good { background: var(--grip); }
+.qa-dot.bad { background: #884444; }
+
+.qa-item.has-dp .qa-label { color: var(--text); }
+
+/* ── DECISION MATRIX ── */
+.decision-matrix {
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.dm-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: var(--surface-2);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.dm-header div { padding: 0.75rem 1rem; }
+.dm-header div:not(:last-child) { border-right: 1px solid var(--border); }
+
+.dm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: var(--surface);
+  transition: background 0.2s;
+}
+
+.dm-row:hover { background: var(--surface-2); }
+
+.dm-cell {
+  padding: 0.9rem 1rem;
+  font-size: 0.68rem;
+  color: var(--text);
+  line-height: 1.6;
+  border-right: 1px solid var(--border);
+}
+
+.dm-cell:last-child { border-right: none; }
+
+.dm-cell.decision {
+  font-weight: 500;
+  color: var(--text-bright);
+  font-family: 'Fraunces', serif;
+  font-size: 0.85rem;
+}
+
+.dm-cell.tool { color: var(--accent); font-size: 0.62rem; }
+.dm-cell.effect { color: var(--text-dim); font-size: 0.62rem; }
+
+@media (max-width: 640px) {
+  .decision-matrix { display: none; }
+  .dm-mobile-note {
+    display: block;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
+.dm-mobile-note { display: none; }
+
+/* ── RATE CALCULATOR ── */
+.rate-calc {
+  margin-top: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.rate-calc-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.rate-calc-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.rate-calc-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 600px) { .rate-calc-body { grid-template-columns: 1fr; } }
+
+.calc-controls { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.calc-control label {
+  display: block;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.calc-control label span {
+  color: var(--accent);
+  float: right;
+  font-size: 0.65rem;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--border-bright);
+  outline: none;
+  border-radius: 1px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover { background: var(--text-bright); }
+
+.calc-output { display: flex; flex-direction: column; gap: 0.8rem; justify-content: center; }
+
+.calc-result {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: 2px;
+}
+
+.calc-result-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.calc-result-value {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--text-bright);
+  letter-spacing: -0.02em;
+}
+
+.calc-result-value.highlight { color: var(--accent); }
+
+.calc-note {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  padding: 0.75rem;
+  background: rgba(200,184,130,0.04);
+  border: 1px solid rgba(200,184,130,0.1);
+  border-radius: 2px;
+}
+
+/* ── CLOSING ── */
+.closing {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+
+.closing.visible { opacity: 1; transform: translateY(0); }
+
+.closing blockquote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-bright);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.closing-meta {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.closing-meta::before, .closing-meta::after {
+  content: '';
+  width: 3rem;
+  height: 1px;
+  background: var(--border-bright);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+/* SELECTION */
+::selection { background: rgba(200,80,160,0.2); }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="eyebrow">GLM / Production Intelligence</div>
+  <h1>What Does a Director of<br><em>Photography</em> Actually Do?</h1>
+  <p class="header-sub">The camera records. The DP decides what it sees. Three departments, two production phases, and every invisible decision that separates cinema from footage.</p>
+  <div class="header-rule"></div>
+</div>
+
+<!-- SECTION 1: THE COMMAND STRUCTURE -->
+<div class="section" id="s1">
+  <div class="section-label">01 / Command Structure</div>
+  <h2 class="section-title">Three Departments.<br>One Person at the Top.</h2>
+  <p class="section-body">A DP does not work alone. The role commands camera, lighting, and grip simultaneously. Understanding this structure explains the day rate. You are not paying one person. You are paying the person who directs three crews in real time.</p>
+
+  <div class="dept-explorer">
+    <div class="dept-tabs">
+      <button class="dept-tab active" data-dept="camera" onclick="switchDept('camera')">
+        Camera Dept
+        <span class="tab-role">DP directs</span>
+      </button>
+      <button class="dept-tab" data-dept="lighting" onclick="switchDept('lighting')">
+        Lighting Dept
+        <span class="tab-role">Gaffer executes</span>
+      </button>
+      <button class="dept-tab" data-dept="grip" onclick="switchDept('grip')">
+        Grip Dept
+        <span class="tab-role">Key grip supports</span>
+      </button>
+    </div>
+
+    <!-- Camera Panel -->
+    <div class="dept-panel active" data-dept="camera">
+      <div class="dept-info" data-dept="camera">
+        <h3>Camera Department</h3>
+        <span class="dept-answers">Answers directly to DP</span>
+        <p>The DP selects the camera system, builds the lens package, and makes every choice about how images are captured. Sensor size, dynamic range, color science, recording format. These are not vendor decisions. They are storytelling decisions.</p>
+        <p>The camera department captures the image the DP has designed. Operator, AC, loader. All executing the DP's visual plan.</p>
+      </div>
+      <div class="dept-crew" data-dept="camera">
+        <div class="dept-crew-title">Roles</div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Camera Operator (B Camera / 2nd Unit)</div>
+            <div class="crew-role-desc">Executes movement and framing on additional cameras. Takes direction from DP on angle, speed, and composition intent.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">1st Assistant Camera (Focus Puller)</div>
+            <div class="crew-role-desc">Maintains critical focus in real time. Builds the camera, manages lens swaps, tracks focus marks. Tactically critical.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">2nd Assistant Camera (Loader)</div>
+            <div class="crew-role-desc">Manages media, slates, camera reports. Keeps the camera fed and documented.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">DIT (Digital Imaging Technician)</div>
+            <div class="crew-role-desc">Manages the color pipeline on set. Applies LUTs, checks exposure on scope, backs up media. The DP's technical color lieutenant.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lighting Panel -->
+    <div class="dept-panel" data-dept="lighting">
+      <div class="dept-info" data-dept="lighting">
+        <h3>Lighting Department</h3>
+        <span class="dept-answers">Gaffer interprets DP's design</span>
+        <p>The DP designs the lighting scheme. The gaffer figures out how to build it electrically and directs the electric crew. On a commercial set, the lighting setup often consumes 60% of the shoot day. The DP is the reason it looks the way it does.</p>
+        <p>The DP calls the position, quality, and intensity of every source. The gaffer solves the power and rigging to deliver it.</p>
+      </div>
+      <div class="dept-crew" data-dept="lighting">
+        <div class="dept-crew-title">Roles</div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Gaffer (Chief Lighting Technician)</div>
+            <div class="crew-role-desc">First lieutenant for electricity. Translates the DP's lighting concept into physical equipment and electrical solutions. Commands the electric crew.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Best Boy Electric</div>
+            <div class="crew-role-desc">Manages the electric crew's labor, equipment, and logistics. Gaffer's direct report. Runs the day-to-day of the electric department.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Electricians (Set Lighting Technicians)</div>
+            <div class="crew-role-desc">Place, rig, and power lighting instruments under gaffer and best boy direction. Execute the physical setup the DP has called for.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Generator Operator</div>
+            <div class="crew-role-desc">On location shoots without facility power. Manages fuel, load balancing, and the electrical supply the entire set depends on.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grip Panel -->
+    <div class="dept-panel" data-dept="grip">
+      <div class="dept-info" data-dept="grip">
+        <h3>Grip Department</h3>
+        <span class="dept-answers">Key grip: DP's mechanical counterpart</span>
+        <p>Grip is the subtractive and mechanical side of image-making. Flags that kill spill, bounce cards that redirect light, diffusion frames that soften sources, and all the rigging that holds camera and lighting in place.</p>
+        <p>Most clients have never heard of the grip department. It is frequently the difference between a controlled image and a compromised one.</p>
+      </div>
+      <div class="dept-crew" data-dept="grip">
+        <div class="dept-crew-title">Roles</div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Key Grip</div>
+            <div class="crew-role-desc">DP's mechanical counterpart. Commands camera movement systems (dollies, cranes, Steadicam), lighting rigging, and the entire subtractive light control toolkit.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Best Boy Grip</div>
+            <div class="crew-role-desc">Manages grip crew labor and equipment inventory. Key grip's direct report.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Dolly Grip</div>
+            <div class="crew-role-desc">Operates the dolly system. Executes every push-in, pull-out, and tracking move with precision. One of the most skilled physical jobs on set.</div>
+          </div>
+        </div>
+        <div class="crew-role">
+          <div class="crew-dot"></div>
+          <div>
+            <div class="crew-role-name">Grips</div>
+            <div class="crew-role-desc">Set the flags, cutters, silks, and bounce cards that shape and subtract light under key grip direction.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 2: WHAT HAPPENS BEFORE CAMERA ROLLS -->
+<div class="section" id="s2">
+  <div class="section-label">02 / Pre-Production</div>
+  <h2 class="section-title">The Most Valuable Work<br>Happens Before Day One.</h2>
+  <p class="section-body">Every hour a DP spends in prep eliminates three hours of problem-solving on set. The tech scout, the shot list, the equipment build. These are not overhead. They are the production's insurance policy.</p>
+
+  <div class="timeline">
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Pre-Production</div>
+      <div class="timeline-heading">Location Tech Scout</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> What happens on a scout</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          The DP walks every location with the director and production designer. The questions being answered: Where is the sun at call time and at wrap. What natural sources exist and can be motivated. What electrical infrastructure is available. What problems exist that need to be solved before the shoot day. A DP who skips the scout is <strong>guessing on the day.</strong> Guessing costs money.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Pre-Production</div>
+      <div class="timeline-heading">Shot List & Director Collaboration</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> More than just angles</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          The DP and director build the shot list together. Not just "what angles" but <strong>why each shot serves the story.</strong> What focal length creates the right emotional distance. Whether a push-in or a locked frame carries the moment. Whether a handheld or Steadicam serves the scene's energy. This is where the visual language of the project gets decided before a single frame is recorded.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Pre-Production</div>
+      <div class="timeline-heading">Department Coordination Meetings</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> Color palettes and wardrobe checks</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          DP, director, producer, production designer, wardrobe. Color palettes get coordinated. Wardrobe colors get checked against background choices and skin tones. If the wardrobe is the same saturation as the background, the DP knows <strong>before the shoot day</strong> and solves it in pre-production instead of on set. These meetings are why commercial images look composed rather than assembled.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Pre-Production</div>
+      <div class="timeline-heading">Camera Prep & Sensor Testing</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> Building the imaging pipeline</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          The DP builds and tests the camera package before the shoot. Lens resolution tests, sensor calibration, color science decisions, LUT development, media workflow verification. A camera problem discovered during prep costs an afternoon. <strong>The same problem discovered on set costs a production day.</strong> Prep is the most cost-effective thing a DP does.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Production</div>
+      <div class="timeline-heading">Blocking & Camera Placement</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> Where the camera lives</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          The director tells the actors where to move. The DP determines where the camera goes to make that movement meaningful. Camera height, angle, lens choice, depth of field. None of these are technical afterthoughts. A camera placed at eye level communicates equality. Placed low communicates power. Placed high communicates vulnerability. <strong>Every placement is an editorial decision.</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Production</div>
+      <div class="timeline-heading">Lighting Design & Execution</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> Hundreds of micro-decisions</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          More fill. Pull the unit back six inches. Add half a stop of diffusion. Flag that spill off the wall. Bring in a negative fill on the shadow side. These are not random adjustments. Each one shifts what the frame communicates. Over the course of a shoot day, a DP makes <strong>hundreds of these decisions</strong> in real time. Each one is a choice about how the image reads.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" onclick="toggleTimeline(this)">
+      <div class="timeline-phase">Production</div>
+      <div class="timeline-heading">Exposure & Color Pipeline</div>
+      <div class="timeline-toggle"><span class="arrow">&#9654;</span> From sensor to final grade</div>
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          The DP sets the exposure and manages the color science pipeline from sensor to display. On a RAW-capture commercial, the DP communicates the visual intent to the colorist through reference frames, LUTs, or written notes. The grade in post is built on <strong>what the DP captured on set.</strong> A DP who does not think about the grade is leaving half the image on the table.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 3: DECISION ANATOMY -->
+<div class="section" id="s3">
+  <div class="section-label">03 / Decision Anatomy</div>
+  <h2 class="section-title">Every Frame Is a<br>Series of Choices.</h2>
+  <p class="section-body">On a given setup, a DP makes dozens of decisions before the camera rolls. Here is what those decisions are and what they control.</p>
+
+  <div class="decision-matrix">
+    <div class="dm-header">
+      <div>Decision</div>
+      <div>Primary Tool</div>
+      <div>What It Controls</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Key Light Position</div>
+      <div class="dm-cell tool">Angle, height, distance</div>
+      <div class="dm-cell effect">Shadow direction, face modeling, dimensionality</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Fill Ratio</div>
+      <div class="dm-cell tool">Fill source intensity or neg fill</div>
+      <div class="dm-cell effect">Shadow depth, contrast, mood from neutral to noir</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Lens Choice</div>
+      <div class="dm-cell tool">Focal length, optical design</div>
+      <div class="dm-cell effect">Emotional distance, background compression, distortion</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Camera Height</div>
+      <div class="dm-cell tool">Tripod, low mode, high hat</div>
+      <div class="dm-cell effect">Power dynamics: low = power, high = vulnerability</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Depth of Field</div>
+      <div class="dm-cell tool">Aperture, focal length, subject distance</div>
+      <div class="dm-cell effect">Focus of attention, separation, world context vs. isolation</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Camera Movement</div>
+      <div class="dm-cell tool">Dolly, handheld, Steadicam, locked</div>
+      <div class="dm-cell effect">Emotional involvement, energy, POV relationship</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Background Exposure</div>
+      <div class="dm-cell tool">Practical control, flags, gel</div>
+      <div class="dm-cell effect">Subject isolation vs. environmental context</div>
+    </div>
+    <div class="dm-row">
+      <div class="dm-cell decision">Color Temperature</div>
+      <div class="dm-cell tool">Kelvin balance, gels, mixed sources</div>
+      <div class="dm-cell effect">Warmth, tension, time of day, emotional temperature</div>
+    </div>
+  </div>
+  <div class="dm-mobile-note">View on a wider screen to see the full decision matrix.</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 4: WITH VS WITHOUT -->
+<div class="section" id="s4">
+  <div class="section-label">04 / The Difference</div>
+  <h2 class="section-title">The Invisible Work<br>That Makes the Difference.</h2>
+  <p class="section-body">Bad cinematography announces itself. The viewer does not know why something looks wrong, but they feel it. Good cinematography disappears into the story. These are not accidents in either direction.</p>
+
+  <div class="quality-demo">
+    <div class="quality-demo-header">
+      <div class="quality-demo-title">Scene Comparison: Interview Setup</div>
+      <div class="quality-toggle-group">
+        <button class="quality-toggle active" id="t-both" onclick="setCompare('both')">Both</button>
+        <button class="quality-toggle" id="t-dp" onclick="setCompare('dp')">With DP</button>
+        <button class="quality-toggle" id="t-nodp" onclick="setCompare('nodp')">Without</button>
+      </div>
+    </div>
+    <div class="quality-demo-body" id="compare-body">
+      <div class="quality-frame frame-with-dp" id="frame-dp">
+        <div class="scene-bg-element"></div>
+        <div class="scene-subject"></div>
+        <div class="scene-rim"></div>
+        <div class="quality-label">With DP</div>
+      </div>
+      <div class="quality-frame frame-without-dp" id="frame-nodp">
+        <div class="scene-bg-element"></div>
+        <div class="scene-subject"></div>
+        <div class="quality-label">Without DP</div>
+      </div>
+    </div>
+    <div class="qa-list">
+      <div class="qa-item has-dp">
+        <div class="qa-dot good"></div>
+        <div class="qa-label">Key light motivated by natural window source at 30-degree angle</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-dot bad"></div>
+        <div class="qa-label">Overhead fluorescent source, flat, no directional modeling</div>
+      </div>
+      <div class="qa-item has-dp">
+        <div class="qa-dot good"></div>
+        <div class="qa-label">Negative fill on shadow side, 2-stop ratio, controlled contrast</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-dot bad"></div>
+        <div class="qa-label">No fill control, shadow side unmanaged</div>
+      </div>
+      <div class="qa-item has-dp">
+        <div class="qa-dot good"></div>
+        <div class="qa-label">Backlight at +2 over key separates subject from background</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-dot bad"></div>
+        <div class="qa-label">No separation, subject merges visually with background</div>
+      </div>
+      <div class="qa-item has-dp">
+        <div class="qa-dot good"></div>
+        <div class="qa-label">Background at -2 below key, subject reads as primary element</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-dot bad"></div>
+        <div class="qa-label">Background near-equal exposure to subject, no visual hierarchy</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 5: RATE CONTEXT -->
+<div class="section" id="s5">
+  <div class="section-label">05 / The Business Case</div>
+  <h2 class="section-title">The Rate Is Not for<br>the Camera. It Is for the System.</h2>
+  <p class="section-body">DFW commercial DP rates span from $900/day to $3,500/day. The variable is not equipment. Any working DP can rent gear. The variable is the three-department system described above, how well it runs, and what the DP's visual design looks like.</p>
+
+  <div class="rate-calc">
+    <div class="rate-calc-header">
+      <div class="rate-calc-title">DFW Production Day Cost Estimator</div>
+    </div>
+    <div class="rate-calc-body">
+      <div class="calc-controls">
+        <div class="calc-control">
+          <label>DP Day Rate <span id="dp-val">$2,500</span></label>
+          <input type="range" id="dp-rate" min="900" max="3500" step="100" value="2500" oninput="updateCalc()">
+        </div>
+        <div class="calc-control">
+          <label>Crew Size (beyond DP) <span id="crew-val">4 people</span></label>
+          <input type="range" id="crew-size" min="1" max="8" step="1" value="4" oninput="updateCalc()">
+        </div>
+        <div class="calc-control">
+          <label>Camera Package <span id="pkg-val">$1,800/day</span></label>
+          <input type="range" id="pkg" min="400" max="4000" step="200" value="1800" oninput="updateCalc()">
+        </div>
+        <div class="calc-control">
+          <label>Lighting/Grip Package <span id="grip-val">$1,200/day</span></label>
+          <input type="range" id="grip-pkg" min="200" max="3000" step="200" value="1200" oninput="updateCalc()">
+        </div>
+      </div>
+      <div class="calc-output">
+        <div class="calc-result">
+          <div class="calc-result-label">Total Production Day</div>
+          <div class="calc-result-value highlight" id="total-val">$9,100</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-label">DP As % of Day Budget</div>
+          <div class="calc-result-value" id="dp-pct">27.5%</div>
+        </div>
+        <div class="calc-note" id="calc-note">
+          At this scale, the DP rate is less than a third of the day budget. The gear, crew, and logistics cost more than the person designing the image.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSING -->
+<div class="closing" id="closing">
+  <blockquote>"The camera records. The DP decides what it sees."</blockquote>
+  <div class="closing-meta">GLM / Geared Like A Machine / Dallas, TX</div>
+</div>
+
+<script>
+// ── DEPT SWITCHER ──
+function switchDept(dept) {
+  document.querySelectorAll('.dept-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.dept === dept);
+  });
+  document.querySelectorAll('.dept-panel').forEach(p => {
+    p.classList.toggle('active', p.dataset.dept === dept);
+  });
+}
+
+// ── TIMELINE ACCORDION ──
+function toggleTimeline(item) {
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.timeline-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── COMPARE TOGGLE ──
+function setCompare(mode) {
+  document.querySelectorAll('.quality-toggle').forEach(b => b.classList.remove('active'));
+  const frameDP = document.getElementById('frame-dp');
+  const frameNO = document.getElementById('frame-nodp');
+  const body = document.getElementById('compare-body');
+
+  if (mode === 'both') {
+    document.getElementById('t-both').classList.add('active');
+    frameDP.style.display = '';
+    frameNO.style.display = '';
+    body.style.gridTemplateColumns = '1fr 1fr';
+  } else if (mode === 'dp') {
+    document.getElementById('t-dp').classList.add('active');
+    frameDP.style.display = '';
+    frameNO.style.display = 'none';
+    body.style.gridTemplateColumns = '1fr';
+  } else {
+    document.getElementById('t-nodp').classList.add('active');
+    frameDP.style.display = 'none';
+    frameNO.style.display = '';
+    body.style.gridTemplateColumns = '1fr';
+  }
+}
+
+// ── RATE CALCULATOR ──
+const crewRates = [650, 700, 700, 750, 750, 800, 800, 850]; // avg crew rates per additional person
+
+function updateCalc() {
+  const dpRate = parseInt(document.getElementById('dp-rate').value);
+  const crewSize = parseInt(document.getElementById('crew-size').value);
+  const pkg = parseInt(document.getElementById('pkg').value);
+  const gripPkg = parseInt(document.getElementById('grip-pkg').value);
+
+  document.getElementById('dp-val').textContent = '$' + dpRate.toLocaleString();
+  document.getElementById('crew-val').textContent = crewSize + (crewSize === 1 ? ' person' : ' people');
+  document.getElementById('pkg-val').textContent = '$' + pkg.toLocaleString() + '/day';
+  document.getElementById('grip-val').textContent = '$' + gripPkg.toLocaleString() + '/day';
+
+  const crewCost = crewRates.slice(0, crewSize).reduce((a, b) => a + b, 0);
+  const total = dpRate + crewCost + pkg + gripPkg;
+  const dpPct = ((dpRate / total) * 100).toFixed(1);
+
+  document.getElementById('total-val').textContent = '$' + total.toLocaleString();
+  document.getElementById('dp-pct').textContent = dpPct + '%';
+
+  let note = '';
+  if (parseFloat(dpPct) < 25) {
+    note = 'The DP is less than a quarter of this day budget. Gear and crew cost more than the person making the visual decisions.';
+  } else if (parseFloat(dpPct) < 35) {
+    note = 'At this scale, the DP rate is roughly a third of the day budget. The imaging pipeline costs are distributed across the full crew.';
+  } else {
+    note = 'Higher DP percentage usually means a leaner crew. The DP may be wearing multiple roles, which changes what is possible on set.';
+  }
+  document.getElementById('calc-note').textContent = note;
+}
+
+updateCalc();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.section, .closing').forEach(el => observer.observe(el));
+
+// Auto-open first timeline item
+setTimeout(() => {
+  const first = document.querySelector('.timeline-item');
+  if (first) first.classList.add('open');
+}, 800);
+</script>
+</body>
+</html>

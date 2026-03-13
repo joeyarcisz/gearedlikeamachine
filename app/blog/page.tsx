@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BlogSubscribe from "@/components/BlogSubscribe";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
@@ -117,6 +118,11 @@ export default function BlogIndex() {
               ))}
             </div>
           )}
+
+          {/* Subscribe */}
+          <div className="mt-16 max-w-xl">
+            <BlogSubscribe />
+          </div>
         </div>
       </main>
       <Footer />

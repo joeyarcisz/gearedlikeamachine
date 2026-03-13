@@ -39,18 +39,19 @@ enum OpportunityStage {
 }
 
 model Contact {
-  id            String       @id @default(cuid())
-  name          String
-  company       String?
-  email         String?
-  phone         String?
-  stage         ContactStage @default(lead)
-  lastContact   DateTime?
-  nextAction    String?
-  notes         String?
-  sourceFiles   String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id             String       @id @default(cuid())
+  name           String
+  company        String?
+  email          String?
+  phone          String?
+  stage          ContactStage @default(lead)
+  lastContact    DateTime?
+  nextAction     String?
+  notes          String?
+  sourceFiles    String?
+  blogSubscriber Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   opportunities Opportunity[]
   activities    Activity[]
