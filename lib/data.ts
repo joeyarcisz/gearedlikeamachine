@@ -11,6 +11,7 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: "Work", href: "#portfolio" },
+  { label: "About", href: "/about" },
   { label: "Capabilities", href: "#services" },
   { label: "Blueprint", href: "#process" },
   { label: "Scope", href: "/scope" },
@@ -82,6 +83,18 @@ export const portfolioItems = [
     category: "Commercial",
     thumbnail: "/coca-cola/santa-1.jpg",
     videoUrl: "/work/coca-cola",
+  },
+  {
+    title: "Kubota",
+    category: "Commercial / Industrial",
+    thumbnail: "/kubota/01.webp",
+    videoUrl: "/work/kubota",
+  },
+  {
+    title: "Conn-Selmer",
+    category: "Music / Education",
+    thumbnail: "/conn-selmer/hero.webp",
+    videoUrl: "/work/conn-selmer",
   },
 ];
 

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import RentalInventory from "@/components/RentalInventory";
+import HowItWorks from "@/components/HowItWorks";
+import RentalPolicies from "@/components/RentalPolicies";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 
 export const metadata: Metadata = {
@@ -54,6 +56,9 @@ export default function RentalsPage() {
             <RentalInventory />
           </div>
         </div>
+
+        <HowItWorks />
+        <RentalPolicies />
 
       </div>
     </DashboardShell>

@@ -30,7 +30,7 @@ interface ProjectDetailClientProps {
   crewMembers: CrewMemberOption[];
 }
 
-type Tab = "overview" | "crew" | "equipment" | "callsheets" | "shotlists" | "schedule";
+type Tab = "overview" | "crew" | "equipment" | "callsheets" | "shotlists" | "schedule" | "documents";
 
 function StatusBadge({ status, type }: { status: string; type: "project" | "callsheet" }) {
   const configs = type === "project" ? PROJECT_STATUSES : CALL_SHEET_STATUSES;
@@ -192,6 +192,7 @@ export default function ProjectDetailClient({
     { key: "callsheets", label: `Call Sheets (${project.callSheets.length})` },
     { key: "shotlists", label: `Shot Lists (${project.shotLists.length})` },
     { key: "schedule", label: `Schedule (${project.scheduleDays.length})` },
+    { key: "documents", label: "Documents" },
   ];
 
   const inputClasses =
@@ -387,6 +388,10 @@ export default function ProjectDetailClient({
 
       {activeTab === "schedule" && (
         <ScheduleTab projectId={project.id} scheduleDays={project.scheduleDays} />
+      )}
+
+      {activeTab === "documents" && (
+        <ProjectDocumentsTab projectId={project.id} />
       )}
     </div>
   );
@@ -1318,6 +1323,97 @@ function ScheduleTab({
                   </span>
                 </div>
               </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROJECT DOCUMENTS TAB
+   ═══════════════════════════════════════════════════════ */
+
+function ProjectDocumentsTab({ projectId }: { projectId: string }) {
+  const [documents, setDocuments] = useState<Array<{
+    id: string;
+    token: string;
+    status: string;
+    recipientName: string | null;
+    createdAt: string;
+    completedAt: string | null;
+    template: { name: string; isExternal: boolean };
+  }>>([]);
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  useCallback(() => {}, []);
+
+  useState(() => {
+    fetch(`/api/documents?projectId=${projectId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setDocuments(data.documents || []);
+        setLoading(false);
+      });
+  });
+
+  function copyLink(token: string) {
+    navigator.clipboard.writeText(`${window.location.origin}/d/${token}`);
+    setCopied(token);
+    setTimeout(() => setCopied(null), 2000);
+  }
+
+  return (
+    <div className="dashboard-card">
+      <div className="dashboard-card-header">
+        <h2 className="text-xs uppercase tracking-widest text-white font-[family-name:var(--font-heading)]">
+          Documents
+        </h2>
+        <Link
+          href={`/admin/documents/new`}
+          className="text-xs text-muted hover:text-steel transition-colors"
+        >
+          + New Document
+        </Link>
+      </div>
+      <div className="dashboard-card-body">
+        {loading ? (
+          <p className="text-muted text-sm">Loading...</p>
+        ) : documents.length === 0 ? (
+          <p className="text-muted text-sm">No documents linked to this project yet.</p>
+        ) : (
+          <div className="space-y-2">
+            {documents.map((doc) => (
+              <div key={doc.id} className="flex items-center justify-between p-3 border border-card-border/50">
+                <div>
+                  <Link href={`/admin/documents/${doc.id}`} className="text-sm text-white hover:text-steel">
+                    {doc.template.name}
+                  </Link>
+                  {doc.recipientName && (
+                    <span className="text-muted text-xs ml-2">{doc.recipientName}</span>
+                  )}
+                  <p className="text-muted text-[10px] mt-0.5">
+                    {new Date(doc.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-[10px] px-2 py-0.5 rounded ${
+                    doc.status === "COMPLETED" ? "bg-green-900/50 text-green-300" :
+                    doc.status === "SENT" ? "bg-blue-900/50 text-blue-300" :
+                    doc.status === "VIEWED" ? "bg-yellow-900/50 text-yellow-300" :
+                    "bg-zinc-700 text-zinc-300"
+                  }`}>
+                    {doc.status}
+                  </span>
+                  {doc.template.isExternal && ["SENT", "VIEWED"].includes(doc.status) && (
+                    <button onClick={() => copyLink(doc.token)} className="text-[10px] text-muted hover:text-steel">
+                      {copied === doc.token ? "Copied!" : "Copy Link"}
+                    </button>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         )}

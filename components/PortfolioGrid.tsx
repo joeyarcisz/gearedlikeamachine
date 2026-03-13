@@ -10,6 +10,8 @@ const bentoLayout = [
   "col-span-1 row-span-1",  // standard
   "col-span-1 row-span-1",  // standard
   "col-span-1 row-span-1",  // standard
+  "col-span-1 row-span-1",  // standard — Kubota
+  "col-span-2 row-span-1",  // wide — Conn-Selmer
 ];
 
 export default function PortfolioGrid() {

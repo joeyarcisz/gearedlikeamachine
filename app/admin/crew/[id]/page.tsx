@@ -4,6 +4,7 @@ import CrewMemberForm from "@/components/admin/CrewMemberForm";
 import EmailCompose from "@/components/admin/EmailCompose";
 import LogActivityForm from "@/components/admin/LogActivityForm";
 import ActivityTimeline from "@/components/admin/ActivityTimeline";
+import CrewDocumentsSection from "@/components/documents/CrewDocumentsSection";
 import type { CRMCrewMember } from "@/lib/crm-types";
 import type { Activity } from "@prisma/client";
 
@@ -55,6 +56,8 @@ export default async function EditCrewPage({
           crewMemberId={crewMember.id}
         />
       )}
+
+      <CrewDocumentsSection crewMemberId={crewMember.id} crewMemberName={crewMember.name} />
 
       <div className="dashboard-card">
         <div className="dashboard-card-header">

@@ -1,4 +1,5 @@
-import { PrismaClient, ContactStage, OpportunityStage } from "@prisma/client";
+import { PrismaClient, ContactStage, OpportunityStage, DocumentCategory } from "@prisma/client";
+import { documentTemplates } from "../lib/document-templates";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -217,6 +218,34 @@ async function main() {
   }
 
   console.log(`Created ${oppCount} opportunities`);
+
+  // --- Document Templates (idempotent upsert) ---
+  let templateCount = 0;
+  for (const tmpl of documentTemplates) {
+    await prisma.documentTemplate.upsert({
+      where: { slug: tmpl.slug },
+      update: {
+        name: tmpl.name,
+        category: tmpl.category as DocumentCategory,
+        description: tmpl.description,
+        requiresSignature: tmpl.requiresSignature,
+        isExternal: tmpl.isExternal,
+        fieldSchema: tmpl.fieldSchema as object,
+      },
+      create: {
+        name: tmpl.name,
+        slug: tmpl.slug,
+        category: tmpl.category as DocumentCategory,
+        description: tmpl.description,
+        requiresSignature: tmpl.requiresSignature,
+        isExternal: tmpl.isExternal,
+        fieldSchema: tmpl.fieldSchema as object,
+      },
+    });
+    templateCount++;
+  }
+  console.log(`Upserted ${templateCount} document templates`);
+
   console.log("Seeding complete!");
 }
 

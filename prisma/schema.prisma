@@ -117,6 +117,7 @@ model CrewMember {
   crewCalls              CrewCall[]
   scheduleAssignments    ScheduleCrewAssignment[]
   projectCrew            ProjectCrew[]
+  crewInvoices           CrewInvoice[]
 }
 
 // ═══════════════════════════════════════════════════════
@@ -153,6 +154,7 @@ model Project {
   scheduleDays     ScheduleDay[]
   projectCrew      ProjectCrew[]
   projectEquipment ProjectEquipment[]
+  documents        Document[]
 }
 
 // ── Call Sheets ──
@@ -311,4 +313,102 @@ model AdminSession {
   token     String   @unique
   createdAt DateTime @default(now())
   expiresAt DateTime
+}
+
+// ═══════════════════════════════════════════════════════
+// DOCUMENT MANAGEMENT
+// ═══════════════════════════════════════════════════════
+
+enum DocumentCategory {
+  LEGAL
+  PRODUCTION
+  FINANCIAL
+  CREW
+}
+
+enum DocumentStatus {
+  DRAFT
+  SENT
+  VIEWED
+  COMPLETED
+  EXPIRED
+  CANCELLED
+}
+
+enum CrewInvoiceStatus {
+  SENT
+  RETURNED
+  PAID
+}
+
+enum PaymentMethod {
+  ACH
+  ZELLE
+  CHECK
+  WIRE
+  PAYPAL
+  VENMO
+}
+
+model DocumentTemplate {
+  id                String           @id @default(cuid())
+  name              String
+  slug              String           @unique
+  category          DocumentCategory
+  description       String
+  requiresSignature Boolean          @default(true)
+  isExternal        Boolean          @default(false)
+  fieldSchema       Json
+  defaultValues     Json?
+  documents         Document[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
+
+model Document {
+  id             String           @id @default(cuid())
+  templateId     String
+  template       DocumentTemplate @relation(fields: [templateId], references: [id])
+  projectId      String?
+  project        Project?         @relation(fields: [projectId], references: [id])
+  token          String           @unique @default(uuid())
+  status         DocumentStatus   @default(DRAFT)
+  formData       Json             @default("{}")
+  recipientName  String?
+  recipientEmail String?
+  completedAt    DateTime?
+  expiresAt      DateTime?
+  signature      Signature?
+  crewInvoice    CrewInvoice?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([status])
+  @@index([templateId])
+  @@index([projectId])
+}
+
+model Signature {
+  id         String   @id @default(cuid())
+  documentId String   @unique
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  signerName String
+  signerIP   String
+  userAgent  String
+  agreedAt   DateTime @default(now())
+}
+
+model CrewInvoice {
+  id             String            @id @default(cuid())
+  documentId     String            @unique
+  document       Document          @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  crewMemberId   String
+  crewMember     CrewMember        @relation(fields: [crewMemberId], references: [id])
+  paymentMethod  PaymentMethod?
+  paymentDetails Json?
+  status         CrewInvoiceStatus @default(SENT)
+  paidAt         DateTime?
+  paidNote       String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 }
