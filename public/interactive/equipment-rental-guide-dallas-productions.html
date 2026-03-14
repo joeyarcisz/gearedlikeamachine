@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment Rental Planner: Dallas Productions</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #101014;
+  --surface-2: #16161c;
+  --border: #1e1e28;
+  --border-light: #2a2a38;
+  --text: #c4c4d0;
+  --text-dim: #565668;
+  --text-bright: #e8e8f0;
+  --accent: #7b6cff;
+  --accent-dim: rgba(123,108,255,0.12);
+  --accent-glow: rgba(123,108,255,0.3);
+  --green: #3fd68e;
+  --green-dim: rgba(63,214,142,0.1);
+  --amber: #f0b840;
+  --amber-dim: rgba(240,184,64,0.1);
+  --red: #f05050;
+  --red-dim: rgba(240,80,80,0.1);
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  --mono: 'Space Mono', monospace;
+  --sans: 'Space Grotesk', sans-serif;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+.site-header {
+  padding: 3rem 2rem 2rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.site-header h1 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--text-bright);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.site-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  max-width: 560px;
+  font-weight: 300;
+}
+
+.divider { width: 100%; height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+.main { max-width: 820px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+.section-header { margin-bottom: 1.5rem; }
+.section-header h2 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-bright);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+}
+.section-header p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+
+/* TYPE GRID */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.type-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.type-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-dim);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.type-card:hover::before { opacity: 1; }
+.type-card.active { border-color: var(--accent); background: var(--surface-2); }
+.type-card.active::before { opacity: 1; }
+
+.type-card .type-icon {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  margin-bottom: 0.6rem;
+  display: block;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+.type-card.active .type-icon { color: var(--accent); }
+.type-card .type-name { font-weight: 600; font-size: 0.88rem; color: var(--text-bright); margin-bottom: 0.25rem; }
+.type-card .type-desc { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; }
+
+.type-card .type-check {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: transparent;
+  transition: all 0.2s;
+}
+.type-card.active .type-check { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* DAYS */
+.days-row { display: flex; gap: 0.6rem; margin-bottom: 2.5rem; }
+.day-btn {
+  flex: 1;
+  padding: 0.7rem 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  transition: all 0.2s;
+  text-align: center;
+}
+.day-btn:hover { border-color: var(--border-light); color: var(--text); }
+.day-btn.active { background: var(--surface-2); border-color: var(--accent); color: var(--accent); }
+.day-btn .day-num { display: block; font-size: 1.3rem; font-weight: 700; color: inherit; line-height: 1; margin-bottom: 0.25rem; }
+.day-btn .day-label { font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* GEAR ROWS */
+.package-grid { display: grid; gap: 0.75rem; margin-bottom: 2.5rem; }
+
+.gear-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.gear-row:hover { border-color: var(--border-light); }
+
+.gear-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.gear-category-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.gear-header-info { flex: 1; }
+.gear-header-name { font-weight: 600; font-size: 0.88rem; color: var(--text-bright); margin-bottom: 0.15rem; }
+.gear-header-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); }
+.gear-header-rate { font-family: var(--mono); font-size: 0.82rem; color: var(--text); text-align: right; }
+.gear-header-rate .rate-val { font-weight: 700; font-size: 0.95rem; color: var(--green); }
+
+.gear-toggle {
+  width: 38px;
+  height: 22px;
+  background: var(--border-light);
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+}
+.gear-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition: all 0.2s;
+}
+.gear-toggle.on { background: var(--accent); }
+.gear-toggle.on::after { left: 19px; background: white; }
+
+.gear-options { padding: 0 1.1rem 1rem; border-top: 1px solid var(--border); display: none; }
+.gear-options.open { display: block; }
+
+.option-list { display: flex; flex-direction: column; gap: 0.4rem; padding-top: 0.75rem; }
+
+.option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s;
+  background: transparent;
+}
+.option-item:hover { background: var(--surface-2); }
+.option-item.selected { background: var(--accent-dim); }
+
+.option-radio {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-light);
+  margin-right: 0.65rem;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  position: relative;
+}
+.option-item.selected .option-radio { border-color: var(--accent); background: var(--accent); }
+.option-item.selected .option-radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: white;
+}
+
+.option-name { flex: 1; font-size: 0.82rem; color: var(--text); }
+
+.option-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  margin-right: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.badge-rec { background: var(--green-dim); color: var(--green); }
+.badge-pro { background: var(--accent-dim); color: var(--accent); }
+.badge-budget { background: var(--amber-dim); color: var(--amber); }
+
+.option-rate { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); }
+
+/* SUMMARY */
+.summary-panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 720px) {
+  .summary-panel { position: sticky; top: 1.5rem; }
+}
+
+.summary-title {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.summary-line:last-of-type { border-bottom: none; }
+.summary-line .line-name { font-size: 0.82rem; color: var(--text-dim); }
+.summary-line .line-name.active { color: var(--text); }
+.summary-line .line-val { font-family: var(--mono); font-size: 0.82rem; color: var(--text-dim); }
+.summary-line .line-val.active { color: var(--text-bright); }
+
+.summary-total {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.summary-total .total-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.summary-total .total-val {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--green);
+  transition: color 0.3s;
+}
+.total-val.warn { color: var(--amber); }
+.total-val.over { color: var(--red); }
+
+.budget-meter { margin-top: 0.75rem; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.budget-meter-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.4s ease, background 0.3s; width: 0%; }
+
+.budget-status { margin-top: 0.6rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; color: var(--text-dim); }
+
+.multiday-note {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--green-dim);
+  border: 1px solid rgba(63,214,142,0.2);
+  border-radius: 5px;
+  font-size: 0.75rem;
+  color: var(--green);
+  display: none;
+}
+.multiday-note.show { display: block; }
+
+/* ADVICE */
+.advice-panel { margin-bottom: 2.5rem; }
+
+.advice-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 0.75rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.advice-card { animation: fadeIn 0.35s ease; }
+
+.advice-flag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  display: inline-block;
+}
+.flag-tip { background: var(--green-dim); color: var(--green); }
+.flag-warn { background: var(--amber-dim); color: var(--amber); }
+.flag-info { background: var(--accent-dim); color: var(--accent); }
+
+.advice-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
+.advice-card p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.55; }
+
+/* SOURCE MATRIX */
+.source-matrix {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+
+.matrix-header {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 90px 90px 90px;
+  gap: 0.5rem;
+}
+.matrix-header span {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.matrix-header span:not(:first-child) { text-align: center; }
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 90px 90px;
+  gap: 0.5rem;
+  padding: 0.75rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+  align-items: center;
+}
+.matrix-row:last-child { border-bottom: none; }
+.matrix-row:hover { background: var(--surface-2); }
+.matrix-row .row-cat { font-size: 0.82rem; color: var(--text); }
+.matrix-row .row-cat small { display: block; font-size: 0.68rem; color: var(--text-dim); margin-top: 0.15rem; }
+
+.indicator { text-align: center; font-family: var(--mono); font-size: 0.7rem; padding: 0.2rem 0; border-radius: 3px; }
+.ind-yes { color: var(--green); }
+.ind-no { color: var(--red); opacity: 0.5; }
+.ind-maybe { color: var(--amber); }
+
+/* TIMING */
+.timing-track { margin-bottom: 2.5rem; position: relative; }
+.timing-track::before {
+  content: '';
+  position: absolute;
+  left: 1.25rem;
+  top: 2.4rem;
+  bottom: 2rem;
+  width: 1px;
+  background: var(--border-light);
+}
+
+.timing-item {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+  align-items: flex-start;
+}
+.timing-item:hover { background: var(--surface); }
+
+.timing-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.3rem;
+  position: relative;
+  z-index: 1;
+}
+.dot-critical { background: var(--red); box-shadow: 0 0 8px var(--red); }
+.dot-action { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.dot-check { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+.dot-day { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+.timing-content .timing-when { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+.timing-content .timing-action { font-size: 0.85rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.2rem; }
+.timing-content .timing-note { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; }
+
+/* LAYOUT */
+@media (min-width: 720px) {
+  .two-col { display: grid; grid-template-columns: 1fr 280px; gap: 2rem; align-items: start; }
+}
+
+.site-footer { max-width: 820px; margin: 0 auto; padding: 2rem 2rem 4rem; border-top: 1px solid var(--border); }
+.footer-brand { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; }
+
+@media (max-width: 480px) {
+  .site-header { padding: 2rem 1.25rem 1.5rem; }
+  .main { padding: 0 1.25rem 3rem; }
+  .matrix-header, .matrix-row { grid-template-columns: 1fr 70px 70px; }
+  .matrix-header span:last-child, .matrix-row .indicator:last-child { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header reveal">
+  <div class="label">Geared Like A Machine &nbsp;/&nbsp; Interactive Tool</div>
+  <h1>Equipment Rental Planner<br>Dallas Productions</h1>
+  <p class="subtitle">Build your rental package. See the real costs. Get source recommendations before you call a single vendor.</p>
+  <div class="divider"></div>
+</header>
+
+<main class="main">
+
+  <section class="reveal" style="margin-bottom:2.5rem">
+    <div class="section-header">
+      <h2>What kind of production are you shooting?</h2>
+      <p>This shapes the recommended package and rental strategy.</p>
+    </div>
+    <div class="type-grid" id="typeGrid">
+      <div class="type-card active" data-type="corporate">
+        <span class="type-check">&#10003;</span>
+        <span class="type-icon">[C]</span>
+        <div class="type-name">Corporate / Interview</div>
+        <div class="type-desc">Talking heads, internal comms, testimonials, event coverage</div>
+      </div>
+      <div class="type-card" data-type="brand">
+        <span class="type-check">&#10003;</span>
+        <span class="type-icon">[B]</span>
+        <div class="type-name">Brand Content</div>
+        <div class="type-desc">Social films, brand anthems, campaign hero pieces</div>
+      </div>
+      <div class="type-card" data-type="commercial">
+        <span class="type-check">&#10003;</span>
+        <span class="type-icon">[A]</span>
+        <div class="type-name">Commercial / Ad</div>
+        <div class="type-desc">Broadcast spots, OTT pre-roll, high-end product campaigns</div>
+      </div>
+      <div class="type-card" data-type="narrative">
+        <span class="type-check">&#10003;</span>
+        <span class="type-icon">[N]</span>
+        <div class="type-name">Narrative / Short</div>
+        <div class="type-desc">Short films, music videos, narrative branded content</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" style="margin-bottom:2.5rem">
+    <div class="section-header">
+      <h2>How many shoot days?</h2>
+      <p>Multi-day rentals typically include a house discount of 10-20%.</p>
+    </div>
+    <div class="days-row" id="daysRow">
+      <button class="day-btn active" data-days="1">
+        <span class="day-num">1</span>
+        <span class="day-label">Day</span>
+      </button>
+      <button class="day-btn" data-days="2">
+        <span class="day-num">2</span>
+        <span class="day-label">Days</span>
+      </button>
+      <button class="day-btn" data-days="3">
+        <span class="day-num">3</span>
+        <span class="day-label">Days</span>
+      </button>
+      <button class="day-btn" data-days="5">
+        <span class="day-num">5</span>
+        <span class="day-label">Days</span>
+      </button>
+      <button class="day-btn" data-days="7">
+        <span class="day-num">7</span>
+        <span class="day-label">Days</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="two-col">
+    <div class="col-main">
+      <section class="reveal">
+        <div class="section-header">
+          <h2>Build your package</h2>
+          <p>Toggle categories on or off. Select the tier that matches your job.</p>
+        </div>
+        <div class="package-grid" id="packageGrid">
+
+          <div class="gear-row" id="row-camera">
+            <div class="gear-header" data-expand="camera">
+              <span class="gear-category-dot" style="background:#7b6cff"></span>
+              <div class="gear-header-info">
+                <div class="gear-header-name">Camera Body</div>
+                <div class="gear-header-sub" id="camera-sub">ARRI ALEXA Mini LF</div>
+              </div>
+              <div class="gear-header-rate">
+                <div class="rate-val" id="camera-rate">$600</div>
+                <div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)">/day</div>
+              </div>
+              <button class="gear-toggle on" id="toggle-camera" data-cat="camera" aria-label="Toggle camera"></button>
+            </div>
+            <div class="gear-options" id="opts-camera">
+              <div class="option-list">
+                <div class="option-item" data-cat="camera" data-name="Blackmagic Cinema 6K" data-rate="175">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Blackmagic Cinema 6K</span>
+                  <span class="option-badge badge-budget">BUDGET</span>
+                  <span class="option-rate">$175/day</span>
+                </div>
+                <div class="option-item" data-cat="camera" data-name="Sony FX9" data-rate="300">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Sony FX9</span>
+                  <span class="option-badge badge-rec">CORPORATE</span>
+                  <span class="option-rate">$300/day</span>
+                </div>
+                <div class="option-item selected" data-cat="camera" data-name="ARRI ALEXA Mini LF" data-rate="600">
+                  <span class="option-radio"></span>
+                  <span class="option-name">ARRI ALEXA Mini LF</span>
+                  <span class="option-badge badge-pro">CINEMA</span>
+                  <span class="option-rate">$600/day</span>
+                </div>
+                <div class="option-item" data-cat="camera" data-name="Sony VENICE 2" data-rate="750">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Sony VENICE 2</span>
+                  <span class="option-badge badge-pro">CINEMA</span>
+                  <span class="option-rate">$750/day</span>
+                </div>
+                <div class="option-item" data-cat="camera" data-name="RED V-RAPTOR [X]" data-rate="550">
+                  <span class="option-radio"></span>
+                  <span class="option-name">RED V-RAPTOR [X]</span>
+                  <span class="option-badge badge-pro">HIGH-RES</span>
+                  <span class="option-rate">$550/day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gear-row" id="row-lenses">
+            <div class="gear-header" data-expand="lenses">
+              <span class="gear-category-dot" style="background:#3fd68e"></span>
+              <div class="gear-header-info">
+                <div class="gear-header-name">Lens Package</div>
+                <div class="gear-header-sub" id="lenses-sub">ZEISS Supreme Primes</div>
+              </div>
+              <div class="gear-header-rate">
+                <div class="rate-val" id="lenses-rate">$400</div>
+                <div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)">/day</div>
+              </div>
+              <button class="gear-toggle on" id="toggle-lenses" data-cat="lenses" aria-label="Toggle lenses"></button>
+            </div>
+            <div class="gear-options" id="opts-lenses">
+              <div class="option-list">
+                <div class="option-item" data-cat="lenses" data-name="Sigma Cine FF Primes (set of 5)" data-rate="200">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Sigma Cine FF Primes (set of 5)</span>
+                  <span class="option-badge badge-budget">BUDGET</span>
+                  <span class="option-rate">$200/day</span>
+                </div>
+                <div class="option-item" data-cat="lenses" data-name="Cooke S4/i Primes (set of 5)" data-rate="350">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Cooke S4/i Primes (set of 5)</span>
+                  <span class="option-badge badge-rec">WARM</span>
+                  <span class="option-rate">$350/day</span>
+                </div>
+                <div class="option-item selected" data-cat="lenses" data-name="ZEISS Supreme Primes (set of 5)" data-rate="400">
+                  <span class="option-radio"></span>
+                  <span class="option-name">ZEISS Supreme Primes (set of 5)</span>
+                  <span class="option-badge badge-pro">COMMERCIAL</span>
+                  <span class="option-rate">$400/day</span>
+                </div>
+                <div class="option-item" data-cat="lenses" data-name="Leica Summilux-C (set of 5)" data-rate="500">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Leica Summilux-C (set of 5)</span>
+                  <span class="option-badge badge-pro">CINEMATIC</span>
+                  <span class="option-rate">$500/day</span>
+                </div>
+                <div class="option-item" data-cat="lenses" data-name="ARRI Master Anamorphics (set of 4)" data-rate="850">
+                  <span class="option-radio"></span>
+                  <span class="option-name">ARRI Master Anamorphics (set of 4)</span>
+                  <span class="option-badge badge-pro">ANAMORPHIC</span>
+                  <span class="option-rate">$850/day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gear-row" id="row-lighting">
+            <div class="gear-header" data-expand="lighting">
+              <span class="gear-category-dot" style="background:#f0b840"></span>
+              <div class="gear-header-info">
+                <div class="gear-header-name">Lighting Package</div>
+                <div class="gear-header-sub" id="lighting-sub">SkyPanel S60 + Kino Package</div>
+              </div>
+              <div class="gear-header-rate">
+                <div class="rate-val" id="lighting-rate">$400</div>
+                <div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)">/day</div>
+              </div>
+              <button class="gear-toggle on" id="toggle-lighting" data-cat="lighting" aria-label="Toggle lighting"></button>
+            </div>
+            <div class="gear-options" id="opts-lighting">
+              <div class="option-list">
+                <div class="option-item" data-cat="lighting" data-name="2x LED Panels (battery capable)" data-rate="180">
+                  <span class="option-radio"></span>
+                  <span class="option-name">2x LED Panels (battery capable)</span>
+                  <span class="option-badge badge-budget">MOBILE</span>
+                  <span class="option-rate">$180/day</span>
+                </div>
+                <div class="option-item" data-cat="lighting" data-name="LITEMAT Plus 4 + Kino Flo kit" data-rate="280">
+                  <span class="option-radio"></span>
+                  <span class="option-name">LITEMAT Plus 4 + Kino Flo kit</span>
+                  <span class="option-badge badge-rec">CORPORATE</span>
+                  <span class="option-rate">$280/day</span>
+                </div>
+                <div class="option-item selected" data-cat="lighting" data-name="SkyPanel S60 + Kino Package" data-rate="400">
+                  <span class="option-radio"></span>
+                  <span class="option-name">SkyPanel S60 + Kino Package</span>
+                  <span class="option-badge badge-pro">BRAND</span>
+                  <span class="option-rate">$400/day</span>
+                </div>
+                <div class="option-item" data-cat="lighting" data-name="2.5K HMI + Tungsten package" data-rate="600">
+                  <span class="option-radio"></span>
+                  <span class="option-name">2.5K HMI + Tungsten package</span>
+                  <span class="option-badge badge-pro">EXTERIOR</span>
+                  <span class="option-rate">$600/day</span>
+                </div>
+                <div class="option-item" data-cat="lighting" data-name="Full G+E commercial package" data-rate="950">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Full G+E commercial package</span>
+                  <span class="option-badge badge-pro">COMMERCIAL</span>
+                  <span class="option-rate">$950/day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gear-row" id="row-grip">
+            <div class="gear-header" data-expand="grip">
+              <span class="gear-category-dot" style="background:#f05050"></span>
+              <div class="gear-header-info">
+                <div class="gear-header-name">Grip Package</div>
+                <div class="gear-header-sub" id="grip-sub">C-Stand + flags + diffusion</div>
+              </div>
+              <div class="gear-header-rate">
+                <div class="rate-val" id="grip-rate">$200</div>
+                <div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)">/day</div>
+              </div>
+              <button class="gear-toggle on" id="toggle-grip" data-cat="grip" aria-label="Toggle grip"></button>
+            </div>
+            <div class="gear-options" id="opts-grip">
+              <div class="option-list">
+                <div class="option-item" data-cat="grip" data-name="Minimal (4 C-stands, sandbags)" data-rate="80">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Minimal (4 C-stands, sandbags)</span>
+                  <span class="option-badge badge-budget">MINIMAL</span>
+                  <span class="option-rate">$80/day</span>
+                </div>
+                <div class="option-item selected" data-cat="grip" data-name="C-stand package + flags + diffusion" data-rate="200">
+                  <span class="option-radio"></span>
+                  <span class="option-name">C-stand package + flags + diffusion</span>
+                  <span class="option-badge badge-rec">STANDARD</span>
+                  <span class="option-rate">$200/day</span>
+                </div>
+                <div class="option-item" data-cat="grip" data-name="12x12 frame + full C-stand package" data-rate="350">
+                  <span class="option-radio"></span>
+                  <span class="option-name">12x12 frame + full C-stand package</span>
+                  <span class="option-badge badge-rec">EXTERIOR</span>
+                  <span class="option-rate">$350/day</span>
+                </div>
+                <div class="option-item" data-cat="grip" data-name="Full 1-ton grip truck" data-rate="600">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Full 1-ton grip truck</span>
+                  <span class="option-badge badge-pro">COMMERCIAL</span>
+                  <span class="option-rate">$600/day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gear-row" id="row-support">
+            <div class="gear-header" data-expand="support">
+              <span class="gear-category-dot" style="background:#60b8ff"></span>
+              <div class="gear-header-info">
+                <div class="gear-header-name">Support + Monitoring</div>
+                <div class="gear-header-sub" id="support-sub">Director monitor + follow focus</div>
+              </div>
+              <div class="gear-header-rate">
+                <div class="rate-val" id="support-rate">$150</div>
+                <div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)">/day</div>
+              </div>
+              <button class="gear-toggle on" id="toggle-support" data-cat="support" aria-label="Toggle support"></button>
+            </div>
+            <div class="gear-options" id="opts-support">
+              <div class="option-list">
+                <div class="option-item" data-cat="support" data-name="On-camera monitor only" data-rate="60">
+                  <span class="option-radio"></span>
+                  <span class="option-name">On-camera monitor only</span>
+                  <span class="option-badge badge-budget">MINIMAL</span>
+                  <span class="option-rate">$60/day</span>
+                </div>
+                <div class="option-item selected" data-cat="support" data-name="Director monitor + follow focus + rods" data-rate="150">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Director monitor + follow focus + rods</span>
+                  <span class="option-badge badge-rec">STANDARD</span>
+                  <span class="option-rate">$150/day</span>
+                </div>
+                <div class="option-item" data-cat="support" data-name="Full DIT station + wireless TX" data-rate="350">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Full DIT station + wireless TX</span>
+                  <span class="option-badge badge-pro">COMMERCIAL</span>
+                  <span class="option-rate">$350/day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gear-row" id="row-genny">
+            <div class="gear-header" data-expand="genny">
+              <span class="gear-category-dot" style="background:#ff8c50"></span>
+              <div class="gear-header-info">
+                <div class="gear-header-name">Generator</div>
+                <div class="gear-header-sub" id="genny-sub">Off / not included</div>
+              </div>
+              <div class="gear-header-rate">
+                <div class="rate-val" id="genny-rate">$0</div>
+                <div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)">/day</div>
+              </div>
+              <button class="gear-toggle" id="toggle-genny" data-cat="genny" aria-label="Toggle generator"></button>
+            </div>
+            <div class="gear-options" id="opts-genny">
+              <div class="option-list">
+                <div class="option-item" data-cat="genny" data-name="Honda EU7000is (quiet, 7kW)" data-rate="200">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Honda EU7000is (quiet, 7kW)</span>
+                  <span class="option-badge badge-rec">SMALL HMI</span>
+                  <span class="option-rate">$200/day</span>
+                </div>
+                <div class="option-item" data-cat="genny" data-name="Multiquip 20kW (5-ton capable)" data-rate="350">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Multiquip 20kW (5-ton capable)</span>
+                  <span class="option-badge badge-pro">LARGE HMI</span>
+                  <span class="option-rate">$350/day</span>
+                </div>
+                <div class="option-item" data-cat="genny" data-name="Strand diesel 40kW (full commercial)" data-rate="500">
+                  <span class="option-radio"></span>
+                  <span class="option-name">Strand diesel 40kW (full commercial)</span>
+                  <span class="option-badge badge-pro">COMMERCIAL</span>
+                  <span class="option-rate">$500/day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <div class="col-aside">
+      <div class="summary-panel reveal">
+        <div class="summary-title">Cost Summary</div>
+        <div id="summaryLines">
+          <div class="summary-line">
+            <span class="line-name active" id="sum-camera-name">Camera Body</span>
+            <span class="line-val active" id="sum-camera-val">$600</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-name active" id="sum-lenses-name">Lens Package</span>
+            <span class="line-val active" id="sum-lenses-val">$400</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-name active" id="sum-lighting-name">Lighting</span>
+            <span class="line-val active" id="sum-lighting-val">$400</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-name active" id="sum-grip-name">Grip</span>
+            <span class="line-val active" id="sum-grip-val">$200</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-name active" id="sum-support-name">Support + Mon.</span>
+            <span class="line-val active" id="sum-support-val">$150</span>
+          </div>
+          <div class="summary-line">
+            <span class="line-name" id="sum-genny-name">Generator</span>
+            <span class="line-val" id="sum-genny-val">--</span>
+          </div>
+        </div>
+        <div class="summary-total">
+          <span class="total-label">Per Day</span>
+          <span class="total-val" id="totalPerDay">$1,750</span>
+        </div>
+        <div class="budget-meter">
+          <div class="budget-meter-fill" id="budgetFill"></div>
+        </div>
+        <div class="budget-status" id="budgetStatus">of $3,000 reference budget</div>
+        <div class="multiday-note" id="multidayNote">Multi-day discount applied.</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="reveal" style="margin-bottom:2rem">
+    <div class="section-header">
+      <h2>Package analysis</h2>
+      <p>Based on your production type and selections.</p>
+    </div>
+    <div id="advicePanel"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-header">
+      <h2>Where to source it</h2>
+      <p>DFW market sourcing guide. National houses ship overnight to Dallas.</p>
+    </div>
+    <div class="source-matrix">
+      <div class="matrix-header">
+        <span>Category</span>
+        <span>National Ship</span>
+        <span>Local DFW</span>
+        <span>Owner-Op</span>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">Premium Primes<small>Cookes, Leicas, ZEISS Supremes</small></div>
+        <div class="indicator ind-yes">Best</div>
+        <div class="indicator ind-maybe">Limited</div>
+        <div class="indicator ind-maybe">Some</div>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">Cinema Bodies<small>ARRI, VENICE, RED</small></div>
+        <div class="indicator ind-yes">Best</div>
+        <div class="indicator ind-maybe">Limited</div>
+        <div class="indicator ind-yes">Common</div>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">LED Lighting<small>SkyPanel, LITEMAT, Gemini</small></div>
+        <div class="indicator ind-yes">Good</div>
+        <div class="indicator ind-yes">Good</div>
+        <div class="indicator ind-yes">Common</div>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">HMI + Tungsten<small>1.2K, 2.5K, 4K Fresnels</small></div>
+        <div class="indicator ind-maybe">Possible</div>
+        <div class="indicator ind-yes">Best</div>
+        <div class="indicator ind-no">Rare</div>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">Grip Packages<small>C-stands, frames, flags</small></div>
+        <div class="indicator ind-maybe">Possible</div>
+        <div class="indicator ind-yes">Best</div>
+        <div class="indicator ind-yes">Common</div>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">Generator<small>7kW to 40kW diesel</small></div>
+        <div class="indicator ind-no">No</div>
+        <div class="indicator ind-yes">Only</div>
+        <div class="indicator ind-no">No</div>
+      </div>
+      <div class="matrix-row">
+        <div class="row-cat">Expendables<small>Gels, tape, stingers</small></div>
+        <div class="indicator ind-no">No</div>
+        <div class="indicator ind-yes">Best</div>
+        <div class="indicator ind-maybe">Some</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" style="margin-top:2.5rem">
+    <div class="section-header">
+      <h2>Booking timeline</h2>
+      <p>DFW market booking windows. Miss these and you are scrambling.</p>
+    </div>
+    <div class="timing-track">
+      <div class="timing-item">
+        <div class="timing-dot dot-critical"></div>
+        <div class="timing-content">
+          <div class="timing-when">14+ DAYS BEFORE SHOOT</div>
+          <div class="timing-action">Book premium prime sets</div>
+          <div class="timing-note">Cookes, Leicas, and ZEISS Supremes book out fast on weekend shoots. National house inventory goes first. Reserve or lose your lens choice.</div>
+        </div>
+      </div>
+      <div class="timing-item">
+        <div class="timing-dot dot-critical"></div>
+        <div class="timing-content">
+          <div class="timing-when">10+ DAYS BEFORE SHOOT</div>
+          <div class="timing-action">Lock ARRI and VENICE body reservations</div>
+          <div class="timing-note">Cinema bodies have a deeper pool than primes but still book out on Thursdays through Mondays. Your camera determines your entire support package.</div>
+        </div>
+      </div>
+      <div class="timing-item">
+        <div class="timing-dot dot-action"></div>
+        <div class="timing-content">
+          <div class="timing-when">7 DAYS BEFORE SHOOT</div>
+          <div class="timing-action">Confirm insurance certificate</div>
+          <div class="timing-note">The rental house will not release gear without it. A DICE or single-production policy takes 24-48 hours to issue. Do not wait until day-before.</div>
+        </div>
+      </div>
+      <div class="timing-item">
+        <div class="timing-dot dot-action"></div>
+        <div class="timing-content">
+          <div class="timing-when">5 DAYS BEFORE SHOOT</div>
+          <div class="timing-action">Order shipped gear with a buffer day</div>
+          <div class="timing-note">National houses ship 1-day to Dallas. Order for delivery 2 days before the shoot. One day to QC, one day of cushion if anything needs replacement.</div>
+        </div>
+      </div>
+      <div class="timing-item">
+        <div class="timing-dot dot-check"></div>
+        <div class="timing-content">
+          <div class="timing-when">2 DAYS BEFORE SHOOT</div>
+          <div class="timing-action">Full gear QC on arrival</div>
+          <div class="timing-note">Check everything. Lenses for barrel smoothness and aperture clicks. Camera body sensor and menu functions. Lights for output consistency. Any issue needs time to resolve.</div>
+        </div>
+      </div>
+      <div class="timing-item">
+        <div class="timing-dot dot-day"></div>
+        <div class="timing-content">
+          <div class="timing-when">DAY OF SHOOT</div>
+          <div class="timing-action">Local grip and expendables pickup only</div>
+          <div class="timing-note">If anything is missing from your primary package, source locally. This is the only same-day category. Camera, lens, and lighting must already be at the location.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-brand">Geared Like A Machine &nbsp;&middot;&nbsp; Dallas, Texas &nbsp;&middot;&nbsp; gearedlikeamachine.com</div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var state = {
+    type: 'corporate',
+    days: 1,
+    gear: {
+      camera:   { on: true,  rate: 600, name: 'ARRI ALEXA Mini LF' },
+      lenses:   { on: true,  rate: 400, name: 'ZEISS Supreme Primes (set of 5)' },
+      lighting: { on: true,  rate: 400, name: 'SkyPanel S60 + Kino Package' },
+      grip:     { on: true,  rate: 200, name: 'C-stand package + flags + diffusion' },
+      support:  { on: true,  rate: 150, name: 'Director monitor + follow focus + rods' },
+      genny:    { on: false, rate: 0,   name: 'Off' }
+    }
+  };
+
+  var typeDefaults = {
+    corporate: {
+      camera:   { name: 'Sony FX9', rate: 300 },
+      lenses:   { name: 'Sigma Cine FF Primes (set of 5)', rate: 200 },
+      lighting: { name: 'LITEMAT Plus 4 + Kino Flo kit', rate: 280 },
+      grip:     { name: 'C-stand package + flags + diffusion', rate: 200 },
+      support:  { name: 'Director monitor + follow focus + rods', rate: 150 },
+      genny:    { on: false, name: 'Off', rate: 0 }
+    },
+    brand: {
+      camera:   { name: 'ARRI ALEXA Mini LF', rate: 600 },
+      lenses:   { name: 'Cooke S4/i Primes (set of 5)', rate: 350 },
+      lighting: { name: 'SkyPanel S60 + Kino Package', rate: 400 },
+      grip:     { name: 'C-stand package + flags + diffusion', rate: 200 },
+      support:  { name: 'Director monitor + follow focus + rods', rate: 150 },
+      genny:    { on: false, name: 'Off', rate: 0 }
+    },
+    commercial: {
+      camera:   { name: 'ARRI ALEXA Mini LF', rate: 600 },
+      lenses:   { name: 'ZEISS Supreme Primes (set of 5)', rate: 400 },
+      lighting: { name: '2.5K HMI + Tungsten package', rate: 600 },
+      grip:     { name: '12x12 frame + full C-stand package', rate: 350 },
+      support:  { name: 'Full DIT station + wireless TX', rate: 350 },
+      genny:    { on: true, name: 'Multiquip 20kW (5-ton capable)', rate: 350 }
+    },
+    narrative: {
+      camera:   { name: 'ARRI ALEXA Mini LF', rate: 600 },
+      lenses:   { name: 'Leica Summilux-C (set of 5)', rate: 500 },
+      lighting: { name: 'SkyPanel S60 + Kino Package', rate: 400 },
+      grip:     { name: 'C-stand package + flags + diffusion', rate: 200 },
+      support:  { name: 'Director monitor + follow focus + rods', rate: 150 },
+      genny:    { on: false, name: 'Off', rate: 0 }
+    }
+  };
+
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  function applyTypeDefaults(type) {
+    var defaults = typeDefaults[type];
+    var cats = ['camera', 'lenses', 'lighting', 'grip', 'support', 'genny'];
+    cats.forEach(function (cat) {
+      var d = defaults[cat];
+      state.gear[cat].rate = d.rate;
+      state.gear[cat].name = d.name;
+      if (typeof d.on !== 'undefined') {
+        state.gear[cat].on = d.on;
+      } else {
+        state.gear[cat].on = true;
+      }
+      var opts = document.querySelectorAll('[data-cat="' + cat + '"]');
+      opts.forEach(function (o) {
+        o.classList.toggle('selected', o.dataset.name === d.name);
+      });
+      var tog = document.getElementById('toggle-' + cat);
+      if (tog) tog.classList.toggle('on', state.gear[cat].on);
+    });
+  }
+
+  function updateAll() {
+    var cats = ['camera', 'lenses', 'lighting', 'grip', 'support', 'genny'];
+    var perDay = 0;
+
+    cats.forEach(function (cat) {
+      var g = state.gear[cat];
+      var isOn = g.on && g.rate > 0;
+      perDay += isOn ? g.rate : 0;
+
+      var sub = document.getElementById(cat + '-sub');
+      if (sub) sub.textContent = isOn ? g.name : 'Off / not included';
+
+      var rateEl = document.getElementById(cat + '-rate');
+      if (rateEl) rateEl.textContent = isOn ? fmt(g.rate) : '$0';
+
+      var nameEl = document.getElementById('sum-' + cat + '-name');
+      var valEl  = document.getElementById('sum-' + cat + '-val');
+      if (nameEl) nameEl.classList.toggle('active', isOn);
+      if (valEl) {
+        valEl.classList.toggle('active', isOn);
+        valEl.textContent = isOn ? fmt(g.rate) : '--';
+      }
+    });
+
+    var discount = 1.0;
+    if (state.days >= 7) discount = 0.72;
+    else if (state.days >= 5) discount = 0.78;
+    else if (state.days >= 3) discount = 0.83;
+    else if (state.days >= 2) discount = 0.88;
+
+    var totalWithDiscount = Math.round(perDay * state.days * discount);
+    var totalEl = document.getElementById('totalPerDay');
+    if (totalEl) {
+      var pct = perDay / 3000;
+      totalEl.textContent = state.days > 1
+        ? (fmt(perDay) + '/day  ' + fmt(totalWithDiscount) + ' total')
+        : fmt(perDay);
+      totalEl.classList.toggle('warn', pct > 0.7 && pct <= 0.9);
+      totalEl.classList.toggle('over', pct > 0.9);
+    }
+
+    var fill   = document.getElementById('budgetFill');
+    var status = document.getElementById('budgetStatus');
+    if (fill && status) {
+      var pct2 = Math.min(perDay / 3000, 1);
+      fill.style.width = (pct2 * 100) + '%';
+      fill.style.background = pct2 > 0.9 ? 'var(--red)' : pct2 > 0.7 ? 'var(--amber)' : 'var(--green)';
+      status.textContent = fmt(perDay) + ' of $3,000 reference budget';
+    }
+
+    var note = document.getElementById('multidayNote');
+    if (note) {
+      var show = state.days > 1;
+      note.classList.toggle('show', show);
+      if (show) {
+        var savePct = Math.round((1 - discount) * 100);
+        note.textContent = state.days + '-day rental. ~' + savePct + '% house discount applied. Est. total: ' + fmt(totalWithDiscount) + '.';
+      }
+    }
+
+    updateAdvice(perDay);
+  }
+
+  function makeAdviceCard(flagClass, flagLabel, title, body) {
+    var card = document.createElement('div');
+    card.className = 'advice-card';
+
+    var flag = document.createElement('span');
+    flag.className = 'advice-flag ' + flagClass;
+    flag.textContent = flagLabel;
+
+    var h3 = document.createElement('h3');
+    h3.textContent = title;
+
+    var p = document.createElement('p');
+    p.textContent = body;
+
+    card.appendChild(flag);
+    card.appendChild(h3);
+    card.appendChild(p);
+    return card;
+  }
+
+  function updateAdvice(perDay) {
+    var panel = document.getElementById('advicePanel');
+    if (!panel) return;
+    while (panel.firstChild) panel.removeChild(panel.firstChild);
+
+    var cards = [];
+    var g = state.gear;
+
+    if (state.type === 'corporate' && g.camera.rate >= 500) {
+      cards.push(['flag-warn', 'Over-spec',
+        'Cinema body on a corporate job',
+        'A ' + g.camera.name + ' on a corporate interview is spending ' + fmt(g.camera.rate) + '/day for a look that will not survive YouTube compression. The Sony FX9 at $300/day delivers the same usable image for this deliverable type and saves you ' + fmt(g.camera.rate - 300) + ' per day.'
+      ]);
+    }
+
+    if (state.type === 'commercial' && !g.genny.on) {
+      cards.push(['flag-warn', 'Missing power',
+        'Commercial lighting without generator',
+        'Commercial shoots using HMI lighting on locations without reliable 20A+ circuits need a generator. Running a 2.5K HMI off standard house power trips breakers mid-take. Add a genny to the package before you get to set.'
+      ]);
+    }
+
+    if (state.type === 'corporate' && g.camera.rate <= 300) {
+      cards.push(['flag-tip', 'Right call',
+        'Camera package matches the job',
+        'A Sony FX9 is the correct rental for corporate interview and b-roll work. Native ISO performance in low-light interview environments, fast card media for long takes, and a codec your editor will appreciate.'
+      ]);
+    }
+
+    if (state.type === 'commercial' && g.lenses.rate >= 400) {
+      cards.push(['flag-tip', 'Lens match',
+        'Commercial lens choice is correct',
+        g.lenses.name + ' for broadcast and campaign work is the right call. The look needs to hold at full resolution through a grade and color correction pipeline. Budget lenses fall apart under that process.'
+      ]);
+    }
+
+    if (g.lenses.name && g.lenses.name.indexOf('Anamorphic') !== -1 && state.type !== 'narrative') {
+      cards.push(['flag-warn', 'Scope mismatch',
+        'Anamorphic on a non-narrative job',
+        'Anamorphic lenses are the right tool for 2.39:1 cinematic deliverables. For brand content or commercials, the 2x squeeze and flare character can work against clean product presentation. Confirm the client wants scope before committing.'
+      ]);
+    }
+
+    if (state.days >= 3 && perDay > 1000) {
+      var savingEstimate = fmt(Math.round(perDay * state.days * 0.17));
+      cards.push(['flag-info', 'Budget tip',
+        'Multi-day discount conversation',
+        'At ' + state.days + ' days, negotiate a house deal rather than day rates. Most rental houses apply 15-25% on 3+ day reservations when asked directly. At your current package, that is a potential saving of ' + savingEstimate + ' over the booking.'
+      ]);
+    }
+
+    if (perDay >= 1000) {
+      cards.push(['flag-info', 'Required',
+        'Insurance certificate before pickup',
+        'At this package value, the rental house requires a COI showing camera and equipment coverage. A single-production DICE policy runs $150-$350 for this insured value. Order it 48 hours before pickup, not the morning of.'
+      ]);
+    }
+
+    if (cards.length === 0) {
+      cards.push(['flag-tip', 'Looking good',
+        'Package is well-matched',
+        'Your current selections align with the production type. No over-spec items detected. Review the sourcing matrix to determine which categories to ship nationally vs. source locally in DFW.'
+      ]);
+    }
+
+    cards.forEach(function (c) {
+      panel.appendChild(makeAdviceCard(c[0], c[1], c[2], c[3]));
+    });
+  }
+
+  // EVENT LISTENERS
+  document.querySelectorAll('.type-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.type-card').forEach(function (c) { c.classList.remove('active'); });
+      card.classList.add('active');
+      state.type = card.dataset.type;
+      applyTypeDefaults(state.type);
+      updateAll();
+    });
+  });
+
+  document.querySelectorAll('.day-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.day-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.days = parseInt(btn.dataset.days, 10);
+      updateAll();
+    });
+  });
+
+  document.querySelectorAll('.gear-toggle').forEach(function (tog) {
+    tog.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var cat = tog.dataset.cat;
+      state.gear[cat].on = !state.gear[cat].on;
+      tog.classList.toggle('on', state.gear[cat].on);
+      if (!state.gear[cat].on) {
+        state.gear[cat].rate = 0;
+      } else {
+        var sel = document.querySelector('[data-cat="' + cat + '"].selected');
+        if (sel) {
+          state.gear[cat].rate = parseInt(sel.dataset.rate, 10);
+          state.gear[cat].name = sel.dataset.name;
+        }
+      }
+      updateAll();
+    });
+  });
+
+  document.querySelectorAll('.gear-header').forEach(function (hdr) {
+    hdr.addEventListener('click', function (e) {
+      if (e.target.classList.contains('gear-toggle')) return;
+      var cat = hdr.dataset.expand;
+      var opts = document.getElementById('opts-' + cat);
+      if (opts) opts.classList.toggle('open');
+    });
+  });
+
+  document.querySelectorAll('.option-item').forEach(function (item) {
+    item.addEventListener('click', function () {
+      var cat = item.dataset.cat;
+      document.querySelectorAll('[data-cat="' + cat + '"]').forEach(function (o) { o.classList.remove('selected'); });
+      item.classList.add('selected');
+      var rate = parseInt(item.dataset.rate, 10);
+      state.gear[cat].rate = rate;
+      state.gear[cat].name = item.dataset.name;
+      state.gear[cat].on = true;
+      var tog = document.getElementById('toggle-' + cat);
+      if (tog) tog.classList.add('on');
+      updateAll();
+    });
+  });
+
+  // SCROLL REVEAL
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
+
+  // INIT
+  updateAll();
+})();
+</script>
+</body>
+</html>

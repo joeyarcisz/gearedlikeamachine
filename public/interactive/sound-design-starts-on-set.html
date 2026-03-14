@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound Design Starts on Set — GLM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Azeret+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0a0a0c; --surface: #0e0e11; --surface2: #13131a;
+  --border: #1a1a22; --border2: #252530;
+  --text: #c2c2cc; --dim: #4a4a58; --accent: #e8e8f0;
+  --warm: #c8a46e; --cold: #6ea8c8; --danger: #c86e6e; --safe: #6ec898;
+}
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Azeret Mono', monospace; min-height: 100vh;
+  overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+.header { padding: 6rem 2rem 4rem; text-align: center; border-bottom: 1px solid var(--border); }
+.tag { font-size: .55rem; text-transform: uppercase; letter-spacing: .5em; color: var(--dim); margin-bottom: 2rem; }
+.header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem,6vw,5rem); font-weight: 300; color: var(--accent); letter-spacing: -.02em; line-height: 1.05; }
+.header h1 em { font-style: italic; color: var(--warm); }
+.hsub { font-size: .65rem; color: var(--dim); letter-spacing: .2em; text-transform: uppercase; margin-top: 1.5rem; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+section { padding: 6rem 0; border-bottom: 1px solid var(--border); }
+.slabel { font-size: .55rem; text-transform: uppercase; letter-spacing: .5em; color: var(--dim); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
+.slabel::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.stitle { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem,3.5vw,3rem); font-weight: 300; color: var(--accent); margin-bottom: 1rem; line-height: 1.1; }
+.sdesc { font-size: .72rem; line-height: 2; color: var(--dim); max-width: 560px; margin-bottom: 3rem; }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease-out, transform .7s ease-out; }
+.reveal.vis { opacity: 1; transform: translateY(0); }
+
+/* NOISE */
+.noise-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 2.5rem; margin-bottom: 2rem; }
+.noise-top { font-size: .6rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); margin-bottom: 1.5rem; display: flex; justify-content: space-between; }
+.noise-rows { display: flex; flex-direction: column; gap: 1.4rem; margin-bottom: 2rem; }
+.noise-row { display: grid; grid-template-columns: 175px 1fr 70px; align-items: center; gap: 1rem; }
+.noise-name { font-size: .62rem; color: var(--dim); text-transform: uppercase; letter-spacing: .12em; }
+.track { height: 4px; background: var(--border2); border-radius: 2px; position: relative; cursor: pointer; }
+.bar-fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 2px; transition: width .12s; pointer-events: none; }
+.bar-handle { position: absolute; top: 50%; transform: translate(-50%,-50%); width: 13px; height: 13px; border-radius: 50%; border: 2px solid; background: var(--bg); cursor: grab; transition: transform .15s; }
+.track:hover .bar-handle { transform: translate(-50%,-50%) scale(1.35); }
+.noise-val { font-size: .65rem; text-align: right; font-variant-numeric: tabular-nums; }
+.noise-total { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.floor-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 300; transition: color .4s; }
+.verdict { font-size: .6rem; text-transform: uppercase; letter-spacing: .3em; padding: .4rem 1.1rem; border-radius: 2px; border: 1px solid var(--border2); transition: all .4s; }
+
+/* WAVEFORM */
+.wave-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 2rem 2.5rem; position: relative; overflow: hidden; }
+.wave-env-lbl { position: absolute; top: 1rem; right: 1.5rem; font-size: .5rem; letter-spacing: .4em; color: var(--dim); opacity: .4; text-transform: uppercase; }
+canvas.wave { width: 100%; height: 80px; display: block; margin: 1.5rem 0; }
+.wave-note { font-size: .58rem; color: var(--dim); text-transform: uppercase; letter-spacing: .28em; }
+
+/* ROOM TONE */
+.rt-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.rt-cell { background: var(--surface); padding: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.rt-lbl { font-size: .55rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); }
+.loc-sel { font-family: 'Azeret Mono', monospace; font-size: .62rem; background: var(--bg); border: 1px solid var(--border2); color: var(--dim); padding: .5rem .75rem; border-radius: 2px; text-transform: uppercase; letter-spacing: .12em; width: 100%; cursor: pointer; }
+.rt-timer { font-family: 'Cormorant Garamond', serif; font-size: 3.8rem; font-weight: 300; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.rt-timer.rec { color: var(--danger); animation: blink 1.1s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
+.rt-status { font-size: .6rem; text-transform: uppercase; letter-spacing: .3em; color: var(--dim); }
+.rt-status.active { color: var(--danger); }
+.rt-status.done { color: var(--safe); }
+.rt-btn { font-family: 'Azeret Mono', monospace; font-size: .6rem; text-transform: uppercase; letter-spacing: .3em; padding: .75rem 1.5rem; border: 1px solid var(--border2); background: transparent; color: var(--dim); cursor: pointer; border-radius: 2px; transition: all .2s; align-self: flex-start; }
+.rt-btn:hover { border-color: var(--warm); color: var(--warm); }
+.rt-btn.act { border-color: var(--danger); color: var(--danger); }
+.rt-log { font-size: .6rem; color: var(--dim); line-height: 1.9; border-top: 1px solid var(--border); padding-top: 1rem; max-height: 180px; overflow-y: auto; scrollbar-width: none; }
+.rt-log::-webkit-scrollbar { display: none; }
+.log-row { display: flex; gap: 1rem; margin-bottom: .3rem; animation: log-in .3s ease-out forwards; }
+@keyframes log-in { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+.log-t { color: var(--dim); flex-shrink: 0; }
+.log-m { color: var(--text); }
+.log-row.suc .log-m { color: var(--safe); }
+.log-row.wrn .log-m { color: var(--warm); }
+.proto-note { margin-top: 1.5rem; padding: 1.5rem 2rem; border: 1px solid var(--border); border-radius: 2px; font-size: .62rem; color: var(--dim); line-height: 1.9; }
+
+/* DEPT */
+.dept-chain { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.dept-row { background: var(--surface); display: grid; grid-template-columns: 180px 1fr; transition: background .2s; }
+.dept-row:hover { background: var(--surface2); }
+.dept-role { padding: 1.5rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: .4rem; }
+.dept-role-name { font-size: .65rem; text-transform: uppercase; letter-spacing: .22em; color: var(--accent); }
+.dept-role-dept { font-size: .55rem; color: var(--dim); letter-spacing: .2em; text-transform: uppercase; }
+.dept-resp { padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+.dept-item { font-size: .65rem; color: var(--dim); line-height: 1.7; display: flex; gap: .75rem; align-items: flex-start; }
+.dash { color: var(--border2); flex-shrink: 0; }
+
+/* WILD LINES */
+.wl-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.wl-hdr { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.wl-hdr-lbl { font-size: .6rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); }
+.wl-badge { font-size: .55rem; text-transform: uppercase; letter-spacing: .3em; padding: .25rem .75rem; border: 1px solid var(--border2); border-radius: 2px; color: var(--dim); }
+.wl-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); }
+.wl-card { background: var(--surface); padding: 1.75rem; transition: background .2s; }
+.wl-card:hover { background: var(--surface2); }
+.wl-scene-id { font-size: .55rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); margin-bottom: .75rem; }
+.wl-line { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: var(--text); line-height: 1.5; margin-bottom: 1rem; }
+.wl-issue { font-size: .6rem; color: var(--danger); text-transform: uppercase; letter-spacing: .2em; margin-bottom: 1rem; }
+.wl-issue.clean { color: var(--safe); }
+.wl-acts { display: flex; gap: .5rem; flex-wrap: wrap; }
+.wl-btn { font-family: 'Azeret Mono', monospace; font-size: .55rem; text-transform: uppercase; letter-spacing: .2em; padding: .35rem .75rem; border: 1px solid var(--border2); background: transparent; color: var(--dim); cursor: pointer; border-radius: 2px; transition: all .2s; }
+.wl-btn:hover { border-color: var(--accent); color: var(--accent); }
+.wl-btn.sw { border-color: var(--warm); color: var(--warm); }
+.wl-btn.sa { border-color: var(--cold); color: var(--cold); }
+.clean-lbl { font-size: .58rem; color: var(--dim); text-transform: uppercase; letter-spacing: .25em; }
+.wl-cmp { padding: 2rem; border-top: 1px solid var(--border); }
+.wl-cmp-title { font-size: .55rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); margin-bottom: 1.5rem; }
+.wl-cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.wl-cmp-card { padding: 1.5rem; border: 1px solid var(--border); border-radius: 2px; background: var(--bg); }
+.wl-cmp-lbl { font-size: .55rem; text-transform: uppercase; letter-spacing: .35em; margin-bottom: .75rem; }
+.wl-cmp-lbl.wl { color: var(--warm); }
+.wl-cmp-lbl.al { color: var(--cold); }
+.stat-row { display: flex; justify-content: space-between; font-size: .62rem; color: var(--dim); padding: .4rem 0; border-bottom: 1px solid var(--border); }
+.stat-row:last-child { border-bottom: none; }
+.stat-row .g { color: var(--safe); }
+.stat-row .b { color: var(--danger); }
+
+/* FILMS */
+.film-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.film-card { background: var(--surface); padding: 2rem 1.75rem; cursor: pointer; transition: background .2s; position: relative; overflow: hidden; }
+.film-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; transform: scaleX(0); transform-origin: left; transition: transform .3s ease-out; }
+.film-card:hover { background: var(--surface2); }
+.film-card:hover::after { transform: scaleX(1); }
+.film-card:nth-child(1)::after { background: var(--warm); }
+.film-card:nth-child(2)::after { background: var(--cold); }
+.film-card:nth-child(3)::after { background: var(--safe); }
+.film-year { font-size: .55rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); margin-bottom: .75rem; }
+.film-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; color: var(--accent); margin-bottom: .5rem; line-height: 1.2; }
+.film-dp { font-size: .58rem; color: var(--dim); text-transform: uppercase; letter-spacing: .18em; margin-bottom: 1.25rem; }
+.film-lesson { font-size: .67rem; color: var(--dim); line-height: 1.8; }
+.film-lesson strong { color: var(--text); font-weight: 500; }
+.film-detail { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: .64rem; color: var(--dim); line-height: 1.9; }
+.film-card.open .film-detail { display: block; }
+.film-card.open { background: var(--surface2); }
+
+/* CHECKLIST */
+.ck-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.ck-hdr { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.ck-hdr-lbl { font-size: .6rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); }
+.ck-num { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; color: var(--accent); font-variant-numeric: tabular-nums; }
+.pb-track { height: 2px; background: var(--border); }
+.pb-fill { height: 100%; background: var(--warm); transition: width .5s cubic-bezier(.22,1,.36,1); }
+.ck-item { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .2s; user-select: none; }
+.ck-item:last-child { border-bottom: none; }
+.ck-item:hover { background: var(--surface2); }
+.ck-box { width: 18px; height: 18px; border: 1px solid var(--border2); border-radius: 2px; flex-shrink: 0; margin-top: .1em; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+.ck-item.on .ck-box { background: var(--warm); border-color: var(--warm); }
+.ck-mark { opacity: 0; transform: scale(.5); transition: all .2s cubic-bezier(.34,1.56,.64,1); color: #0a0a0c; font-size: .6rem; font-weight: 700; line-height: 1; }
+.ck-item.on .ck-mark { opacity: 1; transform: scale(1); }
+.ck-body { flex: 1; }
+.ck-title { font-size: .67rem; color: var(--text); text-transform: uppercase; letter-spacing: .18em; margin-bottom: .35rem; transition: color .2s; }
+.ck-item.on .ck-title { color: var(--dim); }
+.ck-desc { font-size: .62rem; color: var(--dim); line-height: 1.7; }
+.ck-phase { font-size: .5rem; text-transform: uppercase; letter-spacing: .35em; padding: .2rem .65rem; border-radius: 2px; border: 1px solid var(--border2); color: var(--dim); flex-shrink: 0; white-space: nowrap; align-self: flex-start; margin-top: .1em; }
+
+footer { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border); }
+.foot-txt { font-size: .6rem; text-transform: uppercase; letter-spacing: .4em; color: var(--dim); }
+.foot-txt a { color: var(--warm); text-decoration: none; }
+.foot-txt a:hover { color: var(--accent); }
+
+@media(max-width:700px){
+  .noise-row{grid-template-columns:1fr;gap:.5rem}
+  .rt-panel{grid-template-columns:1fr}
+  .wl-grid{grid-template-columns:1fr}
+  .film-grid{grid-template-columns:1fr}
+  .wl-cmp-grid{grid-template-columns:1fr}
+  .dept-row{grid-template-columns:1fr}
+  .dept-role{border-right:none;border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <p class="tag">Geared Like A Machine — Production Intel</p>
+  <h1>Sound Design<br><em>Starts on Set</em></h1>
+  <p class="hsub">The DP's role in protecting production audio</p>
+</div>
+
+<!-- S1 -->
+<section>
+  <div class="wrap">
+    <div class="slabel">01 — The Noise Floor</div>
+    <h2 class="stitle reveal">Build your noise floor before you call action.</h2>
+    <p class="sdesc reveal">Every fixture, generator, and ballast on set contributes to what the sound mixer is fighting. Drag the sliders to see how noise compounds and whether the floor is recordable.</p>
+    <div class="noise-wrap reveal">
+      <div class="noise-top"><span>Noise Sources — dBA</span><span>Interior Location</span></div>
+      <div class="noise-rows" id="noiseRows"></div>
+      <div class="noise-total">
+        <div>
+          <div style="font-size:.55rem;text-transform:uppercase;letter-spacing:.4em;color:var(--dim);margin-bottom:.5rem;">Combined Noise Floor</div>
+          <div class="floor-num" id="floorNum">— dBA</div>
+        </div>
+        <div class="verdict" id="verdictEl">—</div>
+      </div>
+    </div>
+    <div class="wave-wrap reveal">
+      <div class="wave-env-lbl">Audio Environment</div>
+      <canvas class="wave" id="waveCanvas" width="1000" height="80"></canvas>
+      <div class="wave-note">Simulated environment — adjust sliders above to change waveform density</div>
+    </div>
+  </div>
+</section>
+
+<!-- S2 -->
+<section>
+  <div class="wrap">
+    <div class="slabel">02 — Room Tone Protocol</div>
+    <h2 class="stitle reveal">30 seconds. Non-negotiable.</h2>
+    <p class="sdesc reveal">Room tone is the acoustic signature of the space captured in exact shooting conditions. Record it after every setup, every new location, every time the environment changes significantly.</p>
+    <div class="rt-panel reveal">
+      <div class="rt-cell">
+        <div class="rt-lbl">Current Setup</div>
+        <select class="loc-sel" id="locSel">
+          <option value="int_office">INT — Office, Day</option>
+          <option value="int_warehouse">INT — Warehouse, Night</option>
+          <option value="ext_street">EXT — Street, Noon</option>
+          <option value="int_factory">INT — Factory Floor</option>
+          <option value="ext_rooftop">EXT — Rooftop, Dusk</option>
+        </select>
+        <div class="rt-timer" id="rtTimer">00:30</div>
+        <div class="rt-status" id="rtStatus">Ready to Record</div>
+        <button class="rt-btn" id="rtBtn">Begin Recording</button>
+      </div>
+      <div class="rt-cell">
+        <div class="rt-lbl">Session Log</div>
+        <div class="rt-log" id="rtLog"></div>
+      </div>
+    </div>
+    <div class="proto-note reveal">
+      Crew stands still. No movement. No speech. No equipment moves. 30 seconds minimum for interiors — 60 seconds for exteriors or variable-noise environments. Record at every new location and after any significant environmental change.
+    </div>
+  </div>
+</section>
+
+<!-- S3 -->
+<section>
+  <div class="wrap">
+    <div class="slabel">03 — Shared Responsibility</div>
+    <h2 class="stitle reveal">Sound is not one department's problem.</h2>
+    <p class="sdesc reveal">The DP controls most of what the sound mixer is competing against. Understanding the overlap is what separates a functioning set from an expensive one.</p>
+    <div class="dept-chain reveal" id="deptChain"></div>
+  </div>
+</section>
+
+<!-- S4 -->
+<section>
+  <div class="wrap">
+    <div class="slabel">04 — Wild Lines vs ADR</div>
+    <h2 class="stitle reveal">The insurance policy you collect before wrap.</h2>
+    <p class="sdesc reveal">Select a rescue method for each compromised take. The cost and quality difference between recording on the day versus returning to a studio months later is almost never worth it.</p>
+    <div class="wl-panel reveal">
+      <div class="wl-hdr">
+        <span class="wl-hdr-lbl">Scene Audio Issues</span>
+        <span class="wl-badge" id="wlBadge">0 / 2 resolved</span>
+      </div>
+      <div class="wl-grid" id="wlGrid"></div>
+      <div class="wl-cmp">
+        <div class="wl-cmp-title">Method Comparison</div>
+        <div class="wl-cmp-grid">
+          <div class="wl-cmp-card">
+            <div class="wl-cmp-lbl wl">Wild Line — On Set</div>
+            <div class="stat-row"><span>Acoustic match</span><span class="g">Near-perfect</span></div>
+            <div class="stat-row"><span>Performance match</span><span class="g">Same day, same state</span></div>
+            <div class="stat-row"><span>Time required</span><span class="g">10–30 min on set</span></div>
+            <div class="stat-row"><span>Post edit time</span><span class="g">Minimal</span></div>
+            <div class="stat-row"><span>Added cost</span><span class="g">$0 — crew on clock</span></div>
+          </div>
+          <div class="wl-cmp-card">
+            <div class="wl-cmp-lbl al">ADR — Post Production</div>
+            <div class="stat-row"><span>Acoustic match</span><span class="b">Requires heavy processing</span></div>
+            <div class="stat-row"><span>Performance match</span><span class="b">Months later, cold read</span></div>
+            <div class="stat-row"><span>Time required</span><span class="b">Half-day to full day</span></div>
+            <div class="stat-row"><span>Post edit time</span><span class="b">Significant — match and blend</span></div>
+            <div class="stat-row"><span>Added cost</span><span class="b">Studio time + actor recall</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 -->
+<section>
+  <div class="wrap">
+    <div class="slabel">05 — The Reference Films</div>
+    <h2 class="stitle reveal">Three films where audio was designed from day one.</h2>
+    <p class="sdesc reveal">Click each to expand the lesson. These are not films with good sound. They are films where production audio was treated as primary creative material before cameras rolled.</p>
+    <div class="film-grid" id="filmGrid"></div>
+  </div>
+</section>
+
+<!-- S6 -->
+<section>
+  <div class="wrap">
+    <div class="slabel">06 — The Setup Checklist</div>
+    <h2 class="stitle reveal">Run this before calling first positions.</h2>
+    <p class="sdesc reveal">The internal discipline that lives in your head. The goal is zero surprises on the track after wrap.</p>
+    <div class="ck-panel reveal">
+      <div class="ck-hdr">
+        <span class="ck-hdr-lbl">DP Audio Discipline</span>
+        <span class="ck-num" id="ckNum">0 / 10</span>
+      </div>
+      <div class="pb-track"><div class="pb-fill" id="ckBar" style="width:0%"></div></div>
+      <div id="ckList"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="foot-txt">Geared Like A Machine — Dallas, TX &nbsp;|&nbsp; <a href="/blog/sound-design-starts-on-set">Read the full post</a></p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ── NOISE ── */
+var ns = [
+  {n:'HVAC / Air Handler',     v:42, c:'#6ea8c8'},
+  {n:'HMI Ballast (1.2k)',     v:28, c:'#c8a46e'},
+  {n:'LED Fixture (no dimmer)',v:18, c:'#c8a46e'},
+  {n:'Generator (50ft)',       v:35, c:'#c86e6e'},
+  {n:'Ambient / Traffic',      v:32, c:'#4a4a58'},
+];
+
+function cdb(src){ return Math.round(10*Math.log10(src.reduce(function(a,s){return a+Math.pow(10,s.v/10);},0))); }
+
+function verd(db){
+  if(db<35)return{t:'Excellent',   c:'#6ec898',bg:'rgba(110,200,152,.07)',bc:'rgba(110,200,152,.2)'};
+  if(db<45)return{t:'Recordable',  c:'#6ec898',bg:'rgba(110,200,152,.05)',bc:'rgba(110,200,152,.15)'};
+  if(db<52)return{t:'Marginal',    c:'#c8a46e',bg:'rgba(200,164,110,.07)',bc:'rgba(200,164,110,.2)'};
+  if(db<58)return{t:'Problematic', c:'#c86e6e',bg:'rgba(200,110,110,.07)',bc:'rgba(200,110,110,.2)'};
+  return        {t:'Unusable',     c:'#c86e6e',bg:'rgba(200,110,110,.12)',bc:'rgba(200,110,110,.3)'};
+}
+
+function buildNoise(){
+  var cont = document.getElementById('noiseRows');
+  cont.textContent = '';
+  ns.forEach(function(src,i){
+    var row = document.createElement('div'); row.className='noise-row';
+    var nm = document.createElement('div');  nm.className='noise-name';  nm.textContent=src.n;
+    var tr = document.createElement('div');  tr.className='track';
+    var fi = document.createElement('div');  fi.className='bar-fill'; fi.id='bf'+i; fi.style.background=src.c;
+    var ha = document.createElement('div');  ha.className='bar-handle'; ha.id='bh'+i; ha.style.borderColor=src.c;
+    tr.appendChild(fi); tr.appendChild(ha);
+    var vl = document.createElement('div');  vl.className='noise-val'; vl.id='bv'+i; vl.style.color=src.c;
+    row.appendChild(nm); row.appendChild(tr); row.appendChild(vl);
+    cont.appendChild(row);
+    updSlider(i);
+
+    var drag=false;
+    function applyX(x){
+      var r=tr.getBoundingClientRect(),p=Math.max(0,Math.min(1,(x-r.left)/r.width));
+      ns[i].v=Math.round(10+p*70); updSlider(i); updTotals();
+    }
+    tr.addEventListener('mousedown',function(e){drag=true;applyX(e.clientX);});
+    tr.addEventListener('touchstart',function(e){drag=true;applyX(e.touches[0].clientX);},{passive:true});
+    document.addEventListener('mousemove',function(e){if(drag)applyX(e.clientX);});
+    document.addEventListener('touchmove',function(e){if(drag)applyX(e.touches[0].clientX);},{passive:true});
+    document.addEventListener('mouseup',function(){drag=false;});
+    document.addEventListener('touchend',function(){drag=false;});
+  });
+  updTotals();
+}
+
+function updSlider(i){
+  var p=(ns[i].v-10)/70;
+  var f=document.getElementById('bf'+i),h=document.getElementById('bh'+i),v=document.getElementById('bv'+i);
+  if(f)f.style.width=(p*100)+'%';
+  if(h)h.style.left=(p*100)+'%';
+  if(v)v.textContent=ns[i].v+' dBA';
+}
+
+function updTotals(){
+  var db=cdb(ns), vd=verd(db);
+  var fn=document.getElementById('floorNum'),ve=document.getElementById('verdictEl');
+  if(fn){fn.textContent=db+' dBA';fn.style.color=vd.c;}
+  if(ve){ve.textContent=vd.t;ve.style.color=vd.c;ve.style.background=vd.bg;ve.style.borderColor=vd.bc;}
+  drawWave();
+}
+
+/* ── WAVEFORM ── */
+var wPhase=0;
+function drawWave(){
+  var cv=document.getElementById('waveCanvas');if(!cv)return;
+  var cx=cv.getContext('2d'),W=cv.width,H=cv.height,db=cdb(ns),nf=Math.max(.04,(db-18)/65),vd=verd(db);
+  cx.clearRect(0,0,W,H);cx.fillStyle='#0e0e11';cx.fillRect(0,0,W,H);
+  cx.strokeStyle='#1a1a22';cx.lineWidth=1;cx.beginPath();cx.moveTo(0,H/2);cx.lineTo(W,H/2);cx.stroke();
+  var g=cx.createLinearGradient(0,0,W,0);
+  g.addColorStop(0,'transparent');g.addColorStop(.08,vd.c);g.addColorStop(.92,vd.c);g.addColorStop(1,'transparent');
+  cx.strokeStyle=g;cx.lineWidth=1.5;cx.beginPath();
+  for(var x=0;x<W;x++){
+    var t=(x/W)*Math.PI*2*9+wPhase;
+    var y=H/2+(Math.sin(t)*.58+Math.sin(t*2.4+1.1)*.26+Math.sin(t*.65-.4)*.16)*nf*H*.44;
+    x===0?cx.moveTo(x,y):cx.lineTo(x,y);
+  }
+  cx.stroke();
+}
+function animWave(){wPhase+=.016;drawWave();requestAnimationFrame(animWave);}
+
+/* ── ROOM TONE ── */
+var rtRunning=false,rtSecs=30,rtInterval=null,rtEmpty=true;
+var locs={int_office:'INT Office Day',int_warehouse:'INT Warehouse Night',ext_street:'EXT Street Noon',int_factory:'INT Factory Floor',ext_rooftop:'EXT Rooftop Dusk'};
+
+function ts(){var n=new Date();return[n.getHours(),n.getMinutes(),n.getSeconds()].map(function(x){return('0'+x).slice(-2);}).join(':');}
+
+function addLog(type,msg){
+  var log=document.getElementById('rtLog');if(!log)return;
+  if(rtEmpty){log.textContent='';rtEmpty=false;}
+  var row=document.createElement('div'); row.className='log-row'+(type==='suc'?' suc':type==='wrn'?' wrn':'');
+  var t=document.createElement('span'); t.className='log-t'; t.textContent=ts();
+  var m=document.createElement('span'); m.className='log-m'; m.textContent=msg;
+  row.appendChild(t); row.appendChild(m); log.appendChild(row); log.scrollTop=log.scrollHeight;
+}
+
+document.getElementById('rtBtn').addEventListener('click',function(){
+  if(rtRunning)return;
+  rtRunning=true; rtSecs=30;
+  var te=document.getElementById('rtTimer'),se=document.getElementById('rtStatus'),be=document.getElementById('rtBtn');
+  var loc=document.getElementById('locSel').value;
+  te.className='rt-timer rec'; se.className='rt-status active'; se.textContent='Recording'; be.textContent='Recording...'; be.classList.add('act');
+  addLog('','Recording: '+(locs[loc]||loc));
+  addLog('wrn','Crew — stand still, do not speak');
+  rtInterval=setInterval(function(){
+    rtSecs--;
+    if(te)te.textContent=('0'+Math.floor(rtSecs/60)).slice(-2)+':'+('0'+(rtSecs%60)).slice(-2);
+    if(rtSecs<=0){
+      clearInterval(rtInterval); rtRunning=false;
+      if(te){te.className='rt-timer';te.textContent='00:30';}
+      if(se){se.className='rt-status done';se.textContent='Complete';}
+      if(be){be.textContent='Record Again';be.classList.remove('act');}
+      addLog('suc','Room tone logged: '+(locs[loc]||loc));
+      addLog('','Ready for company move');
+      setTimeout(function(){if(se){se.className='rt-status';se.textContent='Ready to Record';}},3500);
+    }
+  },100);
+});
+
+/* ── DEPT CHAIN ── */
+var depts=[
+  {r:'Director of Photography',d:'Camera / Lighting',items:['Controls fixture and ballast selection. Owns generator placement and all stinger runs.','Establishes the exact frame line so the boom operator knows their working space above or below.','Flags any moving equipment — cranes, remote heads, hydraulics — that creates mechanical noise during takes.','Addresses practical fixtures that generate ballast hum or dimmer interference before they reach the track.']},
+  {r:'Production Sound Mixer',d:'Sound',items:['Sets audio levels, listens for noise floor issues, flags every unusable take immediately at the source.','Communicates boom placement requirements to the DP before first positions are called.','Calls for room tone after every setup. Requests wild lines before company moves.','Identifies source noise in the lighting package and escalates to the DP for resolution.']},
+  {r:'Gaffer',d:'Lighting',items:['Selects ballasts and dimmers that operate outside the frequency range of spoken dialogue.','Manages practicals on location: flags buzzing fixtures to the mixer before they get on the track.','Positions generators with audio in mind. Always runs stingers rather than parking adjacent to set.']},
+  {r:'1st Assistant Director',d:'Production',items:['Calls for room tone after every setup without being prompted. This is standard AD discipline, not an exception.','Protects wild line time before company moves. Does not allow schedule pressure to eliminate it.','Enforces noise discipline on set. Quiet on set is not a request.']},
+];
+
+function buildDepts(){
+  var c=document.getElementById('deptChain'); c.textContent='';
+  depts.forEach(function(d){
+    var row=document.createElement('div'); row.className='dept-row';
+    var rc=document.createElement('div'); rc.className='dept-role';
+    var rn=document.createElement('div'); rn.className='dept-role-name'; rn.textContent=d.r;
+    var rd=document.createElement('div'); rd.className='dept-role-dept'; rd.textContent=d.d;
+    rc.appendChild(rn); rc.appendChild(rd);
+    var resp=document.createElement('div'); resp.className='dept-resp';
+    d.items.forEach(function(itm){
+      var di=document.createElement('div'); di.className='dept-item';
+      var dash=document.createElement('span'); dash.className='dash'; dash.textContent='\u2014';
+      var tx=document.createElement('span'); tx.textContent=itm;
+      di.appendChild(dash); di.appendChild(tx); resp.appendChild(di);
+    });
+    row.appendChild(rc); row.appendChild(resp); c.appendChild(row);
+  });
+}
+
+/* ── WILD LINES ── */
+var wlData=[
+  {id:'SC 24 — TAKE 3',line:'"You knew about the account. You knew the whole time."',issue:'Aircraft overhead — line 2 unusable',clean:false},
+  {id:'SC 31 — TAKE 7',line:'"I built this company from nothing. Every dollar."',issue:'Ballast hum on dialogue track',clean:false},
+  {id:'SC 47 — TAKE 2',line:'"She left. That morning, without a word."',issue:'Clean — no issues flagged',clean:true},
+];
+var wlChoices=[null,null,null];
+
+function buildWl(){
+  var c=document.getElementById('wlGrid'); c.textContent='';
+  wlData.forEach(function(sc,i){
+    var card=document.createElement('div'); card.className='wl-card';
+    var sid=document.createElement('div'); sid.className='wl-scene-id'; sid.textContent=sc.id;
+    var sl=document.createElement('div'); sl.className='wl-line'; sl.textContent=sc.line;
+    var si=document.createElement('div'); si.className='wl-issue'+(sc.clean?' clean':''); si.textContent=sc.issue;
+    card.appendChild(sid); card.appendChild(sl); card.appendChild(si);
+    if(!sc.clean){
+      var ar=document.createElement('div'); ar.className='wl-acts';
+      var bw=document.createElement('button'); bw.className='wl-btn'+(wlChoices[i]==='wild'?' sw':''); bw.textContent='Wild Line';
+      var ba=document.createElement('button'); ba.className='wl-btn'+(wlChoices[i]==='adr'?' sa':''); ba.textContent='ADR';
+      (function(idx){
+        bw.addEventListener('click',function(){wlChoices[idx]='wild';buildWl();updWlBadge();});
+        ba.addEventListener('click',function(){wlChoices[idx]='adr';buildWl();updWlBadge();});
+      })(i);
+      ar.appendChild(bw); ar.appendChild(ba); card.appendChild(ar);
+    } else {
+      var cl=document.createElement('div'); cl.className='clean-lbl'; cl.textContent='Use production audio'; card.appendChild(cl);
+    }
+    c.appendChild(card);
+  });
+  updWlBadge();
+}
+
+function updWlBadge(){
+  var total=wlData.filter(function(s){return!s.clean;}).length;
+  var done=wlChoices.filter(function(v){return v!==null;}).length;
+  var b=document.getElementById('wlBadge');
+  if(b)b.textContent=done>=total?'All takes resolved':done+' / '+total+' resolved';
+}
+
+/* ── FILMS ── */
+var films=[
+  {yr:'2007 — Coen Brothers',ti:'No Country for Old Men',dp:'DP: Roger Deakins / Sound: Craig Berkey',
+   lesson:'Silence as score. Sixteen minutes of music across the entire runtime. Every other moment is production audio used as a compositional element.',
+   detail:'Craig Berkey captured the specific acoustic character of each West Texas location: motels, gas stations, open desert, hotel corridors. These recordings became the primary sonic texture. The transponder blip is as frightening as a horror film theme because Berkey designed it from production audio up. The Coens treated room tone as score.'},
+  {yr:'2007 — Paul Thomas Anderson',ti:'There Will Be Blood',dp:'DP: Robert Elswit / Sound: Matthew Wood',
+   lesson:'Environment as performance. The film opens with almost no dialogue. When Plainview finally speaks, the acoustic character of the space has already told the story.',
+   detail:'Elswit and Anderson treated location selection as audio selection. Every mine, field, and oil-boom tent was chosen partly for its acoustic signature. When Plainview delivers his monologues, the room performs with him: the reverb of the oil derrick, the flatness of the desert tent, the hard reflections of the bowling alley.'},
+  {yr:'2017 — Christopher Nolan',ti:'Dunkirk',dp:'DP: Hoyte van Hoytema / Sound: Richard King',
+   lesson:'Sound designed before cameras rolled. Richard King and Zimmer were embedded in development from the beginning. Image and audio planned as a single system.',
+   detail:'Van Hoytema\'s framing decisions incorporated the acoustic geometry of each environment. The guns in the opening used the natural reverb of the cobblestone street, captured in production and played at maximum volume for physical shock. King described it as a continuous sonic environment rather than score over dialogue. That integration happened before the first shooting day.'},
+];
+
+function buildFilms(){
+  var c=document.getElementById('filmGrid'); c.textContent='';
+  films.forEach(function(f){
+    var card=document.createElement('div'); card.className='film-card';
+    var yr=document.createElement('div'); yr.className='film-year'; yr.textContent=f.yr;
+    var ti=document.createElement('div'); ti.className='film-title'; ti.textContent=f.ti;
+    var dp=document.createElement('div'); dp.className='film-dp'; dp.textContent=f.dp;
+    var le=document.createElement('div'); le.className='film-lesson';
+    var dot=f.lesson.indexOf('.');
+    if(dot>0&&dot<42){
+      var s=document.createElement('strong'); s.textContent=f.lesson.substring(0,dot+1);
+      le.appendChild(s); le.appendChild(document.createTextNode(' '+f.lesson.substring(dot+2)));
+    } else { le.textContent=f.lesson; }
+    var de=document.createElement('div'); de.className='film-detail'; de.textContent=f.detail;
+    card.appendChild(yr); card.appendChild(ti); card.appendChild(dp); card.appendChild(le); card.appendChild(de);
+    card.addEventListener('click',function(){card.classList.toggle('open');});
+    c.appendChild(card);
+  });
+}
+
+/* ── CHECKLIST ── */
+var ckData=[
+  {ph:'Tech Scout', ti:'Map the noise floor',        de:'Walk every location with ears. Identify HVAC, mechanical rooms, traffic, and variable noise sources before the truck arrives.'},
+  {ph:'Tech Scout', ti:'Plan generator placement',   de:'Determine genny position and stinger runs before production. Never park adjacent to set.'},
+  {ph:'Pre-Light',  ti:'Spec ballasts and dimmers',  de:'Choose fixtures whose ballasts operate outside the frequency range of spoken dialogue. Magnetic dimmers are suspect by default.'},
+  {ph:'Pre-Light',  ti:'Address practical fixtures', de:'Test every practical for ballast hum and dimmer noise before the sound mixer arrives on set.'},
+  {ph:'Setup',      ti:'Communicate the frame line', de:'Before first positions, tell the mixer exactly where the boom can and cannot enter. Give them room to work.'},
+  {ph:'Setup',      ti:'Flag all moving equipment',  de:'Any remote head, Techno-crane, or hydraulic rig that moves during a take must be flagged to sound before rolling.'},
+  {ph:'Setup',      ti:'Final generator check',      de:'Check wind direction. Confirm no generator noise is reaching set. Fix it before you roll, not after.'},
+  {ph:'After Take', ti:"Respect the mixer's flags",  de:'If the mixer calls a technical issue, treat it as a reshoot note. Do not let bad audio ride.'},
+  {ph:'After Setup',ti:'Protect room tone time',     de:'Do not allow schedule pressure to eliminate room tone. Stand behind the call on every setup without exception.'},
+  {ph:'Before Move',ti:'Request wild lines',         de:'Identify any lines that need audio protection before the company moves. Collect them before wrap is called.'},
+];
+var ckState=new Array(ckData.length).fill(false);
+
+function buildCk(){
+  var c=document.getElementById('ckList'); c.textContent='';
+  ckData.forEach(function(item,i){
+    var row=document.createElement('div'); row.className='ck-item'+(ckState[i]?' on':'');
+    var box=document.createElement('div'); box.className='ck-box';
+    var mk=document.createElement('span'); mk.className='ck-mark'; mk.textContent='\u2713';
+    box.appendChild(mk);
+    var body=document.createElement('div'); body.className='ck-body';
+    var ti=document.createElement('div'); ti.className='ck-title'; ti.textContent=item.ti;
+    var de=document.createElement('div'); de.className='ck-desc'; de.textContent=item.de;
+    body.appendChild(ti); body.appendChild(de);
+    var ph=document.createElement('div'); ph.className='ck-phase'; ph.textContent=item.ph;
+    row.appendChild(box); row.appendChild(body); row.appendChild(ph);
+    (function(idx){row.addEventListener('click',function(){ckState[idx]=!ckState[idx];buildCk();});})(i);
+    c.appendChild(row);
+  });
+  var done=ckState.filter(Boolean).length, total=ckData.length;
+  var num=document.getElementById('ckNum'),bar=document.getElementById('ckBar');
+  if(num)num.textContent=done+' / '+total;
+  if(bar)bar.style.width=(done/total*100)+'%';
+}
+
+/* ── SCROLL REVEAL ── */
+function reveal(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);}});
+  },{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+}
+
+/* ── INIT ── */
+buildNoise(); animWave();
+buildDepts(); buildWl(); buildFilms(); buildCk(); reveal();
+
+})();
+</script>
+</body>
+</html>

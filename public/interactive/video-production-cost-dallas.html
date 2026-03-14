@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dallas Video Production Cost Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #111114;
+  --surface-2: #18181c;
+  --border: #1e1e26;
+  --border-hi: #2e2e3a;
+  --text: #c8c8d0;
+  --text-dim: #5a5a66;
+  --text-bright: #e8e8f0;
+  --accent: #f0c060;
+  --accent-dim: rgba(240,192,96,0.12);
+  --accent-glow: rgba(240,192,96,0.06);
+  --green: #50c88a;
+  --green-dim: rgba(80,200,138,0.12);
+  --red: #e05060;
+  --red-dim: rgba(224,80,96,0.12);
+  --blue: #5090e0;
+  --blue-dim: rgba(80,144,224,0.12);
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  --t1-color: #5090e0;
+  --t2-color: #50c88a;
+  --t3-color: #f0c060;
+  --t4-color: #e05060;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── HEADER ── */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,12,0.92);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+
+.site-header h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.site-header .badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(240,192,96,0.3);
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 2rem 3rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.hero-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.hero-label.visible { opacity: 1; transform: translateY(0); }
+
+.hero h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s;
+}
+
+.hero h2.visible { opacity: 1; transform: translateY(0); }
+
+.hero p {
+  font-size: 1rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-width: 560px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+
+.hero p.visible { opacity: 1; transform: translateY(0); }
+
+/* ── SECTION ── */
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section.visible { opacity: 1; transform: translateY(0); }
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── TIER SELECTOR ── */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 700px) {
+  .tier-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.tier-card {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tier-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tier-card[data-tier="1"]::before { background: var(--blue-dim); }
+.tier-card[data-tier="2"]::before { background: var(--green-dim); }
+.tier-card[data-tier="3"]::before { background: var(--accent-dim); }
+.tier-card[data-tier="4"]::before { background: var(--red-dim); }
+
+.tier-card:hover { transform: translateY(-2px); }
+.tier-card.active { border-color: var(--border-hi); }
+.tier-card.active::before { opacity: 1; }
+
+.tier-card[data-tier="1"].active { border-color: var(--t1-color); }
+.tier-card[data-tier="2"].active { border-color: var(--t2-color); }
+.tier-card[data-tier="3"].active { border-color: var(--t3-color); }
+.tier-card[data-tier="4"].active { border-color: var(--t4-color); }
+
+.tier-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.tier-card[data-tier="1"] .tier-number { color: var(--t1-color); }
+.tier-card[data-tier="2"] .tier-number { color: var(--t2-color); }
+.tier-card[data-tier="3"] .tier-number { color: var(--t3-color); }
+.tier-card[data-tier="4"] .tier-number { color: var(--t4-color); }
+
+.tier-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.tier-range {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  position: relative;
+}
+
+/* ── TIER DETAIL ── */
+.tier-detail {
+  display: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.tier-detail.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tier-detail-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tier-detail-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.tier-detail-range {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tier-detail[data-tier="1"] .tier-detail-range { color: var(--t1-color); }
+.tier-detail[data-tier="2"] .tier-detail-range { color: var(--t2-color); }
+.tier-detail[data-tier="3"] .tier-detail-range { color: var(--t3-color); }
+.tier-detail[data-tier="4"] .tier-detail-range { color: var(--t4-color); }
+
+.tier-detail-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+@media (max-width: 600px) {
+  .tier-detail-body { grid-template-columns: 1fr; }
+}
+
+.tier-col {
+  padding: 1.75rem 2rem;
+  border-right: 1px solid var(--border);
+}
+
+.tier-col:last-child { border-right: none; }
+
+.tier-col-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.tier-col ul {
+  list-style: none;
+}
+
+.tier-col ul li {
+  font-size: 0.85rem;
+  color: var(--text);
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.tier-col ul li:last-child { border-bottom: none; }
+
+.tier-col ul li::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tier-detail[data-tier="1"] li::before { background: var(--t1-color); }
+.tier-detail[data-tier="2"] li::before { background: var(--t2-color); }
+.tier-detail[data-tier="3"] li::before { background: var(--t3-color); }
+.tier-detail[data-tier="4"] li::before { background: var(--t4-color); }
+
+.tier-verdict {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.6;
+  background: var(--surface);
+}
+
+/* ── BUDGET BUILDER ── */
+.builder-intro {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .builder-grid { grid-template-columns: 1fr; }
+}
+
+.builder-row {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  transition: border-color 0.2s ease;
+}
+
+.builder-row:hover { border-color: var(--border-hi); }
+
+.builder-row-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.4rem;
+}
+
+.builder-row-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slider-wrap input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 2px;
+  background: var(--border-hi);
+  border-radius: 1px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.slider-wrap input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.slider-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  min-width: 70px;
+  text-align: right;
+}
+
+/* ── TOTAL DISPLAY ── */
+.total-display {
+  border: 1px solid var(--border-hi);
+  border-radius: 4px;
+  padding: 2rem;
+  background: var(--surface-2);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.total-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.4;
+}
+
+.total-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+.total-amount {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.total-tier-badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+}
+
+.breakdown-bars {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bar-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.bar-fill.crew { background: var(--blue); }
+.bar-fill.gear { background: var(--green); }
+.bar-fill.location { background: var(--accent); }
+.bar-fill.post { background: #a060e0; }
+.bar-fill.overhead { background: var(--red); }
+
+.bar-amount {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text);
+  width: 75px;
+  text-align: right;
+}
+
+/* ── WHAT DRIVES COST ── */
+.driver-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .driver-grid { grid-template-columns: 1fr; }
+}
+
+.driver-cell {
+  background: var(--surface);
+  padding: 1.5rem;
+  transition: background 0.2s ease;
+  cursor: default;
+}
+
+.driver-cell:hover { background: var(--surface-2); }
+
+.driver-icon {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.driver-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.driver-body {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── MARKET COMPARE ── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.compare-table th {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table th:not(:first-child) { text-align: right; }
+
+.compare-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.compare-table td:not(:first-child) {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+
+.compare-table tr:hover td { color: var(--text-bright); }
+
+.val-dfW { color: var(--green); }
+.val-la { color: var(--text-dim); }
+.val-saving { color: var(--accent); font-weight: 700; }
+
+/* ── RULE STRIP ── */
+.rule-strip {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  background: var(--surface);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.rule-icon {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.rule-body {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.rule-body strong { color: var(--text-bright); }
+
+/* ── FOOTER ── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.site-footer p {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.site-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 2rem;
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>GLM / Production Cost / Dallas</h1>
+  <span class="badge">DFW 2026</span>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-label">What Does Video Actually Cost?</p>
+  <h2>Dallas Video<br>Production Pricing</h2>
+  <p>Four budget tiers. Real DFW market rates. A calculator that shows where the money goes. Select a tier and build your budget below.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- TIER SELECTOR -->
+<section class="section">
+  <p class="section-label">01 — Budget Tiers</p>
+
+  <div class="tier-grid">
+    <div class="tier-card" data-tier="1" onclick="selectTier(1)">
+      <div class="tier-number">Tier 01</div>
+      <div class="tier-name">Content</div>
+      <div class="tier-range">$1.5K – $7.5K</div>
+    </div>
+    <div class="tier-card" data-tier="2" onclick="selectTier(2)">
+      <div class="tier-number">Tier 02</div>
+      <div class="tier-name">Corporate</div>
+      <div class="tier-range">$7.5K – $35K</div>
+    </div>
+    <div class="tier-card" data-tier="3" onclick="selectTier(3)">
+      <div class="tier-number">Tier 03</div>
+      <div class="tier-name">Commercial</div>
+      <div class="tier-range">$35K – $150K</div>
+    </div>
+    <div class="tier-card" data-tier="4" onclick="selectTier(4)">
+      <div class="tier-number">Tier 04</div>
+      <div class="tier-name">Campaign</div>
+      <div class="tier-range">$150K+</div>
+    </div>
+  </div>
+
+  <!-- Tier 1 Detail -->
+  <div class="tier-detail" data-tier="1" id="tier-detail-1">
+    <div class="tier-detail-header">
+      <div>
+        <div class="tier-detail-title">Content-Level Production</div>
+        <div style="font-size:0.8rem; color:var(--text-dim); margin-top:0.25rem;">Run-and-gun, social content, basic testimonials</div>
+      </div>
+      <div class="tier-detail-range">$1,500 – $7,500</div>
+    </div>
+    <div class="tier-detail-body">
+      <div class="tier-col">
+        <div class="tier-col-label">What You Get</div>
+        <ul>
+          <li>1-2 person crew (DP solo or DP + PA)</li>
+          <li>Cinema-capable mirrorless camera</li>
+          <li>Minimal lighting (1-2 LED panels)</li>
+          <li>Lav + boom audio</li>
+          <li>Half-day to 1-day shoot</li>
+          <li>Basic editorial cut + color</li>
+        </ul>
+      </div>
+      <div class="tier-col">
+        <div class="tier-col-label">Best For</div>
+        <ul>
+          <li>Internal communications</li>
+          <li>Social media content</li>
+          <li>Website explainer clips</li>
+          <li>Quick-turn testimonials</li>
+          <li>Event recap videos</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tier-verdict">
+      Speed is the product here. Great for volume, fast turnaround, and internal use. Not designed to carry a brand campaign or run as paid media beyond one quarter.
+    </div>
+  </div>
+
+  <!-- Tier 2 Detail -->
+  <div class="tier-detail" data-tier="2" id="tier-detail-2">
+    <div class="tier-detail-header">
+      <div>
+        <div class="tier-detail-title">Corporate / Branded Production</div>
+        <div style="font-size:0.8rem; color:var(--text-dim); margin-top:0.25rem;">Mid-market brand content, case studies, product films</div>
+      </div>
+      <div class="tier-detail-range">$7,500 – $35,000</div>
+    </div>
+    <div class="tier-detail-body">
+      <div class="tier-col">
+        <div class="tier-col-label">What You Get</div>
+        <ul>
+          <li>Dedicated DP + director (or both)</li>
+          <li>Gaffer with lighting package</li>
+          <li>Camera operator or 1st AC</li>
+          <li>Producer on prep days</li>
+          <li>2-3 shoot days with tech scout</li>
+          <li>Location scouted and permitted</li>
+          <li>Color grade + sound mix</li>
+        </ul>
+      </div>
+      <div class="tier-col">
+        <div class="tier-col-label">Best For</div>
+        <ul>
+          <li>Brand films and company overviews</li>
+          <li>Customer case studies</li>
+          <li>Product launch content</li>
+          <li>Recruitment videos</li>
+          <li>Trade show and conference pieces</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tier-verdict">
+      The lighting department is what separates Tier 2 from Tier 1. A gaffer with a real kit transforms what any location can do. The footage holds up and ages well.
+    </div>
+  </div>
+
+  <!-- Tier 3 Detail -->
+  <div class="tier-detail" data-tier="3" id="tier-detail-3">
+    <div class="tier-detail-header">
+      <div>
+        <div class="tier-detail-title">Commercial Production</div>
+        <div style="font-size:0.8rem; color:var(--text-dim); margin-top:0.25rem;">Regional TV spots, campaign anchor pieces, full production crews</div>
+      </div>
+      <div class="tier-detail-range">$35,000 – $150,000</div>
+    </div>
+    <div class="tier-detail-body">
+      <div class="tier-col">
+        <div class="tier-col-label">What You Get</div>
+        <ul>
+          <li>Director + DP (separate roles)</li>
+          <li>Full camera dept. (operator, 1st AC, 2nd AC)</li>
+          <li>Gaffer + best boy + electricians</li>
+          <li>Key grip + dolly grip</li>
+          <li>Art department on location</li>
+          <li>Hair, makeup, wardrobe</li>
+          <li>15-25 person crew days</li>
+          <li>Production insurance included</li>
+          <li>Full post: editorial, color, audio, VFX</li>
+        </ul>
+      </div>
+      <div class="tier-col">
+        <div class="tier-col-label">Best For</div>
+        <ul>
+          <li>Regional TV broadcast</li>
+          <li>National digital campaigns</li>
+          <li>Product launch heroes</li>
+          <li>Agency-directed brand spots</li>
+          <li>Annual brand campaigns</li>
+          <li>Multi-deliverable content packages</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tier-verdict">
+      Daily burn rate on a Tier 3 shoot is $12,000 to $25,000. This is where departments start and stop taking notes. Every person on set has a specific job, and they're doing only that job.
+    </div>
+  </div>
+
+  <!-- Tier 4 Detail -->
+  <div class="tier-detail" data-tier="4" id="tier-detail-4">
+    <div class="tier-detail-header">
+      <div>
+        <div class="tier-detail-title">National Campaign / Major Production</div>
+        <div style="font-size:0.8rem; color:var(--text-dim); margin-top:0.25rem;">Union contracts, broadcast TV, major agency campaigns</div>
+      </div>
+      <div class="tier-detail-range">$150,000+</div>
+    </div>
+    <div class="tier-detail-body">
+      <div class="tier-col">
+        <div class="tier-col-label">What You Get</div>
+        <ul>
+          <li>Agency Creative Director on set</li>
+          <li>SAG-AFTRA talent contracts</li>
+          <li>DGA or senior director</li>
+          <li>Union crew (IATSE, Teamsters)</li>
+          <li>Full production design build</li>
+          <li>Multiple shoot days across locations</li>
+          <li>Major rental house packages</li>
+          <li>Post house deliverables</li>
+        </ul>
+      </div>
+      <div class="tier-col">
+        <div class="tier-col-label">Who Hires At This Level</div>
+        <ul>
+          <li>National brands in automotive</li>
+          <li>Energy sector (oil, renewables)</li>
+          <li>Financial services</li>
+          <li>Major retail chains</li>
+          <li>Advertising agencies with P&G-tier clients</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tier-verdict">
+      DFW has work at this level, particularly in automotive, energy, and financial services. The production infrastructure is identical to what you'd find in LA or Chicago — just at lower day rates.
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BUDGET BUILDER -->
+<section class="section">
+  <p class="section-label">02 — Budget Builder</p>
+
+  <p class="builder-intro">Adjust the sliders to build a realistic Dallas production budget. Numbers reflect DFW non-union market rates for 2026. The total reflects what you should expect to be billed, including production company overhead.</p>
+
+  <div class="builder-grid">
+    <div class="builder-row">
+      <div class="builder-row-label">Shoot Days</div>
+      <div class="builder-row-sub">Total production days on location</div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" value="2" id="s-days" oninput="updateCalc()">
+        <span class="slider-val" id="v-days">2 days</span>
+      </div>
+    </div>
+
+    <div class="builder-row">
+      <div class="builder-row-label">Crew Size</div>
+      <div class="builder-row-sub">Total crew heads on set per day</div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="20" value="5" id="s-crew" oninput="updateCalc()">
+        <span class="slider-val" id="v-crew">5 people</span>
+      </div>
+    </div>
+
+    <div class="builder-row">
+      <div class="builder-row-label">Avg Crew Day Rate</div>
+      <div class="builder-row-sub">Blended rate across all departments (DFW)</div>
+      <div class="slider-wrap">
+        <input type="range" min="400" max="2000" value="750" step="50" id="s-rate" oninput="updateCalc()">
+        <span class="slider-val" id="v-rate">$750/day</span>
+      </div>
+    </div>
+
+    <div class="builder-row">
+      <div class="builder-row-label">Gear Package</div>
+      <div class="builder-row-sub">Camera + lighting + grip per day</div>
+      <div class="slider-wrap">
+        <input type="range" min="500" max="8000" value="2000" step="250" id="s-gear" oninput="updateCalc()">
+        <span class="slider-val" id="v-gear">$2,000/day</span>
+      </div>
+    </div>
+
+    <div class="builder-row">
+      <div class="builder-row-label">Location &amp; Permits</div>
+      <div class="builder-row-sub">Flat total (studio, location fees, permits)</div>
+      <div class="slider-wrap">
+        <input type="range" min="0" max="10000" value="1500" step="250" id="s-loc" oninput="updateCalc()">
+        <span class="slider-val" id="v-loc">$1,500</span>
+      </div>
+    </div>
+
+    <div class="builder-row">
+      <div class="builder-row-label">Post Production</div>
+      <div class="builder-row-sub">Edit, color, audio, graphics (all-in)</div>
+      <div class="slider-wrap">
+        <input type="range" min="1000" max="40000" value="6000" step="500" id="s-post" oninput="updateCalc()">
+        <span class="slider-val" id="v-post">$6,000</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Display -->
+  <div class="total-display">
+    <div class="total-label">Estimated Total Budget (DFW)</div>
+    <div class="total-amount" id="total-amount">$0</div>
+    <div class="total-tier-badge" id="total-tier-badge">Calculating...</div>
+
+    <div class="breakdown-bars" id="breakdown-bars">
+      <div class="bar-row">
+        <span class="bar-label">Crew Labor</span>
+        <div class="bar-track"><div class="bar-fill crew" id="bar-crew" style="width:0%"></div></div>
+        <span class="bar-amount" id="amt-crew">$0</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Gear / Equipment</span>
+        <div class="bar-track"><div class="bar-fill gear" id="bar-gear" style="width:0%"></div></div>
+        <span class="bar-amount" id="amt-gear">$0</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Location / Permits</span>
+        <div class="bar-track"><div class="bar-fill location" id="bar-loc" style="width:0%"></div></div>
+        <span class="bar-amount" id="amt-loc">$0</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Post Production</span>
+        <div class="bar-track"><div class="bar-fill post" id="bar-post" style="width:0%"></div></div>
+        <span class="bar-amount" id="amt-post">$0</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Production Fee (22%)</span>
+        <div class="bar-track"><div class="bar-fill overhead" id="bar-oh" style="width:0%"></div></div>
+        <span class="bar-amount" id="amt-oh">$0</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT DRIVES COST -->
+<section class="section">
+  <p class="section-label">03 — The Three Cost Drivers</p>
+
+  <div class="driver-grid">
+    <div class="driver-cell">
+      <span class="driver-icon">//</span>
+      <div class="driver-title">Crew Structure</div>
+      <div class="driver-body">One person or eight? The crew count is the biggest variable in any budget. A DP doubling as director is $1,200 to $2,500/day. Add a dedicated gaffer ($500 to $900), key grip ($450 to $700), camera operator ($500 to $750), and 1st AC ($450 to $650), and you're at $3,100 to $5,500 per shoot day in labor alone.</div>
+    </div>
+    <div class="driver-cell">
+      <span class="driver-icon">[]</span>
+      <div class="driver-title">Gear Ownership</div>
+      <div class="driver-body">Whether the production company owns or rents gear changes the economics. An owned camera package worth $30,000 bills at market rental rate ($800 to $2,000/day) and generates margin after 20 to 40 shooting days. Sub-rental carries 15% markup. Either way, the camera line on a bid is never what you think it is.</div>
+    </div>
+    <div class="driver-cell">
+      <span class="driver-icon">--</span>
+      <div class="driver-title">Post Scope</div>
+      <div class="driver-body">Post is 30 to 40% of a typical budget. Editorial, color grading by a dedicated colorist, sound design, music licensing, and revision rounds all add up. A $40,000 shoot with $6,000 in post is incomplete. The same shoot with $14,000 in post produces a deliverable with a different finish. Get the post scope in writing before the shoot starts.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DFW vs LA MARKET -->
+<section class="section">
+  <p class="section-label">04 — DFW vs. LA Market Rates</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Role / Line Item</th>
+        <th>DFW (Non-Union)</th>
+        <th>LA (Non-Union)</th>
+        <th>DFW Savings</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Director of Photography</td>
+        <td class="val-dfW">$900 – $1,600/day</td>
+        <td class="val-la">$1,500 – $2,500/day</td>
+        <td class="val-saving">~25% less</td>
+      </tr>
+      <tr>
+        <td>Gaffer</td>
+        <td class="val-dfW">$500 – $900/day</td>
+        <td class="val-la">$700 – $1,200/day</td>
+        <td class="val-saving">~20% less</td>
+      </tr>
+      <tr>
+        <td>1st AC (Focus Puller)</td>
+        <td class="val-dfW">$450 – $650/day</td>
+        <td class="val-la">$600 – $900/day</td>
+        <td class="val-saving">~25% less</td>
+      </tr>
+      <tr>
+        <td>Camera Operator</td>
+        <td class="val-dfW">$500 – $750/day</td>
+        <td class="val-la">$700 – $1,000/day</td>
+        <td class="val-saving">~25% less</td>
+      </tr>
+      <tr>
+        <td>5-ton Grip/Lighting Truck</td>
+        <td class="val-dfW">$1,500 – $3,500/day</td>
+        <td class="val-la">$2,500 – $5,000/day</td>
+        <td class="val-saving">~30% less</td>
+      </tr>
+      <tr>
+        <td>Studio Day Rate (full stage)</td>
+        <td class="val-dfW">$1,500 – $4,000/day</td>
+        <td class="val-la">$3,000 – $8,000/day</td>
+        <td class="val-saving">~40% less</td>
+      </tr>
+      <tr>
+        <td>Freelance Colorist</td>
+        <td class="val-dfW">$75 – $150/hr</td>
+        <td class="val-la">$125 – $250/hr</td>
+        <td class="val-saving">~35% less</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="rule-strip">
+    <span class="rule-icon">TX</span>
+    <p class="rule-body">Texas SB22 (effective September 2025) offers up to a <strong>31% cash rebate</strong> on qualified Texas production spending for larger film and series projects. For commercial and branded content, the incentive doesn't apply directly, but it reflects the state's sustained investment in building production infrastructure in DFW. The market is deep, and it keeps getting deeper.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- KEY RULES -->
+<section class="section">
+  <p class="section-label">05 — Rules for Reading a Production Bid</p>
+
+  <div class="rule-strip">
+    <span class="rule-icon">01</span>
+    <p class="rule-body"><strong>Compare crew counts, not totals.</strong> Two bids can differ by $20,000 and still be pricing the same quality of work if one is quoting a 3-person shoot and the other is quoting 8. Ask for an itemized crew list before you compare numbers.</p>
+  </div>
+
+  <div class="rule-strip">
+    <span class="rule-icon">02</span>
+    <p class="rule-body"><strong>Post scope is where surprises live.</strong> Get explicit clarity on: how many revision rounds, who does color (editor or dedicated colorist), what music licensing covers, and whether motion graphics are included or scoped separately. These four items account for most post-budget disputes.</p>
+  </div>
+
+  <div class="rule-strip">
+    <span class="rule-icon">03</span>
+    <p class="rule-body"><strong>The production fee (overhead) should be visible.</strong> Standard is 20 to 25% on hard costs. If you don't see it as a line item, it's buried in the other line items. One is not more honest than the other, but knowing where it is helps you understand what you're actually buying.</p>
+  </div>
+
+  <div class="rule-strip">
+    <span class="rule-icon">04</span>
+    <p class="rule-body"><strong>Budget toward what the footage has to do.</strong> A video for a trade show this quarter needs to be good. A brand anchor piece running for two years needs to be right. Production is the only cost in your marketing stack that's permanent. Ad spend disappears when the campaign ends. The footage stays. The budget that makes sense for each use case is not the same number.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p>GLM — Geared Like A Machine | Dallas, Texas | <a href="https://gearedlikeamachine.com">gearedlikeamachine.com</a></p>
+</footer>
+
+<script>
+// ── SCROLL REVEALS ──
+const revealEls = document.querySelectorAll('.hero-label, .hero h2, .hero p, .section');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+
+// Immediately reveal hero
+setTimeout(() => {
+  document.querySelectorAll('.hero-label, .hero h2, .hero p').forEach(el => el.classList.add('visible'));
+}, 100);
+
+// ── TIER SELECTOR ──
+function selectTier(n) {
+  // Update cards
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.tier-card[data-tier="${n}"]`).classList.add('active');
+
+  // Update detail panels
+  document.querySelectorAll('.tier-detail').forEach(d => d.classList.remove('active'));
+  document.getElementById(`tier-detail-${n}`).classList.add('active');
+
+  // Preset builder sliders based on tier
+  const presets = {
+    1: { days: 1, crew: 2, rate: 700, gear: 800, loc: 500, post: 2000 },
+    2: { days: 2, crew: 5, rate: 800, gear: 2000, loc: 1500, post: 6000 },
+    3: { days: 3, crew: 12, rate: 900, gear: 4000, loc: 3000, post: 12000 },
+    4: { days: 5, crew: 18, rate: 1200, gear: 7000, loc: 6000, post: 30000 },
+  };
+  const p = presets[n];
+  document.getElementById('s-days').value = p.days;
+  document.getElementById('s-crew').value = p.crew;
+  document.getElementById('s-rate').value = p.rate;
+  document.getElementById('s-gear').value = p.gear;
+  document.getElementById('s-loc').value = p.loc;
+  document.getElementById('s-post').value = p.post;
+  updateCalc();
+}
+
+// ── BUDGET CALCULATOR ──
+function fmt(n) {
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + n.toLocaleString();
+}
+
+function fmtFull(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function getTierLabel(total) {
+  if (total < 7500) return { label: 'Tier 01 — Content', color: 'var(--t1-color)', border: 'var(--t1-color)' };
+  if (total < 35000) return { label: 'Tier 02 — Corporate', color: 'var(--t2-color)', border: 'var(--t2-color)' };
+  if (total < 150000) return { label: 'Tier 03 — Commercial', color: 'var(--t3-color)', border: 'var(--t3-color)' };
+  return { label: 'Tier 04 — Campaign', color: 'var(--t4-color)', border: 'var(--t4-color)' };
+}
+
+function updateCalc() {
+  const days = parseInt(document.getElementById('s-days').value);
+  const crew = parseInt(document.getElementById('s-crew').value);
+  const rate = parseInt(document.getElementById('s-rate').value);
+  const gearPerDay = parseInt(document.getElementById('s-gear').value);
+  const locFlat = parseInt(document.getElementById('s-loc').value);
+  const post = parseInt(document.getElementById('s-post').value);
+
+  document.getElementById('v-days').textContent = days + (days === 1 ? ' day' : ' days');
+  document.getElementById('v-crew').textContent = crew + (crew === 1 ? ' person' : ' people');
+  document.getElementById('v-rate').textContent = '$' + rate.toLocaleString() + '/day';
+  document.getElementById('v-gear').textContent = '$' + gearPerDay.toLocaleString() + '/day';
+  document.getElementById('v-loc').textContent = '$' + locFlat.toLocaleString();
+  document.getElementById('v-post').textContent = '$' + post.toLocaleString();
+
+  const crewCost = days * crew * rate;
+  const gearCost = days * gearPerDay;
+  const hardCosts = crewCost + gearCost + locFlat + post;
+  const overhead = Math.round(hardCosts * 0.22);
+  const total = hardCosts + overhead;
+
+  // Update total
+  document.getElementById('total-amount').textContent = fmtFull(total);
+
+  // Update tier badge
+  const tier = getTierLabel(total);
+  const badge = document.getElementById('total-tier-badge');
+  badge.textContent = tier.label;
+  badge.style.color = tier.color;
+  badge.style.borderColor = tier.border;
+
+  // Update bars
+  const maxAmt = total;
+  const items = [
+    { bar: 'bar-crew', amt: 'amt-crew', val: crewCost },
+    { bar: 'bar-gear', amt: 'amt-gear', val: gearCost },
+    { bar: 'bar-loc', amt: 'amt-loc', val: locFlat },
+    { bar: 'bar-post', amt: 'amt-post', val: post },
+    { bar: 'bar-oh', amt: 'amt-oh', val: overhead },
+  ];
+
+  items.forEach(item => {
+    const pct = maxAmt > 0 ? Math.min(100, (item.val / maxAmt) * 100) : 0;
+    document.getElementById(item.bar).style.width = pct + '%';
+    document.getElementById(item.amt).textContent = fmtFull(item.val);
+  });
+}
+
+// Init
+selectTier(2);
+</script>
+</body>
+</html>

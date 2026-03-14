@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lens Choice Is a Character Decision</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Serif:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0e0e12;
+  --border: #1c1c22;
+  --text: #c4c4cc;
+  --text-dim: #4a4a58;
+  --accent: #e8e8e0;
+  --warm: #e8b86d;
+  --cold: #6db4e8;
+  --wide-color: #c87a5a;
+  --normal-color: #8ab870;
+  --tele-color: #7a8ac8;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+h1, h2, h3, .label, .counter {
+  font-family: 'Syne', sans-serif;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  padding: 5rem 2rem 3rem;
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.header-kicker {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.header-intro {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.7;
+  max-width: 600px;
+  font-style: italic;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 3rem 0;
+}
+
+.section {
+  padding: 3rem 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+.section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.section p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 1rem;
+  max-width: 700px;
+}
+
+.section p:last-child { margin-bottom: 0; }
+
+/* ── FOCAL LENGTH EXPLORER ── */
+.focal-explorer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2.5rem;
+  margin: 2rem 0;
+}
+
+.focal-explorer h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+
+.focal-controls {
+  margin-bottom: 2.5rem;
+}
+
+.focal-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.focal-labels-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.slider-track {
+  flex: 1;
+  position: relative;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.slider-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--wide-color);
+  transition: width 0.1s ease, background 0.3s ease;
+  pointer-events: none;
+}
+
+input[type="range"].focal-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
+
+input[type="range"].focal-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--text-dim);
+  transition: background 0.2s;
+}
+
+input[type="range"].focal-input::-webkit-slider-thumb:hover {
+  background: white;
+}
+
+.focal-readout {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 70px;
+  text-align: right;
+}
+
+/* ── VIEWPORT SIMULATOR ── */
+.viewport-sim {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #060608;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.viewport-aspect {
+  padding-top: 52%;
+  position: relative;
+}
+
+.viewport-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0a0c10 0%, #141820 60%, #1e2230 100%);
+  transition: all 0.5s ease;
+}
+
+.building {
+  position: absolute;
+  bottom: 30%;
+  background: #1a1a22;
+  border-top: 1px solid #2a2a36;
+  transition: all 0.5s ease;
+}
+
+.building.b1 { left: 5%; width: 12%; height: 55%; background: #141420; }
+.building.b2 { left: 18%; width: 8%; height: 40%; background: #1a1826; }
+.building.b3 { left: 27%; width: 15%; height: 65%; background: #161620; }
+.building.b4 { right: 5%; width: 14%; height: 50%; background: #141420; }
+.building.b5 { right: 20%; width: 9%; height: 35%; background: #1c1a28; }
+.building.b6 { right: 30%; width: 12%; height: 60%; background: #161620; }
+
+.figure-wrap {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+  z-index: 10;
+}
+
+.figure { position: relative; transition: all 0.5s ease; }
+
+.figure-body {
+  width: 8px;
+  background: linear-gradient(180deg, #c0b8a8 0%, #a09888 40%, #706860 100%);
+  border-radius: 2px 2px 0 0;
+  margin: 0 auto;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.figure-head {
+  width: 14px;
+  height: 14px;
+  background: #c8bca8;
+  border-radius: 50%;
+  margin: 0 auto 1px;
+  transition: all 0.5s ease;
+}
+
+.figure-legs {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.figure-leg {
+  width: 3px;
+  height: 10px;
+  background: #706860;
+  border-radius: 0 0 2px 2px;
+  transition: all 0.5s ease;
+}
+
+.bg-figure {
+  position: absolute;
+  bottom: 30%;
+  transition: all 0.5s ease;
+}
+
+.viewport-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+  transition: opacity 0.5s ease;
+}
+
+.wide-distort {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(6,6,8,0.4) 100%);
+}
+
+.focal-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 1px;
+  font-family: 'Syne', sans-serif;
+}
+
+.focal-stat {
+  background: var(--surface);
+  padding: 0.75rem 1rem;
+}
+
+.focal-stat-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.focal-stat-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  transition: color 0.3s ease;
+}
+
+.emotional-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+  display: inline-block;
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+  transition: all 0.4s ease;
+  border: 1px solid transparent;
+}
+
+/* ── FORMAT COMPARISON ── */
+.format-compare { margin: 2rem 0; }
+
+.format-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.format-tab {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s ease;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.format-tab:hover { color: var(--text); }
+.format-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.format-panel { display: none; }
+.format-panel.active { display: block; }
+
+.frame-sim {
+  position: relative;
+  background: #060608;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.frame-185 { padding-top: 54%; }
+.frame-239 { padding-top: 41.8%; }
+.frame-178 { padding-top: 56.25%; }
+
+.frame-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.frame-scene {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0a0c12 0%, #141a24 100%);
+}
+
+.frame-figure-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 25%;
+  z-index: 5;
+}
+
+.frame-env-left, .frame-env-right {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.frame-env-left { left: 0; }
+.frame-env-right { right: 0; }
+
+.env-building {
+  background: #141420;
+  border-top: 1px solid #1e1e2a;
+}
+
+.frame-label {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  z-index: 10;
+}
+
+.frame-ratio {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.75rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--warm);
+  z-index: 10;
+}
+
+.format-desc {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.format-examples {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.film-chip {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 2px;
+  cursor: default;
+  transition: all 0.2s ease;
+}
+
+.film-chip:hover { border-color: var(--warm); color: var(--warm); }
+
+/* ── LENS PSYCHOLOGY GRID ── */
+.psych-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.psych-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  background: var(--surface);
+  transition: background 0.2s ease;
+  cursor: default;
+}
+
+.psych-row:hover { background: #111116; }
+
+.psych-focal {
+  padding: 1.2rem 1rem;
+  border-right: 1px solid var(--border);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.psych-content { padding: 1.2rem 1.5rem; }
+
+.psych-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  transition: color 0.3s ease;
+}
+
+.psych-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.psych-films {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-dim);
+  margin-top: 0.3rem;
+}
+
+.psych-row:hover .psych-focal { color: white; }
+.psych-row:hover .psych-name { color: var(--accent); }
+.psych-row:hover .psych-desc { color: var(--text); }
+
+.psych-row.wide .psych-focal { color: var(--wide-color); }
+.psych-row.wide .psych-name { color: var(--wide-color); }
+.psych-row.normal .psych-focal { color: var(--normal-color); }
+.psych-row.normal .psych-name { color: var(--normal-color); }
+.psych-row.short-tele .psych-focal { color: #a8b896; }
+.psych-row.short-tele .psych-name { color: #a8b896; }
+.psych-row.long-tele .psych-focal { color: var(--tele-color); }
+.psych-row.long-tele .psych-name { color: var(--tele-color); }
+
+/* ── SCENE BUILDER ── */
+.scene-builder {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.scene-builder h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.scene-select-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.select-group label {
+  display: block;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.select-group select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.6rem 2rem 0.6rem 0.8rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a4a58' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  transition: border-color 0.2s ease;
+}
+
+.select-group select:hover { border-color: var(--text-dim); }
+.select-group select:focus { border-color: var(--accent); }
+
+.scene-result {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 1.5rem;
+  min-height: 120px;
+  transition: all 0.3s ease;
+}
+
+.scene-result-placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.scene-result-verdict {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.scene-result-reason {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+.scene-result-ref {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-dim);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ── CLOSING ── */
+.closing {
+  padding: 4rem 2rem;
+  max-width: 860px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+
+.closing-quote {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 600px;
+  margin-bottom: 1.5rem;
+}
+
+.closing-credit {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+@media (max-width: 640px) {
+  .header { padding: 3rem 1.5rem 2rem; }
+  .container { padding: 0 1.5rem; }
+  .focal-explorer { padding: 1.5rem; }
+  .scene-select-row { grid-template-columns: 1fr; }
+  .psych-row { grid-template-columns: 85px 1fr; }
+  .focal-stat-label { font-size: 0.55rem; }
+  .format-tabs { overflow-x: auto; }
+  .format-tab { white-space: nowrap; font-size: 0.65rem; padding: 0.6rem 0.9rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header section">
+  <div class="header-kicker">Geared Like A Machine / Cinematography Systems</div>
+  <h1>Lens Choice Is a Character Decision</h1>
+  <p class="header-intro">Every focal length carries a psychology. Wide lenses expose. Telephoto lenses trap. Normal lenses disappear. The choice is made before the camera rolls.</p>
+</div>
+
+<div class="container">
+
+  <!-- 01: FOCAL LENGTH EXPLORER -->
+  <div class="section" id="section-explorer">
+    <div class="section-label">01 — Interactive</div>
+    <h2>The Focal Length Explorer</h2>
+    <p>Drag the slider across the focal length range. Watch how the frame changes: the figure's size relative to the world, the visible environment, the compression of space behind the subject. This is what the audience feels without knowing why.</p>
+
+    <div class="focal-explorer">
+      <h3>Adjust focal length — observe the frame</h3>
+
+      <div class="focal-controls">
+        <div class="focal-labels-row">
+          <span>12mm</span>
+          <span>24mm</span>
+          <span>35mm</span>
+          <span>50mm</span>
+          <span>85mm</span>
+          <span>135mm</span>
+          <span>200mm</span>
+        </div>
+
+        <div class="focal-slider-row">
+          <div class="slider-track" id="focal-track">
+            <div class="slider-fill" id="focal-fill"></div>
+            <input type="range" class="focal-input" id="focal-slider"
+              min="12" max="200" value="50" step="1"
+              aria-label="Focal length selector">
+          </div>
+          <div class="focal-readout" id="focal-readout">50mm</div>
+        </div>
+      </div>
+
+      <div class="viewport-sim">
+        <div class="viewport-aspect">
+          <div class="viewport-inner">
+            <div class="scene" id="sim-scene">
+              <div class="scene-bg" id="sim-bg"></div>
+              <div class="building b1" id="bg-b1"></div>
+              <div class="building b2"></div>
+              <div class="building b3"></div>
+              <div class="building b4"></div>
+              <div class="building b5"></div>
+              <div class="building b6"></div>
+
+              <!-- Background figures -->
+              <div class="bg-figure" id="bgfig-l" style="left:35%;">
+                <div style="width:6px;height:6px;background:#2a2a36;border-radius:50%;margin:0 auto 1px;" id="bfl-head"></div>
+                <div style="width:4px;height:10px;background:#2a2a36;margin:0 auto;" id="bfl-body"></div>
+              </div>
+              <div class="bg-figure" id="bgfig-r" style="right:32%;">
+                <div style="width:6px;height:6px;background:#2a2a36;border-radius:50%;margin:0 auto 1px;" id="bfr-head"></div>
+                <div style="width:4px;height:10px;background:#2a2a36;margin:0 auto;" id="bfr-body"></div>
+              </div>
+
+              <div class="figure-wrap" id="sim-figure">
+                <div class="figure">
+                  <div class="figure-head" id="f-head"></div>
+                  <div class="figure-body" id="f-body"></div>
+                  <div class="figure-legs">
+                    <div class="figure-leg" id="f-leg1"></div>
+                    <div class="figure-leg" id="f-leg2"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="viewport-vignette" id="sim-vignette"></div>
+              <div class="wide-distort" id="sim-distort"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="focal-info">
+          <div class="focal-stat">
+            <div class="focal-stat-label">Focal Length</div>
+            <div class="focal-stat-value" id="stat-fl">50mm</div>
+          </div>
+          <div class="focal-stat">
+            <div class="focal-stat-label">Category</div>
+            <div class="focal-stat-value" id="stat-cat">Normal</div>
+          </div>
+          <div class="focal-stat">
+            <div class="focal-stat-label">Emotional Register</div>
+            <div class="focal-stat-value" id="stat-emo">Neutral / Invisible</div>
+          </div>
+        </div>
+      </div>
+
+      <span class="emotional-tag" id="emo-tag"></span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 02: LENS PSYCHOLOGY GRID -->
+  <div class="section" id="section-psych">
+    <div class="section-label">02 — Reference</div>
+    <h2>Focal Length Psychology</h2>
+    <p>These are not rules. They are tendencies built from the physics of optics and the accumulated grammar of a century of cinema. Hover to explore each register.</p>
+
+    <div class="psych-grid">
+      <div class="psych-row wide">
+        <div class="psych-focal">12–24mm</div>
+        <div class="psych-content">
+          <div class="psych-name">Extreme Wide — Exposure</div>
+          <div class="psych-desc">Distortion at close range. Character cannot hide. Environment presses in from every edge. Used at proximity: vulnerability, chaos, survival.</div>
+          <div class="psych-films">The Revenant, The Shining, Children of Men</div>
+        </div>
+      </div>
+      <div class="psych-row wide">
+        <div class="psych-focal">24–35mm</div>
+        <div class="psych-content">
+          <div class="psych-name">Wide — Presence</div>
+          <div class="psych-desc">Environmental context remains visible. Character exists within a world. Favored by Deakins for faces: intimacy without isolation.</div>
+          <div class="psych-films">No Country for Old Men, Sicario, Fargo</div>
+        </div>
+      </div>
+      <div class="psych-row normal">
+        <div class="psych-focal">35–50mm</div>
+        <div class="psych-content">
+          <div class="psych-name">Normal — Invisible</div>
+          <div class="psych-desc">Closest to human field of view. No optical argument. The lens disappears. Used when the scene carries itself without formal statement from the glass.</div>
+          <div class="psych-films">The Godfather (Willis, family sequences), Moonlight</div>
+        </div>
+      </div>
+      <div class="psych-row short-tele">
+        <div class="psych-focal">75–100mm</div>
+        <div class="psych-content">
+          <div class="psych-name">Short Tele — Watch</div>
+          <div class="psych-desc">Conversational distance without intrusion. The character forgets the camera exists. Background begins to compress. Space begins to close.</div>
+          <div class="psych-films">Boogie Nights, There Will Be Blood, Phantom Thread</div>
+        </div>
+      </div>
+      <div class="psych-row long-tele">
+        <div class="psych-focal">135–200mm</div>
+        <div class="psych-content">
+          <div class="psych-name">Telephoto — Fate</div>
+          <div class="psych-desc">Compression. Entrapment. Background stacks against the subject. Character cannot escape the world closing behind them. The lens of surveillance and inevitability.</div>
+          <div class="psych-films">No Country for Old Men (Chigurh scenes), Sicario border crossing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 03: FORMAT COMPARISON -->
+  <div class="section" id="section-format">
+    <div class="section-label">03 — Format</div>
+    <h2>Anamorphic vs. Spherical: A Decision About Scale</h2>
+    <p>The choice of format is a choice about how much world you want around your character. Anamorphic gives the world space. Spherical gives the character space.</p>
+
+    <div class="format-compare">
+      <div class="format-tabs">
+        <button class="format-tab active" data-panel="tv">1.78:1 — Television</button>
+        <button class="format-tab" data-panel="spherical">1.85:1 — Spherical</button>
+        <button class="format-tab" data-panel="anamorphic">2.39:1 — Anamorphic</button>
+      </div>
+
+      <div class="format-panel active" id="panel-tv">
+        <div class="frame-sim frame-178">
+          <div class="frame-content">
+            <div class="frame-scene"></div>
+            <div class="frame-env-left">
+              <div class="env-building" style="height:70%; margin-bottom:25%; margin-left:10%; width:55%;"></div>
+            </div>
+            <div class="frame-env-right">
+              <div class="env-building" style="height:60%; margin-bottom:25%; margin-right:10%; width:50%;"></div>
+            </div>
+            <div class="frame-figure-container">
+              <div style="text-align:center;">
+                <div style="width:16px;height:16px;background:#c8bca8;border-radius:50%;margin:0 auto 2px;"></div>
+                <div style="width:10px;height:26px;background:#a09888;border-radius:3px 3px 0 0;margin:0 auto;"></div>
+                <div style="display:flex;gap:3px;justify-content:center;margin-top:2px;">
+                  <div style="width:4px;height:14px;background:#706860;border-radius:0 0 2px 2px;"></div>
+                  <div style="width:4px;height:14px;background:#706860;border-radius:0 0 2px 2px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="frame-ratio">1.78:1</div>
+            <div class="frame-label">TV / Streaming</div>
+          </div>
+        </div>
+        <p class="format-desc">The character fills more of the vertical frame. Less world on either side. This format foregrounds the person. Used pervasively in streaming and television drama, where the story lives inside the character. Character looms. World recedes.</p>
+        <div class="format-examples">
+          <span class="film-chip">True Detective S1</span>
+          <span class="film-chip">The Last of Us</span>
+          <span class="film-chip">Succession</span>
+          <span class="film-chip">Breaking Bad</span>
+        </div>
+      </div>
+
+      <div class="format-panel" id="panel-spherical">
+        <div class="frame-sim frame-185">
+          <div class="frame-content">
+            <div class="frame-scene"></div>
+            <div class="frame-env-left">
+              <div class="env-building" style="height:65%; margin-bottom:25%; margin-left:8%; width:50%;"></div>
+            </div>
+            <div class="frame-env-right">
+              <div class="env-building" style="height:55%; margin-bottom:25%; margin-right:8%; width:48%;"></div>
+            </div>
+            <div class="frame-figure-container">
+              <div style="text-align:center;">
+                <div style="width:14px;height:14px;background:#c8bca8;border-radius:50%;margin:0 auto 2px;"></div>
+                <div style="width:9px;height:22px;background:#a09888;border-radius:3px 3px 0 0;margin:0 auto;"></div>
+                <div style="display:flex;gap:2px;justify-content:center;margin-top:2px;">
+                  <div style="width:3px;height:12px;background:#706860;border-radius:0 0 2px 2px;"></div>
+                  <div style="width:3px;height:12px;background:#706860;border-radius:0 0 2px 2px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="frame-ratio">1.85:1</div>
+            <div class="frame-label">Spherical</div>
+          </div>
+        </div>
+        <p class="format-desc">A slight widening over 1.78. The standard theatrical spherical ratio. Character and world share the frame more evenly. Intimate drama that still wants the audience to feel the contained world around the subject. Widely used for character-centered feature films.</p>
+        <div class="format-examples">
+          <span class="film-chip">The Godfather</span>
+          <span class="film-chip">Moonlight</span>
+          <span class="film-chip">Marriage Story</span>
+          <span class="film-chip">Her</span>
+        </div>
+      </div>
+
+      <div class="format-panel" id="panel-anamorphic">
+        <div class="frame-sim frame-239">
+          <div class="frame-content">
+            <div class="frame-scene"></div>
+            <div class="frame-env-left">
+              <div class="env-building" style="height:90%; margin-bottom:20%; margin-left:5%; width:45%;"></div>
+              <div class="env-building" style="height:60%; margin-bottom:20%; margin-left:18%; width:25%; position:absolute; left:0;"></div>
+            </div>
+            <div class="frame-env-right">
+              <div class="env-building" style="height:80%; margin-bottom:20%; margin-right:5%; width:42%;"></div>
+              <div class="env-building" style="height:50%; margin-bottom:20%; margin-right:18%; width:22%; position:absolute; right:0;"></div>
+            </div>
+            <div class="frame-figure-container">
+              <div style="text-align:center;">
+                <div style="width:11px;height:11px;background:#c8bca8;border-radius:50%;margin:0 auto 2px;"></div>
+                <div style="width:7px;height:18px;background:#a09888;border-radius:2px 2px 0 0;margin:0 auto;"></div>
+                <div style="display:flex;gap:2px;justify-content:center;margin-top:2px;">
+                  <div style="width:3px;height:10px;background:#706860;border-radius:0 0 2px 2px;"></div>
+                  <div style="width:3px;height:10px;background:#706860;border-radius:0 0 2px 2px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="frame-ratio" style="color:var(--cold);">2.39:1</div>
+            <div class="frame-label">Anamorphic</div>
+          </div>
+        </div>
+        <p class="format-desc">The character is surrounded. World extends in both directions beyond any other format. The figure is small within a vast horizontal field. This is the language of myth, of landscape, of characters who are figures within something larger than themselves. Anamorphic does not just capture the world. It insists on it.</p>
+        <div class="format-examples">
+          <span class="film-chip">No Country for Old Men</span>
+          <span class="film-chip">Boogie Nights</span>
+          <span class="film-chip">Blade Runner</span>
+          <span class="film-chip">Sicario</span>
+          <span class="film-chip">There Will Be Blood</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 04: SCENE BUILDER -->
+  <div class="section" id="section-builder">
+    <div class="section-label">04 — Decision Tool</div>
+    <h2>The Lens Decision</h2>
+    <p>Every lens decision starts with the same question: what does this character feel in this moment, and what optical relationship puts the audience inside that feeling? Use this to think through your choice before the shoot.</p>
+
+    <div class="scene-builder">
+      <h3>Scene Variables</h3>
+
+      <div class="scene-select-row">
+        <div class="select-group">
+          <label for="sel-emotion">Character Emotional State</label>
+          <select id="sel-emotion">
+            <option value="">Select state...</option>
+            <option value="trapped">Trapped / No escape</option>
+            <option value="exposed">Exposed / Vulnerable</option>
+            <option value="isolated">Isolated / Alone</option>
+            <option value="intimate">Intimate / Connected</option>
+            <option value="invisible">Ordinary / Invisible</option>
+            <option value="dominant">Dominant / Threatening</option>
+            <option value="observed">Observed / Surveilled</option>
+          </select>
+        </div>
+        <div class="select-group">
+          <label for="sel-env">Scene Environment</label>
+          <select id="sel-env">
+            <option value="">Select environment...</option>
+            <option value="vast-exterior">Vast exterior / Landscape</option>
+            <option value="confined-interior">Confined interior / Room</option>
+            <option value="crowd">Among a crowd</option>
+            <option value="two-person">Two-person dialogue</option>
+            <option value="action">Movement / Action sequence</option>
+            <option value="aftermath">Still / Aftermath</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="scene-result" id="scene-result">
+        <p class="scene-result-placeholder">Select scene variables above to get a lens recommendation.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 05: FIELD NOTES -->
+  <div class="section" id="section-deakins">
+    <div class="section-label">05 — Field Notes</div>
+    <h2>The Scout Decision</h2>
+    <p>Roger Deakins walks every location before he shoots it. He knows what lens lives in each room before the camera package arrives. That is why his images look like decisions, not accidents.</p>
+    <p>The lens choice made on the tech scout is intention. The lens choice made on the day, under time pressure, is compromise. The difference between those two is the difference between a DP who lit the scene and a DP who designed the image.</p>
+    <p>Walk the location. Ask: what does the character feel here, and which focal length tells the audience that truth? The answer is the lens you pull from the kit.</p>
+  </div>
+
+</div>
+
+<div class="closing section">
+  <p class="closing-quote">"Every lens carries a psychology. Learn the vocabulary. Then choose the character."</p>
+  <div class="closing-credit">Geared Like A Machine — gearedlikeamachine.com</div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+// ─── FOCAL LENGTH DATA (read-only lookup) ───
+const FOCAL_DATA = Object.freeze([
+  { maxMm: 24,  cat: 'Extreme Wide', emo: 'Exposure / Chaos',      tag: 'Character and world are inseparable. Nowhere to hide.',           bgAlpha: 0.12, hue: '200,122,90' },
+  { maxMm: 35,  cat: 'Wide',         emo: 'Presence / Context',    tag: 'Environment visible. Character grounded in the world.',           bgAlpha: 0.08, hue: '200,122,90' },
+  { maxMm: 55,  cat: 'Normal',       emo: 'Neutral / Invisible',   tag: 'The invisible lens. Trust the performance.',                      bgAlpha: 0.12, hue: '138,184,112' },
+  { maxMm: 100, cat: 'Short Tele',   emo: 'Watch / Intimacy',      tag: 'Conversational distance. Background begins to compress.',        bgAlpha: 0.10, hue: '168,184,150' },
+  { maxMm: 999, cat: 'Telephoto',    emo: 'Fate / Entrapment',     tag: 'The world stacks behind the subject. No escape.',                bgAlpha: 0.12, hue: '122,138,200' },
+]);
+
+// ─── SCENE BUILDER DATA (read-only) ───
+const SCENE_DATA = Object.freeze({
+  'trapped+vast-exterior':     { lens: '135–200mm', reason: 'Telephoto compression makes the landscape feel like a wall. Distance that looks like freedom reads as entrapment.', ref: 'No Country for Old Men — Chigurh pursuing Moss across West Texas.' },
+  'trapped+confined-interior': { lens: '24–35mm (close)', reason: 'Wide glass up close fills the frame with the confining space. Character cannot move without edges pressing in.', ref: 'The Shining — Jack at the typewriter. The room occupies every quadrant.' },
+  'trapped+crowd':             { lens: '135mm+', reason: 'Telephoto compression stacks the crowd flat against the subject. Surrounded and unable to move in any direction.', ref: 'Match Point — Scarlett Johansson isolated in a compressed party crowd.' },
+  'trapped+two-person':        { lens: '85–100mm', reason: 'Short telephoto from distance. Two subjects pressed against each other with no exit. The background closes them in.', ref: 'Prisoners — Hugh Jackman and Paul Dano in close quarters, space removed.' },
+  'trapped+action':            { lens: '24–35mm', reason: 'Movement through tight space feels more desperate wide. The environment never lets up.', ref: 'Children of Men — the car ambush sequence.' },
+  'trapped+aftermath':         { lens: '50mm (held, static)', reason: 'Static normal lens. No movement. Character sits in the frame. The stillness is the trap.', ref: 'Prisoners — Jake Gyllenhaal after the truth lands. Static. Nowhere to go.' },
+  'exposed+vast-exterior':     { lens: '12–24mm', reason: 'Ultra-wide in open landscape. Character is small at center of a frame that extends in every direction. No cover anywhere.', ref: 'The Revenant — DiCaprio alone after the bear attack. Wilderness in every direction.' },
+  'exposed+confined-interior': { lens: '18–24mm (close)', reason: 'Wide glass close to the face. Distortion reads as raw vulnerability. The proportions shift and the subject cannot compose themselves.', ref: 'The Shining — Shelley Duvall. Wide lens, close range. Nowhere to hide.' },
+  'exposed+crowd':             { lens: '24mm', reason: 'Wide enough to show all the people looking at the subject. The crowd is the exposure.', ref: 'Boogie Nights — Dirk Diggler at the party realizing what he has become.' },
+  'exposed+two-person':        { lens: '24–28mm', reason: 'Wide close-up. Both faces in frame, distorted slightly, nowhere to compose. Raw.', ref: 'Marriage Story — the argument scene. Faces close, wide glass, no escape.' },
+  'exposed+action':            { lens: '16–21mm', reason: 'Move the camera through the action on a very wide lens. Everything is in frame. Nothing filters the impact.', ref: 'Children of Men — the Bexhill ambush. Lubezki wide and in the action.' },
+  'exposed+aftermath':         { lens: '24–28mm (close)', reason: 'Wide lens on the face post-impact. No compression to protect. The emotion is right there.', ref: 'The Revenant — moments after Hugh Glass survives. Wide on the face.' },
+  'isolated+vast-exterior':    { lens: '135–200mm', reason: 'Telephoto flattens the landscape into a wall. Character in the center. The world does not care.', ref: 'Sicario — Benicio Del Toro at the border crossing. Long lens. He is a figure in a machine.' },
+  'isolated+confined-interior':{ lens: '50mm', reason: 'Normal lens. Room at neutral distance. No formal argument. The character simply is alone and the frame observes without comment.', ref: 'Joker — Arthur in his apartment. The camera watches without engagement.' },
+  'isolated+crowd':            { lens: '200mm+', reason: 'Long telephoto. Crowd compressed into blur behind subject. Surrounded by undifferentiated mass. Completely alone.', ref: 'No Country for Old Men — Moss in a hotel crowd. Long lens. Alone in the frame.' },
+  'isolated+two-person':       { lens: '85mm each (singles)', reason: 'Shoot separate singles on a short telephoto. Neither person is in the same frame. Isolation even in a two-person scene.', ref: 'Marriage Story — Adam Driver and Scarlett Johansson as the relationship collapses.' },
+  'isolated+action':           { lens: '100–135mm', reason: 'Medium telephoto in action pulls the character away from the chaos. Observational distance. Alone in the event.', ref: 'Sicario — Emily Blunt in the tunnels. Long enough to isolate her in the military machine.' },
+  'isolated+aftermath':        { lens: '50–85mm', reason: 'Normal to short tele. Camera holds back. Does not intrude on the character\'s solitude. Respectful distance.', ref: 'There Will Be Blood — Daniel Plainview at the end. The camera keeps its distance.' },
+  'intimate+vast-exterior':    { lens: '35–50mm (close)', reason: 'Normal focal length at close proximity. Person and landscape coexist. Intimacy without losing context.', ref: 'Days of Heaven — the wheat fields. Malick\'s camera close but the world present.' },
+  'intimate+confined-interior':{ lens: '50–75mm', reason: 'Normal to short tele. Close enough to feel the warmth. Natural human distance.', ref: 'The Godfather — early family scenes. Willis with 50mm on actors\' faces.' },
+  'intimate+crowd':            { lens: '35mm', reason: 'Wide enough to feel the energy of the crowd but close enough to stay with the character. Embedded, not observed.', ref: 'Boogie Nights — the ensemble at their peak. Elswit with Panavision anamorphics.' },
+  'intimate+two-person':       { lens: '50–75mm', reason: 'The perfect range for a two-person dialogue that needs warmth. Close, but the faces hold their natural proportion.', ref: 'Her — Theodore and Samantha\'s conversations. Van Hoytema warm and close.' },
+  'intimate+action':           { lens: '35mm', reason: 'Wide enough for energy, close enough for connection. The camera is with the characters, not watching them.', ref: 'Children of Men — Theo protecting Kee. Lubezki wide and embedded.' },
+  'intimate+aftermath':        { lens: '50–75mm', reason: 'Hold at natural distance. Let the moment breathe. The intimacy comes from time, not compression.', ref: 'Moonlight — the diner conversation. Close but not imposing.' },
+  'invisible+vast-exterior':   { lens: '35–50mm', reason: 'Normal glass. The scene is the scene. No formal optical argument. The story tells itself.', ref: 'Any sequence where the world matters as itself, not as symbol.' },
+  'invisible+confined-interior':{ lens: '35–50mm', reason: 'Normal lens. The room is the room. Nothing distorted. Nothing compressed. Trust what is in the space.', ref: 'Fargo — the everyday domestic scenes. Deakins with normal glass.' },
+  'invisible+crowd':           { lens: '35–50mm', reason: 'Normal glass in a crowd. Character exists within it naturally. No psychological statement.', ref: 'Ordinary crowd scenes that need to feel real, not charged.' },
+  'invisible+two-person':      { lens: '50mm', reason: 'The 50mm two-person scene is the foundation of dialogue coverage. Neutral. Real. The performance carries.', ref: 'The Godfather — Michael and Kay before everything changes.' },
+  'invisible+action':          { lens: '35–50mm', reason: 'Grounded normal lens. The action is physical and real. No distortion to heighten it.', ref: 'Practical action sequences designed to feel documentary and immediate.' },
+  'invisible+aftermath':       { lens: '50mm', reason: 'Normal lens. Neutral observation. This is what happened. Nothing more, nothing less.', ref: 'Scenes where the DP\'s job is to stay out of the way.' },
+  'dominant+vast-exterior':    { lens: '14–21mm (low angle)', reason: 'Wide glass low angle. Character looms against the sky. The environment makes them larger, not smaller.', ref: 'No Country for Old Men — Chigurh on open road. Wide and low.' },
+  'dominant+confined-interior':{ lens: '18–24mm (low angle)', reason: 'Wide glass from below. Ceiling away, subject huge in frame. Physical dominance enforced by the optics.', ref: 'The Shining — Kubrick\'s wide-angle, low-angle Jack framing throughout.' },
+  'dominant+crowd':            { lens: '24mm', reason: 'Wide enough to show the crowd, close enough to keep the dominant character large. They own the space.', ref: 'Boogie Nights — Jack Horner in his element.' },
+  'dominant+two-person':       { lens: '24–35mm dominant, 85–135mm submissive', reason: 'Shoot each character at a different focal length. Wide and looming vs. compressed and small.', ref: 'No Country for Old Men — any Anton Chigurh confrontation scene.' },
+  'dominant+action':           { lens: '18–28mm', reason: 'Wide glass moves with the dominant character. They cut through the space. The world adjusts to them.', ref: 'The Terminator — wide lens on the T-800 moving through crowds.' },
+  'dominant+aftermath':        { lens: '35mm', reason: 'Normal to slight wide. Dominant character in frame. Space around them. They have survived and the environment acknowledges it.', ref: 'There Will Be Blood — Daniel standing over his adversary.' },
+  'observed+vast-exterior':    { lens: '300mm+', reason: 'Maximum reach. Character is unaware. We watch from a distance they cannot close. Surveillance language.', ref: 'Sicario — the convoy. Deakins on a long lens, across the landscape.' },
+  'observed+confined-interior':{ lens: '100–135mm', reason: 'From across the room. Character moving in their private space. The camera does not announce itself.', ref: 'A Most Violent Year — J.C. Chandor holding back, watching.' },
+  'observed+crowd':            { lens: '200mm', reason: 'Long telephoto in a crowd. One face singled out from a distance. Subject does not know they are the subject.', ref: 'The Conversation — Gene Hackman watching the couple in the plaza.' },
+  'observed+two-person':       { lens: '135mm', reason: 'From distance. Two people together, unaware of being watched. The frame is a record, not a participation.', ref: 'The Conversation — Harry Caul observing the couple.' },
+  'observed+action':           { lens: '200mm+', reason: 'Watch the action from distance. Telephoto. The event unfolds. The camera is not in it.', ref: 'Sicario — the bridge executions. The camera across the border.' },
+  'observed+aftermath':        { lens: '135–200mm', reason: 'Long lens on the aftermath. Observational. The camera arrived after something happened and records what remains.', ref: 'No Country for Old Men — the motel crime scenes. Deakins holding back.' },
+});
+
+// ─── HELPER: create element with text ───
+function el(tag, cls, text) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+// ─── FOCAL SLIDER ───
+var slider   = document.getElementById('focal-slider');
+var readout  = document.getElementById('focal-readout');
+var fill     = document.getElementById('focal-fill');
+var statFl   = document.getElementById('stat-fl');
+var statCat  = document.getElementById('stat-cat');
+var statEmo  = document.getElementById('stat-emo');
+var emoTag   = document.getElementById('emo-tag');
+var fHead    = document.getElementById('f-head');
+var fBody    = document.getElementById('f-body');
+var fLeg1    = document.getElementById('f-leg1');
+var fLeg2    = document.getElementById('f-leg2');
+var vignette = document.getElementById('sim-vignette');
+var distort  = document.getElementById('sim-distort');
+var bgfigL   = document.getElementById('bgfig-l');
+var bgfigR   = document.getElementById('bgfig-r');
+var bflHead  = document.getElementById('bfl-head');
+var bflBody  = document.getElementById('bfl-body');
+var bfrHead  = document.getElementById('bfr-head');
+var bfrBody  = document.getElementById('bfr-body');
+var buildings = document.querySelectorAll('.building');
+
+function getFocalRow(mm) {
+  for (var i = 0; i < FOCAL_DATA.length; i++) {
+    if (mm <= FOCAL_DATA[i].maxMm) return FOCAL_DATA[i];
+  }
+  return FOCAL_DATA[FOCAL_DATA.length - 1];
+}
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function updateScene(mm) {
+  var min = 12, max = 200;
+  var t = (mm - min) / (max - min);
+  var row = getFocalRow(mm);
+  var pct = t * 100;
+
+  // Fill bar
+  fill.style.width = pct + '%';
+
+  // Readout + stats
+  var mmStr = mm + 'mm';
+  readout.textContent = mmStr;
+  statFl.textContent  = mmStr;
+  statCat.textContent = row.cat;
+  statEmo.textContent = row.emo;
+  statEmo.style.color = 'rgba(' + row.hue + ',1)';
+
+  // Tag
+  emoTag.textContent = row.tag;
+  emoTag.style.background = 'rgba(' + row.hue + ',' + row.bgAlpha + ')';
+  emoTag.style.color = 'rgba(' + row.hue + ',1)';
+  emoTag.style.borderColor = 'rgba(' + row.hue + ',0.3)';
+
+  // Figure size
+  var scale = lerp(1.9, 0.55, t);
+  var headPx = Math.round(scale * 14);
+  var bodyW  = Math.round(scale * 8);
+  var bodyH  = Math.round(scale * 22);
+  var legH   = Math.round(scale * 10);
+  var legW   = Math.round(scale * 3.5);
+  fHead.style.width  = headPx + 'px';
+  fHead.style.height = headPx + 'px';
+  fBody.style.width  = bodyW + 'px';
+  fBody.style.height = bodyH + 'px';
+  fLeg1.style.height = legH + 'px';
+  fLeg2.style.height = legH + 'px';
+  fLeg1.style.width  = legW + 'px';
+  fLeg2.style.width  = legW + 'px';
+
+  // Background figures (compression at tele)
+  var bgScale = lerp(0.5, 1.2, t);
+  var bgH = Math.max(3, Math.round(bgScale * 8));
+  var bgBodyH = Math.max(4, Math.round(bgScale * 12));
+  [bflHead, bfrHead].forEach(function(h) {
+    h.style.width = bgH + 'px';
+    h.style.height = bgH + 'px';
+  });
+  [bflBody, bfrBody].forEach(function(b) { b.style.height = bgBodyH + 'px'; });
+
+  var spread = lerp(35, 15, t);
+  bgfigL.style.left  = (50 - spread) + '%';
+  bgfigR.style.right = (50 - spread - 5) + '%';
+  var blurPx = (t * 3).toFixed(1) + 'px';
+  bgfigL.style.filter = 'blur(' + blurPx + ')';
+  bgfigR.style.filter = 'blur(' + blurPx + ')';
+
+  // Building compression at tele
+  var bScale = lerp(0.6, 1.3, t);
+  buildings.forEach(function(b) {
+    var isRight = b.classList.contains('b4') || b.classList.contains('b5') || b.classList.contains('b6');
+    b.style.transform = 'scaleX(' + bScale + ')';
+    b.style.transformOrigin = isRight ? 'right bottom' : 'left bottom';
+  });
+
+  // Wide distortion hint
+  distort.style.opacity = Math.max(0, lerp(0.8, 0, t * 2.5));
+
+  // Vignette
+  vignette.style.opacity = lerp(0.4, 0.9, t);
+}
+
+if (slider) {
+  slider.addEventListener('input', function() { updateScene(parseInt(this.value, 10)); });
+  updateScene(50);
+}
+
+// ─── FORMAT TABS ───
+var tabs   = document.querySelectorAll('.format-tab');
+var panels = document.querySelectorAll('.format-panel');
+
+tabs.forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var panelId = 'panel-' + this.dataset.panel;
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    panels.forEach(function(p) { p.classList.remove('active'); });
+    this.classList.add('active');
+    var target = document.getElementById(panelId);
+    if (target) target.classList.add('active');
+  });
+});
+
+// ─── SCENE BUILDER ───
+var selEmotion = document.getElementById('sel-emotion');
+var selEnv     = document.getElementById('sel-env');
+var resultBox  = document.getElementById('scene-result');
+
+function renderResult(data) {
+  // Clear
+  while (resultBox.firstChild) { resultBox.removeChild(resultBox.firstChild); }
+
+  var verdict = el('div', 'scene-result-verdict', 'Use ' + data.lens);
+  var reason  = el('div', 'scene-result-reason', data.reason);
+  var ref     = el('div', 'scene-result-ref', 'Reference: ' + data.ref);
+
+  resultBox.appendChild(verdict);
+  resultBox.appendChild(reason);
+  resultBox.appendChild(ref);
+}
+
+function renderPlaceholder(text) {
+  while (resultBox.firstChild) { resultBox.removeChild(resultBox.firstChild); }
+  resultBox.appendChild(el('p', 'scene-result-placeholder', text));
+}
+
+function updateBuilder() {
+  var emotion = selEmotion ? selEmotion.value : '';
+  var env     = selEnv     ? selEnv.value     : '';
+  if (!emotion || !env) {
+    renderPlaceholder('Select scene variables above to get a lens recommendation.');
+    return;
+  }
+  var key  = emotion + '+' + env;
+  var data = SCENE_DATA[key];
+  if (data) {
+    renderResult(data);
+  } else {
+    renderPlaceholder('No single answer. This combination requires a scout and a test. The physics and the story need to be reconciled on location, not from a lookup table.');
+  }
+}
+
+if (selEmotion) selEmotion.addEventListener('change', updateBuilder);
+if (selEnv)     selEnv.addEventListener('change', updateBuilder);
+
+// ─── SCROLL REVEALS ───
+var sections = document.querySelectorAll('.section');
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+sections.forEach(function(s) { observer.observe(s); });
+
+var header  = document.querySelector('.header');
+var closing = document.querySelector('.closing');
+if (header)  header.classList.add('visible');
+if (closing) closing.classList.add('visible');
+
+})();
+</script>
+</body>
+</html>

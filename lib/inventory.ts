@@ -95,6 +95,9 @@ export const inventory: InventoryItem[] = [
   { id: 65, category: "Lenses", item: "Sony FE 16-35mm F2.8 GM II", rate: 55 },
   { id: 66, category: "Lenses", item: "Voigtlander Heliar-Hyper Wide 10mm f/5.6 Aspherical (Leica M)", rate: 35 },
   { id: 67, category: "Lenses", item: "Voigtlander ULTRON Vintage Line 28mm F2.0 Aspherical VM Type II", rate: 30 },
+  { id: 157, category: "Lenses", item: "Kowa 58mm T2 2x Anamorphic", rate: 125 },
+  { id: 158, category: "Lenses", item: "Sigma 24-70mm f/2.8 DG DN Art (Sony E-mount)", rate: 45 },
+  { id: 159, category: "Lenses", item: "Tiffen Variable ND Filter (x2)", rate: 15 },
 
   // ── Lighting ──
   { id: 68, category: "Lighting", item: "3' Dome Softbox + Grid", rate: 20 },
@@ -130,8 +133,12 @@ export const inventory: InventoryItem[] = [
   { id: 98, category: "Lighting", item: "Lightbridge CRLS C-Drive+ Kit", rate: 175 },
 
   // ── Media ──
-  { id: 99, category: "Media", item: "Sony CFexpress Type A 160GB Memory Card (2-Pack Bundle)", rate: 20 },
+  { id: 99, category: "Media", item: "Sony CFexpress Type A 160GB Memory Card (x5)", rate: 25 },
   { id: 100, category: "Media", item: "Sony CFexpress Type A Memory Card 640GB", rate: 25 },
+  { id: 160, category: "Media", item: "RED PRO CFexpress 1TB (x2)", rate: 35 },
+  { id: 161, category: "Media", item: "RED PRO CFexpress v4 Type B 2TB", rate: 50 },
+  { id: 162, category: "Media", item: "RED CFexpress v4 Type B Card Reader", rate: 15 },
+  { id: 163, category: "Media", item: "Sony CFexpress Type A Card Reader (x2)", rate: 10 },
 
   // ── Monitoring ──
   { id: 101, category: "Monitoring", item: "Alvins Cables 8K 2.1 Micro HDMI to HDMI (Left-Angle, 45cm)", rate: 5 },
@@ -151,9 +158,11 @@ export const inventory: InventoryItem[] = [
   { id: 113, category: "Power", item: "Neewer V-Mount Battery PS150E (150Wh, PD USB-C) (x2)", rate: 45 },
   { id: 114, category: "Power", item: "SmallRig D-TAP Dummy Battery Cable for Sony NP-FZ100 Cameras", rate: 8 },
   { id: 115, category: "Power", item: "SmallRig V Mount Battery VB212 212Wh (140W Output) (x4)", rate: 100 },
-  { id: 116, category: "Power", item: "Sony NP-FZ100 Z-Series Rechargeable Battery Pack (x4)", rate: 20 },
+  { id: 116, category: "Power", item: "Sony NP-FZ100 Z-Series Rechargeable Battery Pack (x7)", rate: 30 },
   { id: 117, category: "Power", item: "ZGCINE VM-VP1 V-Mount Battery Adapter Plate Kit (USB-C PD/DC/D-TAP/USB-A, 15mm Rod Clamp Arm)", rate: 12 },
   { id: 118, category: "Power", item: "ZGCINE VM-VP3 V-Mount Battery Plate with USB-C PD and 3x D-TAP", rate: 15 },
+  { id: 164, category: "Power", item: "REDVOLT MICRO-V Battery (x2)", rate: 30 },
+  { id: 165, category: "Power", item: "RED Compact Dual V-Lock Charger", rate: 15 },
 
   // ── Support ──
   { id: 119, category: "Support", item: "20ft Camera Crane", rate: 275 },
@@ -194,4 +203,8 @@ export const inventory: InventoryItem[] = [
   { id: 154, category: "Support", item: "Urth Lens Mount Adapter Leica M Lens to RF Camera Body", rate: 10 },
   { id: 155, category: "Support", item: "VILTROX E-Z Booster Lens Adapter (E-Mount Lens to Nikon Z Mount Camera)", rate: 18 },
   { id: 156, category: "Support", item: "iEago 40m/131ft Dive Case for Insta360 ONE RS 1-Inch 360 Edition", rate: 20 },
+  { id: 166, category: "Support", item: "Tilta Nucleus-M Wireless Lens Control System (Full Kit)", rate: 85 },
+  { id: 167, category: "Support", item: "RED RF-PL Adapter w/ Electronic ND Filter Pack (V-Raptor)", rate: 75 },
+  { id: 168, category: "Support", item: "Wooden Camera Mid Kit for RED V-Raptor (Cage/Baseplate)", rate: 45 },
+  { id: 169, category: "Support", item: "Canon Mount Adapter EF-EOS R", rate: 15 },
 ];

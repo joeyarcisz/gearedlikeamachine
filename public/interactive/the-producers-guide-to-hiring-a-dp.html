@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Producer's Guide to Hiring a DP</title>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0e0e11;
+  --surface-2: #141418;
+  --border: #1c1c22;
+  --border-bright: #2e2e38;
+  --text: #c4c4cc;
+  --text-dim: #52525e;
+  --text-bright: #e8e8f0;
+  --accent: #c4a882;
+  --accent-dim: #7a6550;
+  --warn: #c87060;
+  --good: #78a878;
+  --neutral: #6080a8;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Literata', Georgia, serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* ── TYPOGRAPHY ── */
+.label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(196, 168, 130, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(120, 168, 120, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0a0c 0%, #0d0d10 100%);
+  pointer-events: none;
+}
+
+.hero-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s ease forwards;
+}
+
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  color: var(--text-bright);
+  text-transform: uppercase;
+  max-width: 900px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.35s ease forwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-family: 'Literata', serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  max-width: 520px;
+  margin-top: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.5s ease forwards;
+}
+
+.hero-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--accent-dim);
+  margin: 2rem 0 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.45s ease forwards;
+}
+
+.hero-scroll {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.8s ease forwards;
+}
+
+.hero-scroll::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--text-dim);
+}
+
+/* ── SECTION ── */
+section {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+section h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  line-height: 1;
+  margin-bottom: 2rem;
+}
+
+section h2 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--accent);
+}
+
+section p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+}
+
+section p strong {
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── REEL EVALUATOR ── */
+.reel-evaluator {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 2.5rem 0;
+}
+
+.reel-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reel-header-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.mute-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mute-toggle input[type="checkbox"] {
+  display: none;
+}
+
+.mute-pill {
+  width: 36px;
+  height: 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-bright);
+  border-radius: 9px;
+  position: relative;
+  transition: background 0.25s;
+}
+
+.mute-pill::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition: left 0.25s, background 0.25s;
+}
+
+.mute-toggle input:checked + .mute-pill {
+  background: rgba(200, 112, 96, 0.15);
+  border-color: var(--warn);
+}
+
+.mute-toggle input:checked + .mute-pill::after {
+  left: 20px;
+  background: var(--warn);
+}
+
+.mute-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.reel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.reel-clip {
+  padding: 1.25rem 1.5rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+
+.reel-clip:last-child,
+.reel-clip:nth-child(3n) {
+  border-right: none;
+}
+
+.reel-clip-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.reel-clip-desc {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+.reel-clip-verdict {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  border-radius: 2px;
+  display: inline-block;
+  background: rgba(120, 168, 120, 0.1);
+  color: var(--good);
+  border: 1px solid rgba(120, 168, 120, 0.2);
+  transition: all 0.3s;
+}
+
+.reel-clip-verdict.warn {
+  background: rgba(200, 112, 96, 0.1);
+  color: var(--warn);
+  border-color: rgba(200, 112, 96, 0.2);
+}
+
+.reel-clip-verdict.neutral {
+  background: rgba(96, 128, 168, 0.1);
+  color: var(--neutral);
+  border-color: rgba(96, 128, 168, 0.2);
+}
+
+/* muted mode: reveal the lie */
+.muted .reel-clip[data-quality="high"] { background: rgba(120, 168, 120, 0.04); }
+.muted .reel-clip[data-quality="mid"]  { background: rgba(200, 112, 96, 0.04); }
+.muted .reel-clip[data-quality="low"]  { background: rgba(200, 112, 96, 0.08); }
+
+.muted .reel-clip[data-quality="high"] .reel-clip-verdict { /* stays good */ }
+.muted .reel-clip[data-quality="mid"]  .reel-clip-verdict.good {
+  background: rgba(200, 112, 96, 0.1);
+  color: var(--warn);
+  border-color: rgba(200, 112, 96, 0.2);
+}
+
+.mute-note {
+  padding: 1rem 1.5rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.mute-note.active {
+  color: var(--warn);
+  background: rgba(200, 112, 96, 0.04);
+}
+
+/* ── RATE CALCULATOR ── */
+.rate-calc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin: 2.5rem 0;
+}
+
+.calc-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.calc-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.calc-field label {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.calc-slider-wrap {
+  position: relative;
+}
+
+.calc-slider-wrap input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1px;
+  background: var(--border-bright);
+  outline: none;
+  cursor: pointer;
+}
+
+.calc-slider-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent-dim);
+}
+
+.calc-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--accent);
+  margin-top: 0.5rem;
+}
+
+.calc-result {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.calc-result-item {
+  text-align: center;
+}
+
+.calc-result-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.calc-result-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.calc-result-val.solo { color: var(--warn); }
+.calc-result-val.bundled { color: var(--accent); }
+.calc-result-val.project { color: var(--good); }
+
+.calc-verdict {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+/* ── QUESTION CARDS ── */
+.questions-list {
+  margin: 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.q-card {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.q-card:last-child {
+  border-bottom: none;
+}
+
+.q-card:hover {
+  background: var(--surface);
+}
+
+.q-header {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.q-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  padding-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.q-text {
+  font-family: 'Literata', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-bright);
+  flex: 1;
+}
+
+.q-arrow {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  transition: transform 0.3s, color 0.2s;
+  font-size: 0.8rem;
+  margin-top: 0.1rem;
+}
+
+.q-card.open .q-arrow {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.q-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.q-body-inner {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.q-signal {
+  padding: 0.75rem 1rem;
+  border-radius: 2px;
+}
+
+.q-signal.good {
+  background: rgba(120, 168, 120, 0.06);
+  border: 1px solid rgba(120, 168, 120, 0.15);
+}
+
+.q-signal.warn {
+  background: rgba(200, 112, 96, 0.06);
+  border: 1px solid rgba(200, 112, 96, 0.15);
+}
+
+.q-signal-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.q-signal.good .q-signal-label { color: var(--good); }
+.q-signal.warn .q-signal-label { color: var(--warn); }
+
+.q-signal p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── RED FLAGS SCANNER ── */
+.flag-scanner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin: 2.5rem 0;
+  overflow: hidden;
+}
+
+.flag-scanner-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flag-items {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.flag-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.flag-item:hover {
+  border-color: var(--border);
+  background: var(--surface-2);
+}
+
+.flag-item.flagged {
+  border-color: rgba(200, 112, 96, 0.25);
+  background: rgba(200, 112, 96, 0.05);
+}
+
+.flag-item.cleared {
+  border-color: rgba(120, 168, 120, 0.2);
+  background: rgba(120, 168, 120, 0.04);
+}
+
+.flag-check {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border-bright);
+  border-radius: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  transition: all 0.25s;
+  margin-top: 0.1rem;
+}
+
+.flag-item.flagged .flag-check {
+  background: rgba(200, 112, 96, 0.2);
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.flag-item.cleared .flag-check {
+  background: rgba(120, 168, 120, 0.15);
+  border-color: var(--good);
+  color: var(--good);
+}
+
+.flag-text {
+  flex: 1;
+}
+
+.flag-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
+}
+
+.flag-desc {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.flag-status {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+  color: var(--text-dim);
+  transition: color 0.25s;
+}
+
+.flag-item.flagged .flag-status { color: var(--warn); }
+.flag-item.cleared .flag-status { color: var(--good); }
+
+.flag-summary {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flag-score {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.flag-score-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+}
+
+.flag-verdict-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  max-width: 300px;
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* ── HIRE/PASS SCORECARD ── */
+.scorecard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 2.5rem 0;
+}
+
+.scorecard-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.scorecard-criteria {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.criterion {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.criterion-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.criterion-bar-wrap {
+  flex: 1;
+  height: 4px;
+  background: var(--border-bright);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.criterion-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  width: 0%;
+  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.criterion-bar.poor { background: var(--warn); }
+.criterion-bar.ok { background: var(--neutral); }
+.criterion-bar.good { background: var(--good); }
+.criterion-bar.great { background: var(--accent); }
+
+.criterion-stars {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.star-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 1px;
+  border: 1px solid var(--border-bright);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+}
+
+.star-btn.filled {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.criterion:nth-child(odd) .star-btn.filled { background: var(--accent); border-color: var(--accent); }
+
+.scorecard-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-score-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.total-score-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 2.2rem;
+  line-height: 1;
+  transition: color 0.4s;
+}
+
+.hire-recommendation {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2px;
+  transition: all 0.4s;
+}
+
+.hire-recommendation.pass {
+  background: rgba(200, 112, 96, 0.1);
+  border: 1px solid rgba(200, 112, 96, 0.25);
+  color: var(--warn);
+}
+
+.hire-recommendation.maybe {
+  background: rgba(96, 128, 168, 0.1);
+  border: 1px solid rgba(96, 128, 168, 0.25);
+  color: var(--neutral);
+}
+
+.hire-recommendation.hire {
+  background: rgba(120, 168, 120, 0.1);
+  border: 1px solid rgba(120, 168, 120, 0.25);
+  color: var(--good);
+}
+
+/* ── CLOSING STATEMENT ── */
+.close-statement {
+  padding: 6rem 2rem;
+  max-width: 820px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.close-statement.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+blockquote {
+  font-family: 'Literata', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.5;
+  color: var(--text-bright);
+  border-left: 2px solid var(--accent);
+  padding-left: 2rem;
+  margin: 2rem 0;
+}
+
+.close-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 3rem;
+}
+
+.close-brand {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 0.4rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer .f-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .reel-grid { grid-template-columns: 1fr; }
+  .calc-body { grid-template-columns: 1fr; }
+  .q-body-inner { grid-template-columns: 1fr; }
+  .criterion-name { width: 120px; font-size: 0.68rem; }
+  .hero { padding: 3rem 1.25rem; }
+  section { padding: 3rem 1.25rem; }
+  .flag-summary { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .flag-verdict-text { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-label">GLM Production Intelligence</div>
+  <h1>The <em>Producer's</em><br>Guide to<br>Hiring a DP</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">Reels lie. References hedge. Day rates are noise if you're asking the wrong questions. Here is how to actually evaluate a cinematographer.</p>
+  <div class="hero-scroll">Scroll to explore</div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 1: REEL EVALUATOR -->
+<section id="s1">
+  <div class="section-num">01 / The Reel</div>
+  <h2>How <em>Reels</em> Lie</h2>
+  <p>A reel is a curated artifact. Best frames. Best projects. Cut to music. Often sourced from multiple operators under the same credit. Toggle mute below to see what changes when the music stops.</p>
+
+  <div class="reel-evaluator">
+    <div class="reel-header">
+      <span class="reel-header-label">Reel Analyzer</span>
+      <label class="mute-toggle">
+        <input type="checkbox" id="muteToggle">
+        <div class="mute-pill"></div>
+        <span class="mute-label">Mute the Music</span>
+      </label>
+    </div>
+    <div class="reel-grid" id="reelGrid">
+      <div class="reel-clip" data-quality="high">
+        <div class="reel-clip-title">Golden Hour Hero Shot</div>
+        <div class="reel-clip-desc">Perfect light. Every DP has this. The sun is doing most of the work.</div>
+        <span class="reel-clip-verdict" id="v1">Strong Frame</span>
+      </div>
+      <div class="reel-clip" data-quality="mid">
+        <div class="reel-clip-title">Feature Film Carry</div>
+        <div class="reel-clip-desc">Credited on a known production. Which shots were actually theirs? The music hides the question.</div>
+        <span class="reel-clip-verdict good" id="v2">Strong Frame</span>
+      </div>
+      <div class="reel-clip" data-quality="low">
+        <div class="reel-clip-title">One-Look Specialty</div>
+        <div class="reel-clip-desc">Moody corporate interview. Beautiful in isolation. Music makes it feel like a narrative film.</div>
+        <span class="reel-clip-verdict warn">Verify Range</span>
+      </div>
+      <div class="reel-clip" data-quality="high">
+        <div class="reel-clip-title">Scene Coverage</div>
+        <div class="reel-clip-desc">Full scene with multiple angles. How did it cut? This is actually useful to evaluate.</div>
+        <span class="reel-clip-verdict" id="v4">Hire Signal</span>
+      </div>
+      <div class="reel-clip" data-quality="mid">
+        <div class="reel-clip-title">Borrowed Gear Spec</div>
+        <div class="reel-clip-desc">ARRI Alexa 35 on a self-funded spec. Looks great. Would it hold on a Sony FX3 shoot?</div>
+        <span class="reel-clip-verdict neutral" id="v5">Ask the Question</span>
+      </div>
+      <div class="reel-clip" data-quality="high">
+        <div class="reel-clip-title">Low-Budget Range</div>
+        <div class="reel-clip-desc">Compelling image on modest gear and a small lighting package. They own every frame here.</div>
+        <span class="reel-clip-verdict" id="v6">Hire Signal</span>
+      </div>
+    </div>
+    <div class="mute-note" id="muteNote">With music: everything reads as cinema. Turn it off to evaluate the image alone.</div>
+  </div>
+
+  <p>The four ways a reel deceives: the music trick, the feature-film carry, the one-look DP, and the borrowed gear reel. Read the full post for what to watch for in each.</p>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 2: RATE CALCULATOR -->
+<section id="s2">
+  <div class="section-num">02 / The Rate</div>
+  <h2>Day Rate <em>vs.</em> Project Rate</h2>
+  <p>The day rate conversation starts in the wrong place. The number is irrelevant without knowing what it includes. Use this to understand what you're actually buying.</p>
+
+  <div class="rate-calc">
+    <div class="calc-header">
+      <span class="reel-header-label">Rate Breakdown Calculator</span>
+    </div>
+    <div class="calc-body">
+      <div class="calc-field">
+        <label>DP Day Rate</label>
+        <div class="calc-slider-wrap">
+          <input type="range" id="dpRate" min="800" max="4500" value="2500" step="100">
+        </div>
+        <div class="calc-val" id="dpRateVal">$2,500/day</div>
+      </div>
+      <div class="calc-field">
+        <label>Shoot Days</label>
+        <div class="calc-slider-wrap">
+          <input type="range" id="shootDays" min="1" max="10" value="3" step="1">
+        </div>
+        <div class="calc-val" id="shootDaysVal">3 days</div>
+      </div>
+      <div class="calc-field">
+        <label>Camera Package (daily rental)</label>
+        <div class="calc-slider-wrap">
+          <input type="range" id="kitRate" min="0" max="3000" value="1200" step="100">
+        </div>
+        <div class="calc-val" id="kitRateVal">$1,200/day</div>
+      </div>
+      <div class="calc-field">
+        <label>Project Rate Discount (%)</label>
+        <div class="calc-slider-wrap">
+          <input type="range" id="discount" min="0" max="25" value="10" step="1">
+        </div>
+        <div class="calc-val" id="discountVal">10% off</div>
+      </div>
+      <div class="calc-result">
+        <div class="calc-result-item">
+          <div class="calc-result-label">Day Rate Total (labor only)</div>
+          <div class="calc-result-val solo" id="soloTotal">$7,500</div>
+        </div>
+        <div class="calc-result-item">
+          <div class="calc-result-label">With Kit Rental (full cost)</div>
+          <div class="calc-result-val bundled" id="bundledTotal">$11,100</div>
+        </div>
+        <div class="calc-result-item">
+          <div class="calc-result-label">Project Rate Equivalent</div>
+          <div class="calc-result-val project" id="projectTotal">$9,990</div>
+        </div>
+        <div class="calc-verdict" id="calcVerdict">
+          At $2,500/day for 3 days, you're spending $7,500 on labor. Add a $1,200/day camera package and the real number is $11,100. A project rate at 10% off saves you $1,110 and aligns the DP's incentive to your outcome, not the clock.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 3: QUESTIONS -->
+<section id="s3">
+  <div class="section-num">03 / The Interview</div>
+  <h2>Four Questions That <em>Reveal</em> Everything</h2>
+  <p>Skip the theater. These four questions separate working DPs from talented shooters. Click each to see what strong and weak answers sound like.</p>
+
+  <div class="questions-list">
+    <div class="q-card" data-idx="0">
+      <div class="q-header">
+        <span class="q-number">Q1</span>
+        <span class="q-text">"Walk me through your prep process for a project like this."</span>
+        <span class="q-arrow">▼</span>
+      </div>
+      <div class="q-body">
+        <div class="q-body-inner">
+          <div class="q-signal good">
+            <div class="q-signal-label">Strong Answer</div>
+            <p>Describes tech scout, lighting design session, conversation with director about focal length choices, camera package decision, brief to the gaffer. Process is defined before call time.</p>
+          </div>
+          <div class="q-signal warn">
+            <div class="q-signal-label">Weak Answer</div>
+            <p>"I like to show up early and stay flexible." Translation: they have no pre-production process. You will pay for their improvisation in shoot day time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="q-card" data-idx="1">
+      <div class="q-header">
+        <span class="q-number">Q2</span>
+        <span class="q-text">"Tell me about a shot you planned that didn't work on the day, and what you did."</span>
+        <span class="q-arrow">▼</span>
+      </div>
+      <div class="q-body">
+        <div class="q-body-inner">
+          <div class="q-signal good">
+            <div class="q-signal-label">Strong Answer</div>
+            <p>A specific story. The sun moved. The location was half the size. They called an audible with the gaffer, redesigned the setup in twenty minutes, and held the look. Composure and technical depth in the same story.</p>
+          </div>
+          <div class="q-signal warn">
+            <div class="q-signal-label">Weak Answer</div>
+            <p>A vague recollection without specifics, or no story at all. A working DP who has shot 50 commercial days has five stories like this ready. If they don't, they haven't been on enough sets, or they don't learn from failure.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="q-card" data-idx="2">
+      <div class="q-header">
+        <span class="q-number">Q3</span>
+        <span class="q-text">"What is your relationship with your gaffer?"</span>
+        <span class="q-arrow">▼</span>
+      </div>
+      <div class="q-body">
+        <div class="q-body-inner">
+          <div class="q-signal good">
+            <div class="q-signal-label">Strong Answer</div>
+            <p>Names a specific gaffer they work with consistently. Describes the visual shorthand. "I say 'half stop cooler on the key' and she already knows what grip position to use." That shorthand is speed on your shoot day.</p>
+          </div>
+          <div class="q-signal warn">
+            <div class="q-signal-label">Weak Answer</div>
+            <p>"Whoever production assigns." This DP has not built a team. Every day with a new gaffer is a calibration period you're paying for. Budget an extra 90 minutes to the setup time on every major scene.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="q-card" data-idx="3">
+      <div class="q-header">
+        <span class="q-number">Q4</span>
+        <span class="q-text">"How do you communicate the look to a colorist you've never worked with?"</span>
+        <span class="q-arrow">▼</span>
+      </div>
+      <div class="q-body">
+        <div class="q-body-inner">
+          <div class="q-signal good">
+            <div class="q-signal-label">Strong Answer</div>
+            <p>LUTs on set. Written intent notes. Reference frames exported with verbal description. They're thinking about the image past wrap. Your client's finished deliverable is downstream of this answer.</p>
+          </div>
+          <div class="q-signal warn">
+            <div class="q-signal-label">Weak Answer</div>
+            <p>"I trust the colorist." This DP is exiting the image at wrap. The colorist will make reasonable choices. They will not make the choices the DP had in mind. That gap ends up in your client's inbox.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 4: RED FLAG SCANNER -->
+<section id="s4">
+  <div class="section-num">04 / Red Flags</div>
+  <h2>The <em>Red Flag</em> Scanner</h2>
+  <p>Check every flag you observe when evaluating a DP. The score updates in real time. This is the floor test: hire for floor, not ceiling.</p>
+
+  <div class="flag-scanner">
+    <div class="flag-scanner-header">
+      <span class="reel-header-label">Candidate Evaluation</span>
+      <span class="label" id="flagCount">0 flags raised</span>
+    </div>
+    <div class="flag-items">
+      <div class="flag-item" data-flag="reel-music" onclick="toggleFlag(this)">
+        <div class="flag-check"></div>
+        <div class="flag-text">
+          <div class="flag-title">Reel Only Works with Music On</div>
+          <div class="flag-desc">Turn it off. If the footage loses all its power, the music was carrying it. Evaluate images alone.</div>
+        </div>
+        <div class="flag-status">Clear</div>
+      </div>
+      <div class="flag-item" data-flag="no-process" onclick="toggleFlag(this)">
+        <div class="flag-check"></div>
+        <div class="flag-text">
+          <div class="flag-title">No Defined Pre-Production Process</div>
+          <div class="flag-desc">"I stay flexible" is not a prep process. You will pay for the lack of planning on shoot day.</div>
+        </div>
+        <div class="flag-status">Clear</div>
+      </div>
+      <div class="flag-item" data-flag="no-gaffer" onclick="toggleFlag(this)">
+        <div class="flag-check"></div>
+        <div class="flag-text">
+          <div class="flag-title">No Regular Gaffer Relationship</div>
+          <div class="flag-desc">A DP without an established gaffer relationship starts every production from zero. That costs you 60-90 minutes daily in calibration.</div>
+        </div>
+        <div class="flag-status">Clear</div>
+      </div>
+      <div class="flag-item" data-flag="one-look" onclick="toggleFlag(this)">
+        <div class="flag-check"></div>
+        <div class="flag-text">
+          <div class="flag-title">One-Look Reel with No Range</div>
+          <div class="flag-desc">Every clip has the same feel. Great if your project needs exactly that. Fatal if it needs anything else.</div>
+        </div>
+        <div class="flag-status">Clear</div>
+      </div>
+      <div class="flag-item" data-flag="no-pipeline" onclick="toggleFlag(this)">
+        <div class="flag-check"></div>
+        <div class="flag-text">
+          <div class="flag-title">No Post Pipeline Thinking</div>
+          <div class="flag-desc">They exit the image at wrap. No LUTs, no colorist notes, no intent documentation. Your deliverable is not their problem after the camera goes back in the case.</div>
+        </div>
+        <div class="flag-status">Clear</div>
+      </div>
+      <div class="flag-item" data-flag="low-rate" onclick="toggleFlag(this)">
+        <div class="flag-check"></div>
+        <div class="flag-text">
+          <div class="flag-title">Aggressively Below-Market Rate</div>
+          <div class="flag-desc">DFW commercial DPs run $1,200 to $3,500/day. A quote far below that signals someone building their reel on your budget, or someone who doesn't know the market.</div>
+        </div>
+        <div class="flag-status">Clear</div>
+      </div>
+    </div>
+    <div class="flag-summary">
+      <div>
+        <div class="total-score-label">Red Flags Raised</div>
+        <div class="flag-score" id="flagScore" style="color: var(--good);">0</div>
+        <div class="flag-score-label">of 6 evaluated</div>
+      </div>
+      <div class="flag-verdict-text" id="flagVerdict" style="color: var(--good);">No flags. Strong candidate. Proceed to references.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 5: HIRE SCORECARD -->
+<section id="s5">
+  <div class="section-num">05 / The Decision</div>
+  <h2>Hire / <em>Pass</em> Scorecard</h2>
+  <p>Rate the candidate on each criterion. The recommendation updates as you score. The floor, not the ceiling, determines the hire.</p>
+
+  <div class="scorecard">
+    <div class="scorecard-header">
+      <span class="reel-header-label">Candidate Assessment</span>
+    </div>
+    <div class="scorecard-criteria" id="scorecardCriteria">
+      <div class="criterion" data-max="5">
+        <div class="criterion-name">Reel Range</div>
+        <div class="criterion-bar-wrap">
+          <div class="criterion-bar" id="bar0"></div>
+        </div>
+        <div class="criterion-stars" data-criterion="0"></div>
+      </div>
+      <div class="criterion" data-max="5">
+        <div class="criterion-name">Prep Process</div>
+        <div class="criterion-bar-wrap">
+          <div class="criterion-bar" id="bar1"></div>
+        </div>
+        <div class="criterion-stars" data-criterion="1"></div>
+      </div>
+      <div class="criterion" data-max="5">
+        <div class="criterion-name">Gaffer Relationship</div>
+        <div class="criterion-bar-wrap">
+          <div class="criterion-bar" id="bar2"></div>
+        </div>
+        <div class="criterion-stars" data-criterion="2"></div>
+      </div>
+      <div class="criterion" data-max="5">
+        <div class="criterion-name">Post Pipeline</div>
+        <div class="criterion-bar-wrap">
+          <div class="criterion-bar" id="bar3"></div>
+        </div>
+        <div class="criterion-stars" data-criterion="3"></div>
+      </div>
+      <div class="criterion" data-max="5">
+        <div class="criterion-name">References</div>
+        <div class="criterion-bar-wrap">
+          <div class="criterion-bar" id="bar4"></div>
+        </div>
+        <div class="criterion-stars" data-criterion="4"></div>
+      </div>
+    </div>
+    <div class="scorecard-footer">
+      <div>
+        <div class="total-score-label">Score</div>
+        <div class="total-score-val" id="totalScore" style="color: var(--text-dim);">0 / 25</div>
+      </div>
+      <div class="hire-recommendation pass" id="hireRec">Pass</div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING STATEMENT -->
+<div class="close-statement" id="closeStatement">
+  <blockquote>
+    "Hire for the floor, not the ceiling. The reel shows you ceiling. The prep question, the reference story, and the gaffer answer show you floor. The floor is what you live with on shoot day."
+  </blockquote>
+  <div class="close-label">A GLM Production Intelligence Brief</div>
+  <div class="close-brand">Geared Like A Machine</div>
+</div>
+
+<footer>
+  <div class="f-label">GLM / gearedlikeamachine.com</div>
+  <div class="f-label">Dallas, Texas</div>
+</footer>
+
+<script>
+// ── SCROLL OBSERVER ──
+const revealEls = document.querySelectorAll('section, .close-statement');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+
+      // Animate bars when scorecard is visible
+      if (e.target.id === 's5') {
+        setTimeout(() => animateBars(), 200);
+      }
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => obs.observe(el));
+
+// ── MUTE TOGGLE ──
+const muteToggle = document.getElementById('muteToggle');
+const reelGrid = document.getElementById('reelGrid');
+const muteNote = document.getElementById('muteNote');
+const v2 = document.getElementById('v2');
+
+muteToggle.addEventListener('change', function() {
+  if (this.checked) {
+    reelGrid.classList.add('muted');
+    muteNote.classList.add('active');
+    muteNote.textContent = 'Music off. The feature-film carry clip now reads as borrowed. The spec clip loses the emotional scaffolding. The scene coverage and the low-budget range clip still hold.';
+    v2.textContent = 'Verify Credit';
+    v2.className = 'reel-clip-verdict warn';
+  } else {
+    reelGrid.classList.remove('muted');
+    muteNote.classList.remove('active');
+    muteNote.textContent = 'With music: everything reads as cinema. Turn it off to evaluate the image alone.';
+    v2.textContent = 'Strong Frame';
+    v2.className = 'reel-clip-verdict good';
+  }
+});
+
+// ── RATE CALCULATOR ──
+const dpRate   = document.getElementById('dpRate');
+const shootDays = document.getElementById('shootDays');
+const kitRate  = document.getElementById('kitRate');
+const discount = document.getElementById('discount');
+
+function fmt(n) {
+  return '$' + n.toLocaleString();
+}
+
+function updateCalc() {
+  const rate  = parseInt(dpRate.value);
+  const days  = parseInt(shootDays.value);
+  const kit   = parseInt(kitRate.value);
+  const disc  = parseInt(discount.value);
+
+  document.getElementById('dpRateVal').textContent   = fmt(rate) + '/day';
+  document.getElementById('shootDaysVal').textContent = days + (days === 1 ? ' day' : ' days');
+  document.getElementById('kitRateVal').textContent  = fmt(kit) + '/day';
+  document.getElementById('discountVal').textContent = disc + '% off';
+
+  const soloTotal    = rate * days;
+  const bundledTotal = (rate + kit) * days;
+  const projectSave  = Math.round(bundledTotal * (disc / 100));
+  const projectTotal = bundledTotal - projectSave;
+
+  document.getElementById('soloTotal').textContent    = fmt(soloTotal);
+  document.getElementById('bundledTotal').textContent = fmt(bundledTotal);
+  document.getElementById('projectTotal').textContent = fmt(projectTotal);
+
+  const saved = bundledTotal - projectTotal;
+  const v = document.getElementById('calcVerdict');
+  if (kit > 0) {
+    v.textContent = `At ${fmt(rate)}/day for ${days} days, labor alone is ${fmt(soloTotal)}. Add a ${fmt(kit)}/day camera package and the real number is ${fmt(bundledTotal)}. A project rate at ${disc}% off saves you ${fmt(saved)} and aligns the DP's incentive to your outcome, not the clock.`;
+  } else {
+    v.textContent = `No kit rental specified. Labor total is ${fmt(soloTotal)} over ${days} days. If the DP is providing their own camera package, add that as a separate line item. Always get the itemized split in writing.`;
+  }
+}
+
+[dpRate, shootDays, kitRate, discount].forEach(el => el.addEventListener('input', updateCalc));
+updateCalc();
+
+// ── QUESTION ACCORDION ──
+document.querySelectorAll('.q-card').forEach(card => {
+  card.addEventListener('click', function() {
+    const isOpen = this.classList.contains('open');
+    document.querySelectorAll('.q-card').forEach(c => {
+      c.classList.remove('open');
+      c.querySelector('.q-body').style.maxHeight = '0';
+    });
+    if (!isOpen) {
+      this.classList.add('open');
+      const body = this.querySelector('.q-body');
+      body.style.maxHeight = body.scrollHeight + 40 + 'px';
+    }
+  });
+});
+
+// ── RED FLAG SCANNER ──
+let flaggedCount = 0;
+
+function toggleFlag(el) {
+  if (el.classList.contains('flagged')) {
+    el.classList.remove('flagged');
+    el.classList.add('cleared');
+    el.querySelector('.flag-status').textContent = 'Cleared';
+    el.querySelector('.flag-check').textContent = '✓';
+  } else if (el.classList.contains('cleared')) {
+    el.classList.remove('cleared');
+    el.querySelector('.flag-status').textContent = 'Clear';
+    el.querySelector('.flag-check').textContent = '';
+  } else {
+    el.classList.add('flagged');
+    el.querySelector('.flag-status').textContent = 'Flagged';
+    el.querySelector('.flag-check').textContent = '!';
+  }
+
+  flaggedCount = document.querySelectorAll('.flag-item.flagged').length;
+  const clearedCount = document.querySelectorAll('.flag-item.cleared').length;
+  const totalEval = flaggedCount + clearedCount;
+
+  document.getElementById('flagCount').textContent = totalEval + ' of 6 evaluated';
+  document.getElementById('flagScore').textContent = flaggedCount;
+
+  const scoreEl = document.getElementById('flagScore');
+  const verdictEl = document.getElementById('flagVerdict');
+
+  if (flaggedCount === 0) {
+    scoreEl.style.color = 'var(--good)';
+    verdictEl.style.color = 'var(--good)';
+    verdictEl.textContent = 'No flags. Strong candidate. Proceed to references.';
+  } else if (flaggedCount <= 2) {
+    scoreEl.style.color = 'var(--neutral)';
+    verdictEl.style.color = 'var(--neutral)';
+    verdictEl.textContent = flaggedCount + ' flag' + (flaggedCount > 1 ? 's' : '') + '. Conditional candidate. Dig into the flagged areas before committing.';
+  } else if (flaggedCount <= 4) {
+    scoreEl.style.color = 'var(--accent)';
+    verdictEl.style.color = 'var(--accent)';
+    verdictEl.textContent = flaggedCount + ' flags. Significant concerns. Hire only if references are exceptional.';
+  } else {
+    scoreEl.style.color = 'var(--warn)';
+    verdictEl.style.color = 'var(--warn)';
+    verdictEl.textContent = flaggedCount + ' flags. Pass. The floor is too low for a production you will stake your reputation on.';
+  }
+}
+
+// ── SCORECARD ──
+const scores = [0, 0, 0, 0, 0];
+const maxStars = 5;
+
+function buildStars() {
+  document.querySelectorAll('.criterion-stars').forEach((container, cIdx) => {
+    for (let s = 1; s <= maxStars; s++) {
+      const btn = document.createElement('button');
+      btn.className = 'star-btn';
+      btn.setAttribute('aria-label', `${s} stars`);
+      btn.setAttribute('data-star', s);
+      btn.addEventListener('click', () => setScore(cIdx, s));
+      container.appendChild(btn);
+    }
+  });
+}
+
+function setScore(criterionIdx, starVal) {
+  // Toggle off if same star
+  if (scores[criterionIdx] === starVal) {
+    scores[criterionIdx] = 0;
+  } else {
+    scores[criterionIdx] = starVal;
+  }
+
+  // Update stars UI
+  const container = document.querySelector(`[data-criterion="${criterionIdx}"]`);
+  container.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('filled', i < scores[criterionIdx]);
+  });
+
+  // Update bar
+  const bar = document.getElementById('bar' + criterionIdx);
+  const pct = (scores[criterionIdx] / maxStars) * 100;
+  bar.style.width = pct + '%';
+  bar.className = 'criterion-bar ' + (pct <= 20 ? 'poor' : pct <= 40 ? 'ok' : pct <= 60 ? 'ok' : pct <= 80 ? 'good' : 'great');
+
+  // Update total
+  const total = scores.reduce((a, b) => a + b, 0);
+  const maxTotal = scores.length * maxStars;
+  const totalEl = document.getElementById('totalScore');
+  const recEl = document.getElementById('hireRec');
+
+  totalEl.textContent = total + ' / ' + maxTotal;
+
+  const pctTotal = total / maxTotal;
+  if (pctTotal < 0.4) {
+    totalEl.style.color = 'var(--warn)';
+    recEl.className = 'hire-recommendation pass';
+    recEl.textContent = 'Pass';
+  } else if (pctTotal < 0.65) {
+    totalEl.style.color = 'var(--neutral)';
+    recEl.className = 'hire-recommendation maybe';
+    recEl.textContent = 'Conditional';
+  } else {
+    totalEl.style.color = 'var(--good)';
+    recEl.className = 'hire-recommendation hire';
+    recEl.textContent = 'Hire';
+  }
+}
+
+function animateBars() {
+  // bars start at 0, this is just for initial reveal animation
+  scores.forEach((s, i) => {
+    const bar = document.getElementById('bar' + i);
+    if (s === 0) {
+      bar.style.width = '0%';
+    }
+  });
+}
+
+buildStars();
+</script>
+</body>
+</html>

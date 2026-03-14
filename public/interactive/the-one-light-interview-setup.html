@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The One-Light Interview Setup — GLM</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Overpass+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0f0f12;
+  --surface2: #141418;
+  --border: #1c1c22;
+  --border2: #252530;
+  --text: #c4c4cc;
+  --text-dim: #5a5a66;
+  --text-bright: #e8e8ee;
+  --accent: #d4a96a;
+  --accent2: #7a9fd4;
+  --accent3: #8ac48a;
+  --danger: #c46a6a;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Overpass Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* HEADER */
+.site-header {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.site-header .label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.site-header h1 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.2;
+}
+
+.site-header .sub {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  margin-left: auto;
+}
+
+/* INTRO */
+.intro {
+  max-width: 640px;
+  padding: 2.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.intro p {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.intro p + p { margin-top: 1rem; }
+
+.intro strong {
+  color: var(--text-bright);
+  font-weight: 700;
+}
+
+/* MAIN LAYOUT */
+.simulator-wrap {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  min-height: 80vh;
+}
+
+@media (max-width: 900px) {
+  .simulator-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CANVAS AREA */
+.canvas-area {
+  padding: 2rem;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.canvas-title {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* THE LIGHTING DIAGRAM */
+.diagram-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  max-width: 560px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.diagram-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* FACE PREVIEW */
+.face-preview-section {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.face-preview-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.face-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.face-canvas {
+  width: 140px;
+  height: 180px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  background: #050507;
+}
+
+.face-desc {
+  margin-top: 0.5rem;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 140px;
+  line-height: 1.5;
+}
+
+/* READOUT PANEL */
+.readout {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.readout-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.readout-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.readout-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  transition: color 0.3s;
+}
+
+.readout-value.good { color: var(--accent3); }
+.readout-value.warn { color: var(--accent); }
+.readout-value.bad  { color: var(--danger); }
+
+/* CONTROLS PANEL */
+.controls-panel {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.control-section {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateX(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.control-section.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.control-section:last-child { border-bottom: none; }
+
+.ctrl-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+}
+
+.ctrl-heading-text {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.ctrl-num {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.ctrl-desc {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* SLIDERS */
+.slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slider-label {
+  font-size: 0.62rem;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+
+.slider-val {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 3.5rem;
+  text-align: right;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--border2);
+  outline: none;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 0 0 0 rgba(212, 169, 106, 0);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 4px rgba(212, 169, 106, 0.15);
+}
+
+input[type="range"].blue::-webkit-slider-thumb { background: var(--accent2); }
+input[type="range"].green::-webkit-slider-thumb { background: var(--accent3); }
+input[type="range"].red::-webkit-slider-thumb { background: var(--danger); }
+
+/* TOGGLE BUTTONS */
+.toggle-group {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.toggle-btn {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.6rem;
+  font-family: 'Overpass Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.toggle-btn:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.toggle-btn.active {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.toggle-btn.active.blue {
+  background: var(--accent2);
+  border-color: var(--accent2);
+}
+
+.toggle-btn.active.green {
+  background: var(--accent3);
+  border-color: var(--accent3);
+}
+
+/* ANNOTATION */
+.annotation-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  padding: 0.75rem 1rem;
+  border-radius: 0 2px 2px 0;
+  margin-top: 0.75rem;
+}
+
+.annotation-box.blue { border-left-color: var(--accent2); }
+.annotation-box.green { border-left-color: var(--accent3); }
+.annotation-box.red { border-left-color: var(--danger); }
+
+.annotation-text {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.72rem;
+  color: var(--text);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* QUOTE SECTION */
+.quote-section {
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  max-width: 560px;
+}
+
+.quote-section blockquote {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-bright);
+  line-height: 1.7;
+  border-left: 2px solid var(--accent);
+  padding-left: 1.5rem;
+}
+
+.quote-source {
+  margin-top: 1rem;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  padding-left: 1.5rem;
+  text-transform: uppercase;
+}
+
+/* FILM REFERENCES SECTION */
+.references-section {
+  padding: 2.5rem 2rem;
+  border-top: 1px solid var(--border);
+  max-width: 640px;
+}
+
+.references-section h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 1.5rem;
+}
+
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.ref-card {
+  background: var(--surface);
+  padding: 1rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  cursor: default;
+}
+
+.ref-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ref-card:hover {
+  background: var(--surface2);
+}
+
+.ref-film {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.ref-dp {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.ref-note {
+  font-size: 0.65rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* CATCH LIGHT TEST */
+.catchlight-section {
+  padding: 2rem 2rem 0;
+  max-width: 640px;
+}
+
+.catchlight-section h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.catchlight-section p {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.eye-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.eye-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.eye-demo.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.eye-canvas {
+  width: 80px;
+  height: 80px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  background: #050507;
+}
+
+.eye-label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 0.05em;
+  max-width: 90px;
+  line-height: 1.4;
+}
+
+.eye-label.correct { color: var(--accent3); }
+.eye-label.wrong { color: var(--danger); }
+
+/* FOOTER CODA */
+.coda {
+  padding: 3rem 2rem 4rem;
+  border-top: 1px solid var(--border);
+  max-width: 560px;
+}
+
+.coda p {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.coda strong {
+  color: var(--text);
+}
+
+.coda .glm-tag {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border2);
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="label">Geared Like A Machine / Interactive</div>
+    <h1>The One-Light Interview Setup</h1>
+  </div>
+  <div class="sub">Four decisions. Maximum result.</div>
+</header>
+
+<div class="intro reveal">
+  <p>The best interview lighting you will ever produce comes from one source. Not because you lack a second light. Because you chose not to use one.</p>
+  <p>That choice is the discipline. Adjust the four controls below and watch how each decision reshapes the subject. <strong>Key quality. Negative fill. Background distance. Lighting pattern.</strong></p>
+</div>
+
+<div class="simulator-wrap">
+
+  <!-- LEFT: DIAGRAM + FACE -->
+  <div class="canvas-area">
+    <div class="canvas-title">Top-Down Diagram — Light Placement</div>
+
+    <div class="diagram-container">
+      <canvas class="diagram-canvas" id="diagramCanvas"></canvas>
+    </div>
+
+    <div class="face-preview-section reveal">
+      <div class="face-wrap">
+        <div class="face-preview-label">Result</div>
+        <canvas class="face-canvas" id="faceCanvas" width="140" height="180"></canvas>
+        <div class="face-desc" id="faceDesc">Adjust controls to see the result</div>
+      </div>
+
+      <div>
+        <div class="face-preview-label">Readout</div>
+        <div class="readout">
+          <div class="readout-item">
+            <span class="readout-label">Pattern</span>
+            <span class="readout-value" id="readPattern">Loop</span>
+          </div>
+          <div class="readout-item">
+            <span class="readout-label">Contrast Ratio</span>
+            <span class="readout-value" id="readRatio">3:1</span>
+          </div>
+          <div class="readout-item">
+            <span class="readout-label">Key / Ambient</span>
+            <span class="readout-value" id="readKeyAmb">+1 stop</span>
+          </div>
+          <div class="readout-item">
+            <span class="readout-label">BG Separation</span>
+            <span class="readout-value" id="readBG">2.5 stops</span>
+          </div>
+          <div class="readout-item">
+            <span class="readout-label">Catch Light</span>
+            <span class="readout-value" id="readCatch">Present</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CONTROLS -->
+  <div class="controls-panel">
+
+    <!-- CONTROL 1: KEY QUALITY -->
+    <div class="control-section" id="ctrl1">
+      <div class="ctrl-heading">
+        <span class="ctrl-heading-text">01 — Key Quality</span>
+        <span class="ctrl-num">DECISION 1</span>
+      </div>
+      <p class="ctrl-desc">Source size relative to the subject determines shadow edge. Larger apparent source, softer transition. Smaller, harder falloff.</p>
+
+      <div class="toggle-group">
+        <button class="toggle-btn" data-quality="hard" onclick="setQuality('hard')">Hard</button>
+        <button class="toggle-btn active" data-quality="medium" onclick="setQuality('medium')">Medium</button>
+        <button class="toggle-btn" data-quality="soft" onclick="setQuality('soft')">Soft</button>
+        <button class="toggle-btn" data-quality="very-soft" onclick="setQuality('very-soft')">Very Soft</button>
+      </div>
+
+      <div class="annotation-box" id="qualityAnnotation">
+        <span class="annotation-text" id="qualityAnnotationText">Medium diffusion — a 2x3 Chimera on an M18 or a Skypanel with opal frost. The workhorse for most interview work.</span>
+      </div>
+    </div>
+
+    <!-- CONTROL 2: KEY ANGLE / PATTERN -->
+    <div class="control-section" id="ctrl2">
+      <div class="ctrl-heading">
+        <span class="ctrl-heading-text">02 — Lighting Pattern</span>
+        <span class="ctrl-num">DECISION 2</span>
+      </div>
+      <p class="ctrl-desc">Axis angle determines which pattern falls on the face. Each pattern communicates a different relationship between subject and viewer.</p>
+
+      <div class="toggle-group">
+        <button class="toggle-btn" data-pattern="butterfly" onclick="setPattern('butterfly')">Butterfly</button>
+        <button class="toggle-btn active green" data-pattern="loop" onclick="setPattern('loop')">Loop</button>
+        <button class="toggle-btn" data-pattern="rembrandt" onclick="setPattern('rembrandt')">Rembrandt</button>
+        <button class="toggle-btn" data-pattern="split" onclick="setPattern('split')">Split</button>
+      </div>
+
+      <div class="annotation-box green" id="patternAnnotation">
+        <span class="annotation-text" id="patternAnnotationText">Loop lighting — the DP default. Nose shadow falls toward the corner of the mouth but does not connect with the cheek shadow. Flattering and dimensional without being theatrical.</span>
+      </div>
+    </div>
+
+    <!-- CONTROL 3: NEGATIVE FILL -->
+    <div class="control-section" id="ctrl3">
+      <div class="ctrl-heading">
+        <span class="ctrl-heading-text">03 — Negative Fill</span>
+        <span class="ctrl-num">DECISION 3</span>
+      </div>
+      <p class="ctrl-desc">Distance of the black V-flat from the shadow side of the subject. Closer absorbs more ambient. Further, shadows lift as room bounce reaches the face.</p>
+
+      <div class="slider-row">
+        <div class="slider-label-row">
+          <span class="slider-label">V-Flat Distance</span>
+          <span class="slider-val" id="negFillVal">2.5 ft</span>
+        </div>
+        <input type="range" class="red" id="negFillSlider" min="0" max="100" value="50" oninput="updateNegFill(this.value)">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="font-size:0.55rem; color:var(--text-dim);">On-face (deep shadow)</span>
+          <span style="font-size:0.55rem; color:var(--text-dim);">Removed (shadows lift)</span>
+        </div>
+      </div>
+
+      <div class="annotation-box red" id="negFillAnnotation">
+        <span class="annotation-text" id="negFillAnnotationText">2.5 ft — optimal position. Shadow side holds without crushing. The falloff from key to shadow reads as three-dimensional.</span>
+      </div>
+    </div>
+
+    <!-- CONTROL 4: BACKGROUND DISTANCE -->
+    <div class="control-section" id="ctrl4">
+      <div class="ctrl-heading">
+        <span class="ctrl-heading-text">04 — Background Distance</span>
+        <span class="ctrl-num">DECISION 4</span>
+      </div>
+      <p class="ctrl-desc">Inverse square law does the separation work. Pull the subject away from the background and the key falls off before it reaches the wall.</p>
+
+      <div class="slider-row">
+        <div class="slider-label-row">
+          <span class="slider-label">Subject-to-BG Distance</span>
+          <span class="slider-val" id="bgDistVal">6 ft</span>
+        </div>
+        <input type="range" class="blue" id="bgDistSlider" min="0" max="100" value="40" oninput="updateBGDist(this.value)">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="font-size:0.55rem; color:var(--text-dim);">Against wall (0 ft)</span>
+          <span style="font-size:0.55rem; color:var(--text-dim);">Max distance (15 ft)</span>
+        </div>
+      </div>
+
+      <div class="annotation-box blue" id="bgAnnotation">
+        <span class="annotation-text" id="bgAnnotationText">6 ft — minimum workable separation. Key metered at f/4 on the subject falls to roughly f/1.4 at the background. 2.5 stops of natural separation without a second light.</span>
+      </div>
+    </div>
+
+  </div><!-- /controls-panel -->
+</div><!-- /simulator-wrap -->
+
+<!-- CATCH LIGHT TEST -->
+<div class="catchlight-section">
+  <h2 class="reveal">The Catch Light Test</h2>
+  <p class="reveal">Every setup is complete or incomplete based on one thing. One white shape, upper portion of the eye. If it is missing, the key is too far off-axis. If there are two, a fill crept in. If it is in the lower half, the key is below eye level.</p>
+
+  <div class="eye-row" id="eyeRow">
+    <div class="eye-demo" id="eyeDemo1">
+      <canvas class="eye-canvas" id="eyeCanvas1" width="80" height="80"></canvas>
+      <div class="eye-label correct">Correct — upper quarter, single source</div>
+    </div>
+    <div class="eye-demo" id="eyeDemo2">
+      <canvas class="eye-canvas" id="eyeCanvas2" width="80" height="80"></canvas>
+      <div class="eye-label wrong">Two catch lights — fill lamp in setup</div>
+    </div>
+    <div class="eye-demo" id="eyeDemo3">
+      <canvas class="eye-canvas" id="eyeCanvas3" width="80" height="80"></canvas>
+      <div class="eye-label wrong">Lower catch light — key too low</div>
+    </div>
+    <div class="eye-demo" id="eyeDemo4">
+      <canvas class="eye-canvas" id="eyeCanvas4" width="80" height="80"></canvas>
+      <div class="eye-label wrong">No catch light — key too far off-axis</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-section reveal">
+  <blockquote>
+    "You do not create contrast by adding more light to the bright side. You create contrast by subtracting light from the dark side."
+  </blockquote>
+  <div class="quote-source">Geared Like A Machine</div>
+</div>
+
+<!-- FILM REFERENCES -->
+<div class="references-section">
+  <h2 class="reveal">The References</h2>
+  <div class="ref-grid">
+    <div class="ref-card" id="ref1">
+      <div class="ref-film">The Fog of War</div>
+      <div class="ref-dp">Errol Morris, 2003</div>
+      <div class="ref-note">One motivated source per subject. Shadow side holds throughout. The weight in McNamara's face is a lighting decision made before the camera rolled.</div>
+    </div>
+    <div class="ref-card" id="ref2">
+      <div class="ref-film">Blade Runner 2049</div>
+      <div class="ref-dp">Roger Deakins, 2017</div>
+      <div class="ref-note">Negative fill baked into the approach. Every shadow side in K's close-ups holds because ambient light was controlled before the key was placed.</div>
+    </div>
+    <div class="ref-card" id="ref3">
+      <div class="ref-film">The Godfather Part II</div>
+      <div class="ref-dp">Gordon Willis, 1974</div>
+      <div class="ref-note">Practical fixtures as motivating sources, dimmed below realistic level. Key supplemented off-camera at matching angle. The lamp sells the logic.</div>
+    </div>
+    <div class="ref-card" id="ref4">
+      <div class="ref-film">Atonement</div>
+      <div class="ref-dp">Seamus McGarvey, 2007</div>
+      <div class="ref-note">Window motivation on every interior. Large frames outside shape the source quality. Emotional temperature established by light direction before dialogue begins.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CODA -->
+<div class="coda reveal">
+  <p>When you can produce a compelling, dimensional interview setup from one light consistently, you understand light. Not as a fixture choice. As a system.</p>
+  <p style="margin-top:1rem;">The DP who walks in with one Skypanel and a V-flat and produces a better image than the crew that just unloaded six fixtures is not lucky. <strong>They know something that six-light crew does not.</strong></p>
+  <span class="glm-tag">Geared Like A Machine — Dallas, TX</span>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────
+const state = {
+  quality: 'medium',
+  pattern: 'loop',
+  negFill: 50,   // 0=on-face, 100=removed
+  bgDist: 40,    // 0=against wall, 100=max distance
+};
+
+// ── QUALITY ANNOTATIONS ──────────────────────────
+const qualityData = {
+  'hard': {
+    text: 'Hard source — open-face HMI or Fresnel without diffusion. Sharp shadow edge with defined falloff. Dramatic and theatrical. Use for noir-influenced corporate work or when the subject has strong bone structure.',
+    shadowSoftness: 2,
+  },
+  'medium': {
+    text: 'Medium diffusion — a 2x3 Chimera on an M18 or a Skypanel with opal frost. The workhorse for most interview work. Shadow edge is noticeable but not theatrical.',
+    shadowSoftness: 12,
+  },
+  'soft': {
+    text: 'Soft source — large Octabox or 4x4 silk close to the subject. Gentle transition. Background separation becomes more important to compensate for the reduced shadow definition.',
+    shadowSoftness: 24,
+  },
+  'very-soft': {
+    text: 'Very soft source — 12x12 silk or bounced from a large card. Wraps the face almost completely. Requires stronger negative fill to maintain any sense of dimensionality.',
+    shadowSoftness: 40,
+  },
+};
+
+const patternData = {
+  'butterfly': {
+    text: 'Butterfly lighting — key directly in front, slightly above eye level. A symmetrical shadow under the nose. Open and flattering. Use for commercial testimonials where warmth and approachability are the priority.',
+    angle: 0,
+  },
+  'loop': {
+    text: 'Loop lighting — the DP default. Nose shadow falls toward the corner of the mouth but does not connect with the cheek shadow. Flattering and dimensional without being theatrical.',
+    angle: 40,
+  },
+  'rembrandt': {
+    text: 'Rembrandt pattern — key moved further to the side until the nose shadow connects with the cheek shadow, forming a triangle of light under the unlit eye. More character, more history. Earned by the subject.',
+    angle: 60,
+  },
+  'split': {
+    text: 'Split lighting — key at 90 degrees to the subject. Half the face in light, half in darkness. High-contrast and confrontational. Use it deliberately. Rarely appropriate for straight corporate work.',
+    angle: 90,
+  },
+};
+
+// ── INIT ────────────────────────────────────────
+function setQuality(q) {
+  state.quality = q;
+  document.querySelectorAll('[data-quality]').forEach(b => {
+    b.classList.toggle('active', b.dataset.quality === q);
+  });
+  document.getElementById('qualityAnnotationText').textContent = qualityData[q].text;
+  render();
+}
+
+function setPattern(p) {
+  state.pattern = p;
+  document.querySelectorAll('[data-pattern]').forEach(b => {
+    b.classList.remove('active', 'green');
+    if (b.dataset.pattern === p) {
+      b.classList.add('active', 'green');
+    }
+  });
+  document.getElementById('patternAnnotationText').textContent = patternData[p].text;
+  render();
+}
+
+function updateNegFill(v) {
+  state.negFill = parseInt(v);
+  const dist = (state.negFill / 100 * 8).toFixed(1);
+  const label = state.negFill < 15 ? '0.5 ft' : state.negFill > 85 ? 'Removed' : dist + ' ft';
+  document.getElementById('negFillVal').textContent = label;
+
+  let txt;
+  if (state.negFill < 20) {
+    txt = 'V-flat very close — shadow side is deep. Watch for crushing on dark skin tones. Maximum contrast ratio, minimum shadow detail.';
+  } else if (state.negFill < 45) {
+    txt = '2.5 ft — optimal position. Shadow side holds without crushing. The falloff from key to shadow reads as three-dimensional.';
+  } else if (state.negFill < 70) {
+    txt = 'V-flat further away — room bounce beginning to lift the shadow side. Contrast ratio decreasing. Acceptable for subjects who prefer more even illumination.';
+  } else {
+    txt = 'V-flat removed — ambient fill wrapping the face from all sides. Flat result. Functional but not cinematic. Three-point lighting territory.';
+  }
+  document.getElementById('negFillAnnotationText').textContent = txt;
+  render();
+}
+
+function updateBGDist(v) {
+  state.bgDist = parseInt(v);
+  const dist = Math.round(v / 100 * 15);
+  document.getElementById('bgDistVal').textContent = dist + ' ft';
+
+  let txt;
+  if (v < 15) {
+    txt = 'Against the wall — key spills onto background, subject merges with it. No tonal separation. Background light equals add a dedicated fixture or reposition.';
+  } else if (v < 35) {
+    txt = '2-3 ft — minimal separation. Key hitting the background within one stop of subject exposure. Rim light or background unit required to rescue the setup.';
+  } else if (v < 55) {
+    txt = '6 ft — minimum workable separation. Key metered at f/4 on the subject falls to roughly f/1.4 at the background. 2.5 stops of natural separation without a second light.';
+  } else if (v < 75) {
+    txt = '10 ft — strong separation. Background falls nearly 3.5 stops. Subject sits in its own tonal pool. Ideal for documentary and character-driven corporate work.';
+  } else {
+    txt = '12+ ft — maximum inverse-square separation. Background in near-darkness relative to subject. Only limited by location size.';
+  }
+  document.getElementById('bgAnnotationText').textContent = txt;
+  render();
+}
+
+// ── DIAGRAM CANVAS ─────────────────────────────
+function renderDiagram() {
+  const canvas = document.getElementById('diagramCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.clientWidth * window.devicePixelRatio;
+  const H = canvas.clientHeight * window.devicePixelRatio;
+  canvas.width = W;
+  canvas.height = H;
+  const scale = W / 560;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#0f0f12';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40 * scale) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 0; y < H; y += 40 * scale) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Subject position
+  const subX = W * 0.5;
+  const subY = H * 0.52;
+  const subR = 22 * scale;
+
+  // Background wall position
+  const bgPct = state.bgDist / 100;
+  const bgY = subY + (bgPct * 140 + 30) * scale;
+  const wallY = Math.min(bgY, H - 8 * scale);
+
+  // Draw wall
+  const wallOpacity = Math.max(0.08, 0.5 - bgPct * 0.45);
+  ctx.fillStyle = `rgba(255,255,255,${wallOpacity * 0.15})`;
+  ctx.fillRect(0, wallY, W, H - wallY);
+  ctx.strokeStyle = `rgba(255,255,255,${wallOpacity})`;
+  ctx.lineWidth = 1.5 * scale;
+  ctx.beginPath(); ctx.moveTo(0, wallY); ctx.lineTo(W, wallY); ctx.stroke();
+  ctx.fillStyle = `rgba(255,255,255,${wallOpacity * 0.5})`;
+  ctx.font = `${8 * scale}px 'Overpass Mono', monospace`;
+  ctx.fillText('BACKGROUND WALL', 8 * scale, wallY - 5 * scale);
+
+  // BG distance label
+  const bgDistFt = Math.round(state.bgDist / 100 * 15);
+  if (bgDistFt > 0) {
+    ctx.strokeStyle = 'rgba(122, 159, 212, 0.3)';
+    ctx.lineWidth = 1 * scale;
+    ctx.setLineDash([3 * scale, 3 * scale]);
+    ctx.beginPath(); ctx.moveTo(subX + subR + 8 * scale, subY); ctx.lineTo(subX + subR + 8 * scale, wallY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(122, 159, 212, 0.6)';
+    ctx.font = `${7 * scale}px 'Overpass Mono', monospace`;
+    ctx.fillText(bgDistFt + 'ft', subX + subR + 10 * scale, (subY + wallY) / 2);
+  }
+
+  // Key light position based on pattern
+  const patternAngle = patternData[state.pattern].angle;
+  const keyDist = 130 * scale;
+  const angleRad = ((patternAngle - 90) * Math.PI) / 180;
+  const keyX = subX + Math.cos(angleRad - Math.PI / 2) * keyDist;
+  const keyY = subY - Math.abs(Math.sin(angleRad)) * keyDist - 40 * scale;
+
+  // Light cone
+  const softness = qualityData[state.quality].shadowSoftness;
+  const coneAngle = (25 + softness * 0.5) * (Math.PI / 180);
+  const coneLength = 180 * scale;
+  const dirAngle = Math.atan2(subY - keyY, subX - keyX);
+
+  const grad = ctx.createRadialGradient(keyX, keyY, 0, keyX, keyY, coneLength);
+  grad.addColorStop(0, 'rgba(212, 169, 106, 0.35)');
+  grad.addColorStop(0.5, 'rgba(212, 169, 106, 0.12)');
+  grad.addColorStop(1, 'rgba(212, 169, 106, 0)');
+
+  ctx.beginPath();
+  ctx.moveTo(keyX, keyY);
+  ctx.arc(keyX, keyY, coneLength, dirAngle - coneAngle, dirAngle + coneAngle);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Negative fill position
+  const negFillActive = state.negFill < 90;
+  if (negFillActive) {
+    const negFillDist = (15 + state.negFill * 0.8) * scale;
+    // Shadow side is opposite of key
+    const negX = subX - Math.cos(angleRad - Math.PI / 2) * negFillDist - 20 * scale;
+    const negY = subY;
+    const nw = 12 * scale, nh = 50 * scale;
+
+    ctx.fillStyle = 'rgba(100, 100, 120, 0.15)';
+    ctx.strokeStyle = 'rgba(196, 106, 106, 0.6)';
+    ctx.lineWidth = 1.5 * scale;
+    const rx = negX - nw / 2, ry = negY - nh / 2;
+    ctx.fillRect(rx, ry, nw, nh);
+    ctx.strokeRect(rx, ry, nw, nh);
+    ctx.fillStyle = 'rgba(196, 106, 106, 0.6)';
+    ctx.font = `${6 * scale}px 'Overpass Mono', monospace`;
+    ctx.save();
+    ctx.translate(negX, negY);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('NEG FILL', -12 * scale, -nw * 0.8);
+    ctx.restore();
+
+    // Dashed line to subject
+    ctx.strokeStyle = 'rgba(196, 106, 106, 0.25)';
+    ctx.lineWidth = 1 * scale;
+    ctx.setLineDash([3 * scale, 3 * scale]);
+    ctx.beginPath(); ctx.moveTo(negX + nw / 2, negY); ctx.lineTo(subX - subR, subY); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Camera
+  const camX = subX;
+  const camY = subY - 220 * scale;
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1.5 * scale;
+  const cw = 20 * scale, ch = 14 * scale;
+  ctx.beginPath();
+  ctx.roundRect(camX - cw / 2, camY - ch / 2, cw, ch, 2 * scale);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = 'rgba(122, 159, 212, 0.5)';
+  ctx.font = `${6.5 * scale}px 'Overpass Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('CAMERA', camX, camY - ch / 2 - 4 * scale);
+  ctx.textAlign = 'left';
+
+  // Subject circle
+  const litSide = patternAngle / 90;
+  const subGrad = ctx.createRadialGradient(
+    subX - litSide * subR * 0.6, subY - subR * 0.2, 0,
+    subX, subY, subR * 1.5
+  );
+  subGrad.addColorStop(0, 'rgba(212, 169, 106, 0.9)');
+  subGrad.addColorStop(0.4, 'rgba(180, 140, 80, 0.5)');
+  subGrad.addColorStop(1, 'rgba(30, 20, 10, 0.8)');
+  ctx.beginPath();
+  ctx.arc(subX, subY, subR, 0, Math.PI * 2);
+  ctx.fillStyle = subGrad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(212, 169, 106, 0.4)';
+  ctx.lineWidth = 1 * scale;
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(212, 169, 106, 0.7)';
+  ctx.font = `bold ${7 * scale}px 'Overpass Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('SUBJECT', subX, subY + subR + 12 * scale);
+  ctx.textAlign = 'left';
+
+  // Key light fixture
+  ctx.beginPath();
+  ctx.arc(keyX, keyY, 12 * scale, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(212, 169, 106, 0.9)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255, 220, 120, 0.6)';
+  ctx.lineWidth = 2 * scale;
+  ctx.stroke();
+  ctx.fillStyle = '#0a0a0c';
+  ctx.font = `bold ${6 * scale}px 'Overpass Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('KEY', keyX, keyY + 2.5 * scale);
+  ctx.textAlign = 'left';
+
+  // Pattern label at key
+  ctx.fillStyle = 'rgba(212, 169, 106, 0.55)';
+  ctx.font = `${6 * scale}px 'Overpass Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText(state.pattern.toUpperCase(), keyX, keyY - 16 * scale);
+  ctx.textAlign = 'left';
+
+  // Top-down label
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.font = `${7 * scale}px 'Overpass Mono', monospace`;
+  ctx.fillText('TOP-DOWN VIEW', 8 * scale, H - 8 * scale);
+}
+
+// ── FACE CANVAS ────────────────────────────────
+function renderFace() {
+  const canvas = document.getElementById('faceCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 140, H = 180;
+  canvas.width = W;
+  canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#050507';
+  ctx.fillRect(0, 0, W, H);
+
+  const patternAngle = patternData[state.pattern].angle;
+  const softness = qualityData[state.quality].shadowSoftness;
+  const negFillStrength = 1 - state.negFill / 100;
+
+  // Face oval
+  const cx = W / 2, cy = H / 2 + 5;
+  const rx = 48, ry = 58;
+
+  // Base skin shadow (shadow side based on pattern)
+  const shadowX = cx + (patternAngle / 90) * rx * 0.6;
+  const litX = cx - (patternAngle / 90) * rx * 0.6;
+
+  const faceGrad = ctx.createLinearGradient(litX - rx, cy, shadowX + rx, cy);
+  const keyBright = 0.82;
+  const shadowDepth = Math.max(0.04, 0.18 - negFillStrength * 0.14);
+
+  faceGrad.addColorStop(0, `rgba(195, 140, 90, ${keyBright})`);
+  faceGrad.addColorStop(0.3, `rgba(170, 118, 72, 0.7)`);
+  faceGrad.addColorStop(0.55, `rgba(110, 76, 48, 0.45)`);
+  faceGrad.addColorStop(1, `rgba(60, 40, 22, ${shadowDepth})`);
+
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.fillStyle = faceGrad;
+  ctx.fill();
+
+  // Shadow side fill affected by neg fill
+  if (negFillStrength < 0.7) {
+    // More negative fill = deeper shadow overlay
+    const overlayAlpha = (0.7 - negFillStrength) * 0.5;
+    const shadowOverlay = ctx.createLinearGradient(cx, cy, cx + rx, cy);
+    shadowOverlay.addColorStop(0, `rgba(0,0,0,0)`);
+    shadowOverlay.addColorStop(1, `rgba(0,0,0,${overlayAlpha})`);
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = shadowOverlay;
+    ctx.fill();
+  }
+
+  // Soft shadow feathering based on quality
+  const edgeSharpness = Math.max(0, 1 - softness / 40);
+  const shadowGrad = ctx.createLinearGradient(cx - softness, cy, cx + 15, cy);
+  shadowGrad.addColorStop(0, `rgba(0,0,0,0)`);
+  shadowGrad.addColorStop(edgeSharpness > 0.6 ? 0.7 : 0.4, `rgba(0,0,0,0.25)`);
+  shadowGrad.addColorStop(1, `rgba(0,0,0,0.55)`);
+
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.fillStyle = shadowGrad;
+  ctx.fill();
+
+  // Face edge darkening
+  const edgeGrad = ctx.createRadialGradient(cx, cy, rx * 0.5, cx, cy, rx * 1.15);
+  edgeGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  edgeGrad.addColorStop(1, 'rgba(0,0,0,0.5)');
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.fillStyle = edgeGrad;
+  ctx.fill();
+
+  // Loop nose shadow
+  if (state.pattern === 'loop' || state.pattern === 'rembrandt') {
+    const noseX = cx + (patternAngle > 30 ? 4 : 0);
+    const noseY = cy + 10;
+    ctx.beginPath();
+    ctx.ellipse(noseX + 6, noseY + 10, 5, 8, 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fill();
+  }
+
+  // Rembrandt triangle
+  if (state.pattern === 'rembrandt') {
+    ctx.beginPath();
+    ctx.moveTo(cx + 10, cy - 8);
+    ctx.lineTo(cx + 22, cy - 2);
+    ctx.lineTo(cx + 18, cy + 12);
+    ctx.lineTo(cx + 8, cy + 10);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(180, 125, 75, 0.4)';
+    ctx.fill();
+  }
+
+  // Eyes
+  [-18, 18].forEach((dx) => {
+    const eyeX = cx + dx;
+    const eyeY = cy - 15;
+    ctx.beginPath();
+    ctx.ellipse(eyeX, eyeY, 9, 6, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1008';
+    ctx.fill();
+
+    // Iris
+    ctx.beginPath();
+    ctx.arc(eyeX, eyeY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#3a2a14';
+    ctx.fill();
+
+    // Pupil
+    ctx.beginPath();
+    ctx.arc(eyeX, eyeY, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#080504';
+    ctx.fill();
+
+    // Catch light (present on lit side, absent or dim on shadow side)
+    const isLitSide = dx < 0;
+    const catchAlpha = isLitSide ? 0.95 : (negFillStrength > 0.5 ? 0.15 : 0);
+    if (catchAlpha > 0) {
+      ctx.beginPath();
+      ctx.arc(eyeX - 2, eyeY - 2.5, 2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 235, 200, ${catchAlpha})`;
+      ctx.fill();
+    }
+  });
+
+  // Rim edge on lit side
+  const rimGrad = ctx.createRadialGradient(cx - rx * 0.9, cy, 0, cx - rx * 0.9, cy, rx * 0.6);
+  rimGrad.addColorStop(0, 'rgba(255, 220, 160, 0.15)');
+  rimGrad.addColorStop(1, 'rgba(255, 220, 160, 0)');
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.fillStyle = rimGrad;
+  ctx.fill();
+
+  // Background behind face
+  const bgSep = state.bgDist / 100;
+  const bgBrightness = Math.max(0.02, 0.35 - bgSep * 0.32);
+  const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H));
+  bgGrad.addColorStop(0, `rgba(40, 30, 20, ${bgBrightness})`);
+  bgGrad.addColorStop(1, `rgba(5, 4, 2, ${bgBrightness * 0.4})`);
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+  // Re-draw face on top of bg adjustment
+  // (bg is drawn first, but we approximate by adding subtle overlay)
+  // Actually: fill bg BEHIND the face by not re-drawing...
+  // Let's use compositing instead
+
+  // Face description
+  const descriptions = {
+    'butterfly': 'Corporate — open, approachable, even illumination across both cheeks.',
+    'loop': 'DP default — dimensional, flattering, shadow side defined but not theatrical.',
+    'rembrandt': 'Narrative weight — nose and cheek shadow meet. History in the face.',
+    'split': 'High contrast — half dark, half lit. Confrontational. Use deliberately.',
+  };
+  document.getElementById('faceDesc').textContent = descriptions[state.pattern];
+}
+
+// ── EYE CANVASES ──────────────────────────────
+function drawEye(canvasId, catchLightPositions, label) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 80, H = 80;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#050507';
+  ctx.fillRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2 + 2;
+
+  // Eye white
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, 28, 18, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#1a1614';
+  ctx.fill();
+
+  // Iris
+  ctx.beginPath();
+  ctx.arc(cx, cy, 13, 0, Math.PI * 2);
+  ctx.fillStyle = '#2c1e10';
+  ctx.fill();
+
+  // Iris detail ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, 13, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(100, 70, 30, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Pupil
+  ctx.beginPath();
+  ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#080504';
+  ctx.fill();
+
+  // Catch lights
+  catchLightPositions.forEach(([dx, dy, size, alpha]) => {
+    ctx.beginPath();
+    ctx.arc(cx + dx, cy + dy, size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 240, 210, ${alpha})`;
+    ctx.fill();
+  });
+
+  // Lower lid
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + 16, 28, 8, 0, 0, Math.PI);
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fill();
+}
+
+// ── READOUT UPDATE ────────────────────────────
+function updateReadout() {
+  const patternAngle = patternData[state.pattern].angle;
+  const negFillStrength = 1 - state.negFill / 100;
+  const bgPct = state.bgDist / 100;
+
+  // Pattern name
+  const patternNames = { butterfly: 'Butterfly', loop: 'Loop', rembrandt: 'Rembrandt', split: 'Split' };
+  document.getElementById('readPattern').textContent = patternNames[state.pattern];
+
+  // Contrast ratio
+  const baseRatio = 2 + (patternAngle / 90) * 4;
+  const negFillBoost = negFillStrength * 2;
+  const ratio = Math.max(1.2, Math.min(8, baseRatio + negFillBoost));
+  const ratioStr = ratio < 2 ? '1.5:1' : ratio < 3 ? '3:1' : ratio < 5 ? '4:1' : ratio < 7 ? '5:1' : '8:1';
+  const ratioEl = document.getElementById('readRatio');
+  ratioEl.textContent = ratioStr;
+  ratioEl.className = 'readout-value ' + (ratio < 2 ? 'bad' : ratio < 6 ? 'good' : 'warn');
+
+  // Key/ambient
+  document.getElementById('readKeyAmb').textContent = '+1 stop';
+  document.getElementById('readKeyAmb').className = 'readout-value good';
+
+  // BG separation
+  const bgStops = (bgPct * 3.5 + 0.3).toFixed(1);
+  const bgEl = document.getElementById('readBG');
+  bgEl.textContent = bgStops + ' stops';
+  bgEl.className = 'readout-value ' + (bgPct < 0.25 ? 'bad' : bgPct < 0.45 ? 'warn' : 'good');
+
+  // Catch light
+  const catchEl = document.getElementById('readCatch');
+  catchEl.textContent = 'Present';
+  catchEl.className = 'readout-value good';
+}
+
+// ── MAIN RENDER ───────────────────────────────
+function render() {
+  renderDiagram();
+  renderFace();
+  updateReadout();
+}
+
+// ── EYE DEMOS ─────────────────────────────────
+function renderEyes() {
+  // Correct: single catch light, upper-left
+  drawEye('eyeCanvas1', [[-3, -5, 2.5, 0.95]]);
+  // Two catch lights: fill light added
+  drawEye('eyeCanvas2', [[-3, -5, 2.5, 0.9], [5, -2, 1.8, 0.7]]);
+  // Lower catch light: key too low
+  drawEye('eyeCanvas3', [[-2, 5, 2.5, 0.9]]);
+  // No catch light: key too far off-axis
+  drawEye('eyeCanvas4', []);
+}
+
+// ── SCROLL REVEAL ─────────────────────────────
+function setupScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal, .control-section, .ref-card, .eye-demo').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+// ── RESIZE ─────────────────────────────────────
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(render, 80);
+});
+
+// ── BOOT ─────────────────────────────────────
+window.addEventListener('load', () => {
+  render();
+  renderEyes();
+  setupScrollReveal();
+
+  // Stagger control sections
+  const sections = document.querySelectorAll('.control-section');
+  sections.forEach((s, i) => {
+    setTimeout(() => s.classList.add('visible'), 200 + i * 120);
+  });
+});
+</script>
+</body>
+</html>

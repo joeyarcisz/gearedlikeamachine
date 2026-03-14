@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment Package Math — GLM</title>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,400;0,700;0,900;1,200;1,400&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0f0f12;
+  --surface-2: #16161a;
+  --border: #1c1c22;
+  --border-bright: #2e2e38;
+  --text: #c0c0cc;
+  --text-dim: #4a4a58;
+  --text-muted: #888898;
+  --accent: #e8e8f0;
+  --gold: #c8a84a;
+  --gold-dim: #7a6428;
+  --green: #4aaa72;
+  --green-dim: #1e4a30;
+  --red: #c84a4a;
+  --red-dim: #4a1e1e;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.038'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Fira Code', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+.header {
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.header h1 {
+  font-family: 'Epilogue', sans-serif;
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+  margin-bottom: 0.8rem;
+}
+
+.header h1 span {
+  color: var(--gold);
+  font-style: italic;
+  font-weight: 200;
+}
+
+.header .sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  max-width: 52ch;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+section:last-of-type { border-bottom: none; }
+
+.section-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+h2 {
+  font-family: 'Epilogue', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+p {
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 1rem;
+  max-width: 68ch;
+}
+
+/* CALCULATOR */
+.calc-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border-bright);
+  border-radius: 2px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 600px) { .calc-grid { grid-template-columns: 1fr; } }
+
+.calc-field label {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.calc-field .input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.calc-field input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 2px;
+  background: var(--border-bright);
+  outline: none;
+  cursor: pointer;
+}
+
+.calc-field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--gold);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.calc-field input[type="range"]:hover::-webkit-slider-thumb { background: var(--accent); }
+
+.calc-field .value-display {
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 500;
+  min-width: 6ch;
+  text-align: right;
+}
+
+.result-panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 500px) { .result-panel { grid-template-columns: 1fr; } }
+
+.result-stat .stat-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.result-stat .stat-value {
+  font-family: 'Epilogue', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.result-stat .stat-sub {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+.timeline-wrap { margin-top: 2rem; }
+
+.timeline-bar-track {
+  height: 40px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.timeline-fill-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  color: var(--bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.timeline-marker-row {
+  position: relative;
+  height: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.timeline-marker {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+  font-size: 0.5rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.profit-zone {
+  margin-top: 0.8rem;
+  font-size: 0.62rem;
+  color: var(--green);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profit-zone-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+/* SCENARIOS */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin-top: 2rem;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 640px) { .scenario-grid { grid-template-columns: 1fr; } }
+
+.scenario-card {
+  background: var(--surface);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.scenario-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--border-bright);
+  transition: background 0.2s;
+}
+
+.scenario-card:hover { background: var(--surface-2); }
+.scenario-card.active { background: var(--surface-2); }
+.scenario-card.active::before { background: var(--gold); }
+
+.sc-type {
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.sc-title {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+  line-height: 1.2;
+}
+
+.sc-rows { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.sc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.sc-row:last-child { border-bottom: none; }
+.sc-key { color: var(--text-muted); }
+.sc-val { color: var(--accent); }
+.sc-val-gold { color: var(--gold); }
+.sc-val-green { color: var(--green); }
+
+/* OWN VS RENT TABLE */
+.compare-table { margin-top: 2rem; }
+
+.compare-row {
+  display: flex;
+  gap: 1px;
+  margin-bottom: 1px;
+  background: var(--border);
+}
+
+.compare-cell {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: var(--surface);
+  font-size: 0.62rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.compare-cell.header-cell {
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.6rem 1rem;
+}
+
+.compare-cell.col-label { color: var(--text-muted); flex: 1.8; }
+.compare-cell.col-owns { border-left: 2px solid var(--gold); }
+.compare-cell.col-rents { border-left: 2px solid var(--text-dim); }
+.compare-cell.header-cell.col-label { flex: 1.8; }
+
+.verdict {
+  display: inline-block;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  padding: 0.15rem 0.4rem;
+  margin-top: 0.35rem;
+  text-transform: uppercase;
+}
+
+.verdict-win { background: var(--green-dim); color: var(--green); }
+.verdict-lose { background: var(--red-dim); color: var(--red); }
+.verdict-neutral { background: var(--border); color: var(--text-dim); }
+
+/* RULE BOX */
+.rule-box {
+  border: 1px solid var(--gold-dim);
+  border-left: 4px solid var(--gold);
+  padding: 1.25rem 1.5rem;
+  margin-top: 2rem;
+  background: rgba(200, 168, 74, 0.04);
+}
+
+.rb-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.rule-box p {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 200;
+  font-style: italic;
+  color: var(--accent);
+  line-height: 1.5;
+  margin: 0;
+  max-width: none;
+}
+
+/* GEAR BUILDER */
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  margin-top: 2rem;
+  border: 1px solid var(--border);
+}
+
+.gear-item {
+  background: var(--surface);
+  padding: 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.gear-item:hover { background: var(--surface-2); }
+.gear-item.selected { background: var(--surface-2); }
+
+.gear-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.6rem;
+  gap: 0.5rem;
+}
+
+.gi-name {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.gi-check {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-bright);
+  flex-shrink: 0;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+
+.gear-item.selected .gi-check {
+  border-color: var(--gold);
+  background: var(--gold);
+}
+
+.gear-item.selected .gi-check::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 2px;
+  width: 8px;
+  height: 5px;
+  border-left: 2px solid var(--bg);
+  border-bottom: 2px solid var(--bg);
+  transform: rotate(-45deg);
+}
+
+.gi-cost { font-size: 0.6rem; color: var(--text-dim); }
+.gi-rate { font-size: 0.6rem; color: var(--gold); margin-top: 0.2rem; }
+.gi-days { font-size: 0.58rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+.gear-totals {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 500px) { .gear-totals { grid-template-columns: repeat(2, 1fr); } }
+
+.gear-total-cell {
+  background: var(--surface-2);
+  padding: 1rem;
+}
+
+.gtc-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.gtc-value {
+  font-family: 'Epilogue', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+/* ANNUAL REVENUE BREAKDOWN */
+.revenue-breakdown {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 640px) { .revenue-breakdown { grid-template-columns: 1fr; } }
+
+.revenue-bars { flex: 1; }
+
+.rev-bar-item {
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+}
+
+.rev-bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.06em;
+}
+
+.rev-bar-label { color: var(--text-muted); }
+.rev-bar-amount { color: var(--accent); font-weight: 500; }
+
+.rev-bar-track {
+  height: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.rev-bar-fill {
+  height: 100%;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
+}
+
+.rev-bar-item:hover .rev-bar-fill { filter: brightness(1.2); }
+
+.revenue-panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border-bright);
+  padding: 1.5rem;
+}
+
+.rev-panel-title {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.rev-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.62rem;
+}
+
+.rev-stat-row:last-child { border-bottom: none; }
+
+.rev-stat-key { color: var(--text-muted); }
+
+.rev-stat-val {
+  font-family: 'Epilogue', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.rev-stat-val.gold { color: var(--gold); }
+.rev-stat-val.green { color: var(--green); }
+.rev-stat-val.white { color: var(--accent); }
+
+/* YEAR-BY-YEAR PROJECTION */
+.projection-table {
+  margin-top: 2rem;
+  border: 1px solid var(--border);
+}
+
+.proj-row {
+  display: grid;
+  grid-template-columns: 60px repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.proj-cell {
+  background: var(--surface);
+  padding: 0.7rem 0.8rem;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.proj-row.header .proj-cell {
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.proj-cell.year { color: var(--text-dim); font-weight: 500; }
+.proj-cell.revenue { color: var(--gold); font-weight: 500; }
+.proj-cell.cumulative { color: var(--green); }
+.proj-cell.status { font-size: 0.52rem; }
+.proj-cell.status.recouped { color: var(--green); }
+.proj-cell.status.pending { color: var(--red); }
+
+.footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+.footer-brand {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.footer-line {
+  width: 1px;
+  height: 40px;
+  background: var(--border-bright);
+  margin: 1.5rem auto;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-label">Geared Like A Machine &nbsp;/&nbsp; Business Systems</div>
+  <h1>Equipment<br><span>as Annuity</span></h1>
+  <p class="sub">The ownership math most production companies never run. Interactive calculators for payback period, annual margin, and hybrid package strategy.</p>
+</header>
+
+<!-- SECTION 1 -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">01 &nbsp; Payback Calculator</div>
+    <h2 class="reveal reveal-delay-1">When does Day 1 become profit?</h2>
+    <p class="reveal reveal-delay-2">Rental houses know exactly when each piece of gear recoups its purchase price. You should know the same number for every item in your package. Set your package cost and daily billing rate below.</p>
+
+    <div class="calc-wrap reveal reveal-delay-3">
+      <div class="calc-grid">
+        <div class="calc-field">
+          <label>Package Cost</label>
+          <div class="input-row">
+            <input type="range" id="pkgCost" min="5000" max="80000" step="1000" value="25000">
+            <span class="value-display" id="pkgCostVal">$25,000</span>
+          </div>
+        </div>
+        <div class="calc-field">
+          <label>Camera Package Day Rate</label>
+          <div class="input-row">
+            <input type="range" id="pkgRate" min="400" max="4000" step="100" value="1800">
+            <span class="value-display" id="pkgRateVal">$1,800</span>
+          </div>
+        </div>
+        <div class="calc-field">
+          <label>Annual Shoot Days</label>
+          <div class="input-row">
+            <input type="range" id="shootDays" min="20" max="200" step="5" value="100">
+            <span class="value-display" id="shootDaysVal">100 days</span>
+          </div>
+        </div>
+        <div class="calc-field">
+          <label>Annual Overhead (insurance + maint)</label>
+          <div class="input-row">
+            <input type="range" id="overhead" min="500" max="5000" step="250" value="1500">
+            <span class="value-display" id="overheadVal">$1,500</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-stat">
+          <div class="stat-label">Payback Period</div>
+          <div class="stat-value" id="paybackDays">14</div>
+          <div class="stat-sub">shooting days to recoup</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-label">Annual Gear Revenue</div>
+          <div class="stat-value" id="annualRev">$180K</div>
+          <div class="stat-sub">from equipment alone</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-label">Net Gear Margin</div>
+          <div class="stat-value" id="netMargin">$178.5K</div>
+          <div class="stat-sub">after annual overhead</div>
+        </div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-marker-row">
+          <div class="timeline-marker" id="timelineMarker" style="left: 14%;">DAY <span id="markerDay">14</span></div>
+        </div>
+        <div class="timeline-bar-track">
+          <div class="timeline-fill" id="timelineFill" style="width: 14%;">
+            <span class="timeline-fill-label">RECOUPED</span>
+          </div>
+        </div>
+        <div class="timeline-axis">
+          <span>Day 1</span>
+          <span>50 days</span>
+          <span>100 days</span>
+          <span>150 days</span>
+          <span>200 days</span>
+        </div>
+        <div class="profit-zone" id="profitZone">
+          <div class="profit-zone-dot"></div>
+          <span id="profitZoneText">Every shoot day after recoup is pure margin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">02 &nbsp; Package Scenarios</div>
+    <h2 class="reveal reveal-delay-1">Three entry points. One math.</h2>
+    <p class="reveal reveal-delay-2">The lean, standard, and full-production package models cover most commercial operators. Click a scenario to load its numbers into the calculator above.</p>
+
+    <div class="scenario-grid reveal reveal-delay-3" id="scenarioGrid">
+      <div class="scenario-card active" data-idx="0">
+        <div class="sc-type">Entry</div>
+        <div class="sc-title">Run &amp; Gun Package</div>
+        <div class="sc-rows">
+          <div class="sc-row"><span class="sc-key">Package cost</span><span class="sc-val">$12,000</span></div>
+          <div class="sc-row"><span class="sc-key">Day rate billed</span><span class="sc-val-gold">$900/day</span></div>
+          <div class="sc-row"><span class="sc-key">Annual shoot days</span><span class="sc-val">80</span></div>
+          <div class="sc-row"><span class="sc-key">Payback period</span><span class="sc-val-green">14 days</span></div>
+        </div>
+      </div>
+      <div class="scenario-card" data-idx="1">
+        <div class="sc-type">Standard</div>
+        <div class="sc-title">Commercial DP Kit</div>
+        <div class="sc-rows">
+          <div class="sc-row"><span class="sc-key">Package cost</span><span class="sc-val">$35,000</span></div>
+          <div class="sc-row"><span class="sc-key">Day rate billed</span><span class="sc-val-gold">$2,200/day</span></div>
+          <div class="sc-row"><span class="sc-key">Annual shoot days</span><span class="sc-val">100</span></div>
+          <div class="sc-row"><span class="sc-key">Payback period</span><span class="sc-val-green">16 days</span></div>
+        </div>
+      </div>
+      <div class="scenario-card" data-idx="2">
+        <div class="sc-type">Heavy</div>
+        <div class="sc-title">Full Production Package</div>
+        <div class="sc-rows">
+          <div class="sc-row"><span class="sc-key">Package cost</span><span class="sc-val">$65,000</span></div>
+          <div class="sc-row"><span class="sc-key">Day rate billed</span><span class="sc-val-gold">$4,000/day</span></div>
+          <div class="sc-row"><span class="sc-key">Annual shoot days</span><span class="sc-val">120</span></div>
+          <div class="sc-row"><span class="sc-key">Payback period</span><span class="sc-val-green">17 days</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">03 &nbsp; Own vs. Rent</div>
+    <h2 class="reveal reveal-delay-1">Head-to-head. Every axis.</h2>
+    <p class="reveal reveal-delay-2">The ownership argument is not about feelings. Here is the comparison on every dimension that matters to a working production company.</p>
+
+    <div class="compare-table reveal reveal-delay-3">
+      <div class="compare-row">
+        <div class="compare-cell header-cell col-label">Variable</div>
+        <div class="compare-cell header-cell col-owns">Owner-Operator</div>
+        <div class="compare-cell header-cell col-rents">Rental-Only</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Revenue on gear</div>
+        <div class="compare-cell col-owns">Full margin captured<br><span class="verdict verdict-win">Win</span></div>
+        <div class="compare-cell col-rents">Zero. Rental house keeps it.<br><span class="verdict verdict-lose">Loss</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Availability</div>
+        <div class="compare-cell col-owns">Always in your control<br><span class="verdict verdict-win">Win</span></div>
+        <div class="compare-cell col-rents">Subject to inventory. Can be pulled.<br><span class="verdict verdict-lose">Risk</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Access to latest body</div>
+        <div class="compare-cell col-owns">Limited to owned body<br><span class="verdict verdict-neutral">Neutral</span></div>
+        <div class="compare-cell col-rents">Rent any camera on day one<br><span class="verdict verdict-win">Win</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Tax treatment</div>
+        <div class="compare-cell col-owns">Section 179 full deduction yr 1<br><span class="verdict verdict-win">Win</span></div>
+        <div class="compare-cell col-rents">Rental expense deductible<br><span class="verdict verdict-neutral">Neutral</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Client perception</div>
+        <div class="compare-cell col-owns">Infrastructure signal. Vendor status.<br><span class="verdict verdict-win">Win</span></div>
+        <div class="compare-cell col-rents">Dependency signal. Freelancer status.<br><span class="verdict verdict-lose">Loss</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Upfront capital required</div>
+        <div class="compare-cell col-owns">High. $12K to $65K+<br><span class="verdict verdict-lose">Cost</span></div>
+        <div class="compare-cell col-rents">Zero upfront<br><span class="verdict verdict-win">Win</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Obsolescence risk</div>
+        <div class="compare-cell col-owns">Real. Manage with mid-cycle buys.<br><span class="verdict verdict-neutral">Managed</span></div>
+        <div class="compare-cell col-rents">None. Always current.<br><span class="verdict verdict-win">Win</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell col-label">Long-run economics</div>
+        <div class="compare-cell col-owns">After recoup: 90%+ margin on gear<br><span class="verdict verdict-win">Win</span></div>
+        <div class="compare-cell col-rents">Perpetual rental cost. No equity.<br><span class="verdict verdict-lose">Loss</span></div>
+      </div>
+    </div>
+
+    <div class="rule-box reveal">
+      <div class="rb-label">The Decision Rule</div>
+      <p>If you cannot identify 15 days of billable use per year for a piece of gear, you do not own it. You rent it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">04 &nbsp; Package Builder</div>
+    <h2 class="reveal reveal-delay-1">Build your core kit.</h2>
+    <p class="reveal reveal-delay-2">Select the items you deploy on 80 percent of your shoots. The totals show your package investment, combined daily billing rate, and payback period. Rent everything else per project.</p>
+
+    <div class="gear-grid reveal reveal-delay-3" id="gearGrid"></div>
+
+    <div class="gear-totals">
+      <div class="gear-total-cell">
+        <div class="gtc-label">Package Cost</div>
+        <div class="gtc-value" id="gt-cost">$0</div>
+      </div>
+      <div class="gear-total-cell">
+        <div class="gtc-label">Daily Rate</div>
+        <div class="gtc-value" id="gt-rate">$0/day</div>
+      </div>
+      <div class="gear-total-cell">
+        <div class="gtc-label">Payback</div>
+        <div class="gtc-value" id="gt-payback">0 days</div>
+      </div>
+      <div class="gear-total-cell">
+        <div class="gtc-label">Annual Margin (100 days)</div>
+        <div class="gtc-value" id="gt-margin">$0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">05 &nbsp; Revenue Projection</div>
+    <h2 class="reveal reveal-delay-1">Where the money goes. Year by year.</h2>
+    <p class="reveal reveal-delay-2">Using the standard Commercial DP Kit scenario: $35K package, $2,200/day rate, 100 shoot days annually. This is what the five-year picture looks like once the package recoups.</p>
+
+    <div class="revenue-breakdown reveal reveal-delay-3">
+      <div class="revenue-bars">
+        <div class="rev-bar-item">
+          <div class="rev-bar-header">
+            <span class="rev-bar-label">Equipment Revenue</span>
+            <span class="rev-bar-amount">$220,000/yr</span>
+          </div>
+          <div class="rev-bar-track">
+            <div class="rev-bar-fill" style="width: 88%; background: var(--gold);"></div>
+          </div>
+        </div>
+        <div class="rev-bar-item">
+          <div class="rev-bar-header">
+            <span class="rev-bar-label">DP Day Rate (100 days @ $2,500)</span>
+            <span class="rev-bar-amount">$250,000/yr</span>
+          </div>
+          <div class="rev-bar-track">
+            <div class="rev-bar-fill" style="width: 100%; background: var(--accent);"></div>
+          </div>
+        </div>
+        <div class="rev-bar-item">
+          <div class="rev-bar-header">
+            <span class="rev-bar-label">Annual Gear Overhead</span>
+            <span class="rev-bar-amount">$1,800/yr</span>
+          </div>
+          <div class="rev-bar-track">
+            <div class="rev-bar-fill" style="width: 1%; background: var(--red);"></div>
+          </div>
+        </div>
+        <div class="rev-bar-item">
+          <div class="rev-bar-header">
+            <span class="rev-bar-label">Net Equipment Margin</span>
+            <span class="rev-bar-amount">$218,200/yr</span>
+          </div>
+          <div class="rev-bar-track">
+            <div class="rev-bar-fill" style="width: 87%; background: var(--green);"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="revenue-panel">
+        <div class="rev-panel-title">5-Year Summary</div>
+        <div class="rev-stat-row">
+          <span class="rev-stat-key">Package investment</span>
+          <span class="rev-stat-val white">$35,000</span>
+        </div>
+        <div class="rev-stat-row">
+          <span class="rev-stat-key">Payback period</span>
+          <span class="rev-stat-val gold">16 days</span>
+        </div>
+        <div class="rev-stat-row">
+          <span class="rev-stat-key">Year 1 gear revenue</span>
+          <span class="rev-stat-val gold">$220,000</span>
+        </div>
+        <div class="rev-stat-row">
+          <span class="rev-stat-key">5-Year gear revenue</span>
+          <span class="rev-stat-val gold">$1,100,000</span>
+        </div>
+        <div class="rev-stat-row">
+          <span class="rev-stat-key">5-Year net margin</span>
+          <span class="rev-stat-val green">$1,056,000</span>
+        </div>
+        <div class="rev-stat-row">
+          <span class="rev-stat-key">Return on investment</span>
+          <span class="rev-stat-val green">3,017%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="projection-table reveal">
+      <div class="proj-row header">
+        <div class="proj-cell">Year</div>
+        <div class="proj-cell">Gear Revenue</div>
+        <div class="proj-cell">Overhead</div>
+        <div class="proj-cell">Cumulative Net</div>
+        <div class="proj-cell">Status</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-cell year">Y1</div>
+        <div class="proj-cell revenue">$220,000</div>
+        <div class="proj-cell">$1,800</div>
+        <div class="proj-cell cumulative">$183,200</div>
+        <div class="proj-cell status recouped">RECOUPED</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-cell year">Y2</div>
+        <div class="proj-cell revenue">$220,000</div>
+        <div class="proj-cell">$1,800</div>
+        <div class="proj-cell cumulative">$401,400</div>
+        <div class="proj-cell status recouped">COMPOUNDING</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-cell year">Y3</div>
+        <div class="proj-cell revenue">$220,000</div>
+        <div class="proj-cell">$1,800</div>
+        <div class="proj-cell cumulative">$619,600</div>
+        <div class="proj-cell status recouped">COMPOUNDING</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-cell year">Y4</div>
+        <div class="proj-cell revenue">$220,000</div>
+        <div class="proj-cell">$1,800</div>
+        <div class="proj-cell cumulative">$837,800</div>
+        <div class="proj-cell status recouped">COMPOUNDING</div>
+      </div>
+      <div class="proj-row">
+        <div class="proj-cell year">Y5</div>
+        <div class="proj-cell revenue">$220,000</div>
+        <div class="proj-cell">$1,800</div>
+        <div class="proj-cell cumulative">$1,056,000</div>
+        <div class="proj-cell status recouped">COMPOUNDING</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-line"></div>
+  <div class="footer-brand">Geared Like A Machine &nbsp;&bull;&nbsp; Dallas, TX &nbsp;&bull;&nbsp; gearedlikeamachine.com</div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  var SCENARIOS = [
+    { cost: 12000, rate: 900,  days: 80,  overhead: 800 },
+    { cost: 35000, rate: 2200, days: 100, overhead: 1800 },
+    { cost: 65000, rate: 4000, days: 120, overhead: 3200 }
+  ];
+
+  var GEAR_ITEMS = [
+    { id: 'body1',   name: 'Camera Body (Sony FX3)',   cost: 4000, rate: 450 },
+    { id: 'body2',   name: 'Camera Body (Sony FX9)',   cost: 8000, rate: 800 },
+    { id: 'primes',  name: 'Prime Set (3 lenses)',      cost: 6000, rate: 500 },
+    { id: 'zoom',    name: 'Versatile Zoom (24-105)',   cost: 2500, rate: 200 },
+    { id: 'ff',      name: 'Wireless Follow Focus',     cost: 2800, rate: 250 },
+    { id: 'mon',     name: 'Monitor (SmallHD 5in)',     cost: 1200, rate: 100 },
+    { id: 'gimbal',  name: 'Gimbal (DJI RS3 Pro)',      cost: 900,  rate: 150 },
+    { id: 'audio',   name: 'Wireless Audio (Lectro)',   cost: 3200, rate: 280 },
+    { id: 'slider',  name: 'Slider / Motion Control',   cost: 1800, rate: 180 },
+    { id: 'support', name: 'Basic Support (head+legs)', cost: 2200, rate: 180 },
+    { id: 'power',   name: 'Power / V-Mount System',    cost: 1400, rate: 120 },
+    { id: 'cases',   name: 'Cases + Grip Accessories',  cost: 1600, rate: 0   }
+  ];
+
+  var selected = { body1: true, primes: true, zoom: true, mon: true, audio: true, support: true };
+
+  function fmt(n) {
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
+    return '$' + n.toLocaleString();
+  }
+
+  function updateCalc() {
+    var cost     = parseInt(document.getElementById('pkgCost').value, 10);
+    var rate     = parseInt(document.getElementById('pkgRate').value, 10);
+    var days     = parseInt(document.getElementById('shootDays').value, 10);
+    var overhead = parseInt(document.getElementById('overhead').value, 10);
+
+    document.getElementById('pkgCostVal').textContent   = '$' + cost.toLocaleString();
+    document.getElementById('pkgRateVal').textContent   = '$' + rate.toLocaleString();
+    document.getElementById('shootDaysVal').textContent = days + ' days';
+    document.getElementById('overheadVal').textContent  = '$' + overhead.toLocaleString();
+
+    var payback   = Math.ceil(cost / rate);
+    var annualRev = rate * days;
+    var netMargin = annualRev - overhead;
+
+    document.getElementById('paybackDays').textContent = payback;
+    document.getElementById('annualRev').textContent   = fmt(annualRev);
+    document.getElementById('netMargin').textContent   = fmt(netMargin);
+    document.getElementById('markerDay').textContent   = payback;
+
+    var pct = Math.min((payback / 200) * 100, 96);
+    document.getElementById('timelineFill').style.width  = pct + '%';
+    document.getElementById('timelineMarker').style.left = pct + '%';
+
+    var profitDot  = document.querySelector('.profit-zone-dot');
+    var profitText = document.getElementById('profitZoneText');
+    var zone       = document.getElementById('profitZone');
+
+    if (payback <= days) {
+      zone.style.color       = 'var(--green)';
+      profitDot.style.background = 'var(--green)';
+      profitText.textContent = 'Recouped within your annual schedule. Margin starts day ' + payback + '.';
+    } else {
+      zone.style.color       = 'var(--red)';
+      profitDot.style.background = 'var(--red)';
+      profitText.textContent = 'Payback exceeds annual shoot days. Increase rate or reduce package cost.';
+    }
+  }
+
+  function loadScenario(idx) {
+    var s = SCENARIOS[idx];
+    document.getElementById('pkgCost').value    = s.cost;
+    document.getElementById('pkgRate').value    = s.rate;
+    document.getElementById('shootDays').value  = s.days;
+    document.getElementById('overhead').value   = s.overhead;
+    document.querySelectorAll('.scenario-card').forEach(function(c, i) {
+      c.classList.toggle('active', i === idx);
+    });
+    updateCalc();
+  }
+
+  function buildGearGrid() {
+    var grid = document.getElementById('gearGrid');
+
+    GEAR_ITEMS.forEach(function(item) {
+      var isSel       = !!selected[item.id];
+      var paybackDays = item.rate > 0 ? Math.ceil(item.cost / item.rate) : 0;
+
+      var el = document.createElement('div');
+      el.className = 'gear-item' + (isSel ? ' selected' : '');
+
+      var header  = document.createElement('div');
+      header.className = 'gear-item-header';
+
+      var nameEl  = document.createElement('span');
+      nameEl.className = 'gi-name';
+      nameEl.textContent = item.name;
+
+      var checkEl = document.createElement('div');
+      checkEl.className = 'gi-check';
+
+      header.appendChild(nameEl);
+      header.appendChild(checkEl);
+
+      var costEl  = document.createElement('div');
+      costEl.className = 'gi-cost';
+      costEl.textContent = 'Cost: $' + item.cost.toLocaleString();
+
+      var rateEl  = document.createElement('div');
+      rateEl.className = 'gi-rate';
+      rateEl.textContent = item.rate > 0 ? 'Bills: $' + item.rate + '/day' : 'Overhead only';
+
+      var daysEl  = document.createElement('div');
+      daysEl.className = 'gi-days';
+      daysEl.textContent = paybackDays > 0 ? 'Recoup in ' + paybackDays + ' days' : '';
+
+      el.appendChild(header);
+      el.appendChild(costEl);
+      el.appendChild(rateEl);
+      el.appendChild(daysEl);
+
+      el.addEventListener('click', function() {
+        if (selected[item.id]) {
+          delete selected[item.id];
+        } else {
+          selected[item.id] = true;
+        }
+        el.classList.toggle('selected', !!selected[item.id]);
+        updateGearTotals();
+      });
+
+      grid.appendChild(el);
+    });
+
+    updateGearTotals();
+  }
+
+  function updateGearTotals() {
+    var totalCost = 0;
+    var totalRate = 0;
+
+    GEAR_ITEMS.forEach(function(item) {
+      if (selected[item.id]) {
+        totalCost += item.cost;
+        totalRate += item.rate;
+      }
+    });
+
+    var payback = totalRate > 0 ? Math.ceil(totalCost / totalRate) : 0;
+    var margin  = totalRate * 100;
+
+    document.getElementById('gt-cost').textContent    = '$' + totalCost.toLocaleString();
+    document.getElementById('gt-rate').textContent    = '$' + totalRate.toLocaleString() + '/day';
+    document.getElementById('gt-payback').textContent = payback > 0 ? payback + ' days' : 'N/A';
+    document.getElementById('gt-margin').textContent  = fmt(margin);
+  }
+
+  function initReveal() {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      obs.observe(el);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    ['pkgCost', 'pkgRate', 'shootDays', 'overhead'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', updateCalc);
+    });
+
+    document.getElementById('scenarioGrid').addEventListener('click', function(e) {
+      var card = e.target.closest('.scenario-card');
+      if (card) {
+        loadScenario(parseInt(card.dataset.idx, 10));
+      }
+    });
+
+    buildGearGrid();
+    loadScenario(0);
+    updateCalc();
+    initReveal();
+  });
+})();
+</script>
+</body>
+</html>

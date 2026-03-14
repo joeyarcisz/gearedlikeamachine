@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Production Is Where You Win or Lose</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:#0a0a0c; --surface:#0f0f12; --surface2:#161619;
+  --border:#1e1e26; --border-bright:#2e2e3a;
+  --text:#c0c0cc; --text-dim:#52525e; --text-bright:#e8e8f0;
+  --accent:#a08060; --accent-dim:#6a5540;
+  --gold:#c8a060; --green:#5a9070; --red:#9a4040;
+  --grain:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Roboto Mono',monospace; font-weight:300;
+  min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+body::before {
+  content:''; position:fixed; inset:0; background:var(--grain);
+  pointer-events:none; z-index:9999; opacity:0.6;
+}
+/* HEADER */
+.glm-header { padding:5rem 2rem 3rem; max-width:760px; margin:0 auto; border-bottom:1px solid var(--border); }
+.glm-label { font-size:0.6rem; font-weight:500; letter-spacing:0.25em; text-transform:uppercase; color:var(--accent); margin-bottom:2rem; }
+.glm-title { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,5vw,3.8rem); font-weight:900; line-height:1.08; color:var(--text-bright); margin-bottom:1.5rem; }
+.glm-sub { font-size:0.75rem; line-height:1.8; color:var(--text-dim); max-width:480px; }
+/* SECTIONS */
+.glm-section { max-width:760px; margin:0 auto; padding:4rem 2rem; border-bottom:1px solid var(--border); opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+.glm-section.visible { opacity:1; transform:translateY(0); }
+.s-num { font-size:0.55rem; font-weight:700; letter-spacing:0.2em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.5rem; opacity:0.5; }
+.s-title { font-family:'Playfair Display',serif; font-size:clamp(1.4rem,3vw,2rem); font-weight:700; color:var(--text-bright); margin-bottom:0.5rem; line-height:1.2; }
+.s-sub { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:2rem; }
+.s-intro { font-size:0.68rem; line-height:1.9; margin-bottom:1.75rem; color:var(--text); }
+/* SHOT LIST */
+.shot-tool { background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.shot-hdr { background:var(--surface2); padding:0.75rem 1.25rem; display:grid; grid-template-columns:2.5rem 1fr 1fr 1fr 1.5fr; border-bottom:1px solid var(--border); }
+.shot-hdr-cell { font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); }
+.shot-rows { display:flex; flex-direction:column; }
+.shot-row { display:grid; grid-template-columns:2.5rem 1fr 1fr 1fr 1.5fr; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.2s; }
+.shot-row:hover { background:var(--surface2); }
+.shot-row:last-child { border-bottom:none; }
+.shot-row.sel { background:rgba(160,128,96,0.08); border-left:2px solid var(--accent); }
+.shot-cell { padding:0.9rem 1rem; font-size:0.65rem; line-height:1.5; border-right:1px solid var(--border); display:flex; align-items:center; }
+.shot-cell:last-child { border-right:none; }
+.sc-num { color:var(--text-dim); font-weight:500; justify-content:center; }
+.sc-size { color:var(--gold); font-weight:500; }
+.sc-lens { color:var(--text-dim); }
+.sc-purpose { color:var(--text-bright); font-style:italic; font-family:'Playfair Display',serif; font-size:0.7rem; }
+.shot-detail { background:rgba(160,128,96,0.05); border-top:1px solid var(--border); padding:1.25rem; display:none; }
+.shot-detail.open { display:block; }
+.sd-title { font-family:'Playfair Display',serif; font-size:0.95rem; color:var(--gold); margin-bottom:0.5rem; }
+.sd-text { font-size:0.65rem; line-height:1.8; color:var(--text); }
+/* SCOUT */
+.scout-item { display:flex; align-items:flex-start; gap:1rem; padding:1rem 0; border-bottom:1px solid var(--border); cursor:pointer; }
+.scout-item:last-child { border-bottom:none; }
+.scout-check { width:18px; height:18px; border:1px solid var(--border-bright); border-radius:1px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:background 0.2s,border-color 0.2s; }
+.scout-item.checked .scout-check { background:var(--green); border-color:var(--green); }
+.ck-svg { opacity:0; transform:scale(0.6); transition:opacity 0.15s,transform 0.15s; display:block; }
+.scout-item.checked .ck-svg { opacity:1; transform:scale(1); }
+.scout-lbl { font-size:0.7rem; font-weight:500; color:var(--text); line-height:1.4; transition:color 0.2s; }
+.scout-item.checked .scout-lbl { color:var(--text-dim); text-decoration:line-through; }
+.scout-desc { font-size:0.6rem; color:var(--text-dim); line-height:1.6; margin-top:0.2rem; }
+.scout-prog { margin-top:1.5rem; height:2px; background:var(--border); border-radius:1px; overflow:hidden; }
+.scout-bar { height:100%; background:var(--green); border-radius:1px; transition:width 0.5s ease; width:0%; }
+.scout-status { margin-top:0.75rem; font-size:0.6rem; color:var(--text-dim); text-align:right; }
+/* BLOCKING */
+.block-stage { background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:1.5rem; position:relative; min-height:380px; overflow:hidden; user-select:none; }
+.block-controls { display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+.scene-btn { font-family:'Roboto Mono',monospace; font-size:0.6rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; padding:0.4rem 0.8rem; border:1px solid var(--border-bright); background:transparent; color:var(--text-dim); cursor:pointer; transition:all 0.2s; }
+.scene-btn:hover { border-color:var(--accent); color:var(--accent); }
+.scene-btn.active { border-color:var(--gold); color:var(--gold); background:rgba(200,160,96,0.06); }
+.floor-plan { position:relative; width:100%; height:300px; background:#0c0c0f; border:1px solid var(--border); border-radius:1px; overflow:hidden; }
+.fp-lbl { position:absolute; bottom:0.5rem; right:0.75rem; font-size:0.5rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); opacity:0.3; }
+.env-el { position:absolute; border:1px solid var(--border-bright); background:var(--surface2); border-radius:1px; display:flex; align-items:center; justify-content:center; font-size:0.45rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); opacity:0.6; }
+.actor-mk { position:absolute; width:28px; height:28px; border-radius:50%; border:2px solid; display:flex; align-items:center; justify-content:center; font-size:0.55rem; font-weight:700; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); z-index:10; }
+.actor-a1 { border-color:#7090d0; color:#7090d0; background:rgba(112,144,208,0.12); }
+.actor-a2 { border-color:#c070a0; color:#c070a0; background:rgba(192,112,160,0.12); }
+.cam-mk { position:absolute; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); z-index:10; }
+.cam-body { width:36px; height:22px; background:var(--surface2); border:1.5px solid var(--gold); border-radius:2px; position:relative; display:flex; align-items:center; justify-content:center; }
+.cam-lbl-text { font-size:0.42rem; font-weight:700; color:var(--gold); letter-spacing:0.04em; }
+.cam-lens { position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:7px; height:10px; background:var(--surface2); border:1.5px solid var(--gold); border-left:none; border-radius:0 2px 2px 0; }
+.block-svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:5; }
+.path-dash { stroke-dasharray:5 3; animation:dashAnim 1.5s linear infinite; }
+@keyframes dashAnim { to { stroke-dashoffset:-16; } }
+.scene-info { margin-top:1rem; padding:0.75rem 1rem; background:var(--surface2); border:1px solid var(--border); border-radius:1px; }
+.si-title { font-family:'Playfair Display',serif; font-size:0.85rem; color:var(--text-bright); margin-bottom:0.35rem; }
+.si-text { font-size:0.62rem; line-height:1.7; color:var(--text-dim); }
+/* TIMELINE */
+.timeline { position:relative; padding-left:1.5rem; }
+.timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,transparent,var(--accent-dim) 10%,var(--accent-dim) 90%,transparent); }
+.tl-item { position:relative; padding:0 0 2.5rem 1.5rem; opacity:0; transform:translateX(-12px); transition:opacity 0.5s ease,transform 0.5s ease; }
+.tl-item.visible { opacity:1; transform:translateX(0); }
+.tl-item:last-child { padding-bottom:0; }
+.tl-dot { position:absolute; left:-1.5rem; top:0.2rem; width:7px; height:7px; background:var(--accent); border-radius:50%; transform:translateX(-3px); }
+.tl-week { font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:0.4rem; }
+.tl-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--text-bright); margin-bottom:0.4rem; }
+.tl-text { font-size:0.65rem; line-height:1.8; color:var(--text); }
+.tl-tags { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.6rem; }
+.tag { font-size:0.5rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.2rem 0.5rem; border:1px solid var(--border-bright); color:var(--text-dim); border-radius:1px; }
+.pquote { border-left:2px solid var(--accent); padding:1rem 1.5rem; margin:2.5rem 0; background:rgba(160,128,96,0.04); }
+.pq-text { font-family:'Playfair Display',serif; font-size:clamp(1rem,2.5vw,1.25rem); font-style:italic; color:var(--text-bright); line-height:1.5; }
+.pq-attr { font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); margin-top:0.6rem; }
+/* QUIZ */
+.quiz-wrap { background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.quiz-q { padding:1.5rem; border-bottom:1px solid var(--border); display:none; }
+.quiz-q.active { display:block; }
+.q-num { font-size:0.55rem; letter-spacing:0.2em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.5rem; }
+.q-text { font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--text-bright); margin-bottom:1.25rem; line-height:1.4; }
+.q-opts { display:flex; flex-direction:column; gap:0.5rem; }
+.q-opt { font-family:'Roboto Mono',monospace; font-size:0.65rem; padding:0.75rem 1rem; border:1px solid var(--border-bright); background:transparent; color:var(--text); text-align:left; cursor:pointer; transition:all 0.2s; border-radius:1px; line-height:1.4; }
+.q-opt:hover:not(:disabled) { border-color:var(--accent); color:var(--text-bright); }
+.q-opt.correct { border-color:var(--green); color:var(--green); background:rgba(90,144,112,0.08); }
+.q-opt.wrong { border-color:var(--red); color:var(--red); background:rgba(154,64,64,0.08); }
+.q-opt:disabled { cursor:default; }
+.q-fb { margin-top:1rem; padding:0.75rem 1rem; background:var(--surface2); border:1px solid var(--border); font-size:0.65rem; line-height:1.7; color:var(--text); border-radius:1px; display:none; }
+.q-fb.show { display:block; }
+.q-next { margin-top:0.75rem; font-family:'Roboto Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.5rem 1rem; border:1px solid var(--accent); background:transparent; color:var(--accent); cursor:pointer; transition:all 0.2s; border-radius:1px; display:none; }
+.q-next.show { display:inline-block; }
+.q-next:hover { background:rgba(160,128,96,0.1); color:var(--text-bright); }
+.quiz-foot { padding:1rem 1.5rem; background:var(--surface2); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.qs-lbl { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); }
+.qs-val { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); }
+.quiz-done { padding:2.5rem 1.5rem; text-align:center; display:none; }
+.quiz-done.show { display:block; }
+.qd-title { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--text-bright); margin-bottom:0.75rem; }
+.qd-sub { font-size:0.65rem; line-height:1.8; color:var(--text-dim); max-width:400px; margin:0 auto 1.5rem; }
+.q-restart { font-family:'Roboto Mono',monospace; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.6rem 1.25rem; border:1px solid var(--border-bright); background:transparent; color:var(--text-dim); cursor:pointer; transition:all 0.2s; }
+.q-restart:hover { border-color:var(--accent); color:var(--accent); }
+/* FOOTER */
+.glm-footer { max-width:760px; margin:0 auto; padding:4rem 2rem 6rem; text-align:center; opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+.glm-footer.visible { opacity:1; transform:translateY(0); }
+.f-rule { font-family:'Playfair Display',serif; font-size:clamp(1.2rem,3vw,1.7rem); font-style:italic; color:var(--text-bright); margin-bottom:1.5rem; line-height:1.4; }
+.f-lbl { font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-dim); }
+</style>
+</head>
+<body>
+
+<header class="glm-header">
+  <p class="glm-label">GLM / Production Intelligence / Filmmaking</p>
+  <h1 class="glm-title">Pre-Production<br>Is Where You<br>Win or Lose</h1>
+  <p class="glm-sub">Five tools used before camera day. Responsible for every image captured after it.</p>
+</header>
+
+<section class="glm-section" id="sec1">
+  <p class="s-num">Tool 01 / 05</p>
+  <h2 class="s-title">The Shot List</h2>
+  <p class="s-sub">Your Visual Contract</p>
+  <p class="s-intro">Every line item answers four questions: shot size, camera movement, focal length, and emotional purpose. If you cannot answer the fourth, you do not have a shot. Click any row to see the full breakdown.</p>
+  <div class="shot-tool">
+    <div class="shot-hdr">
+      <span class="shot-hdr-cell">#</span>
+      <span class="shot-hdr-cell">Size</span>
+      <span class="shot-hdr-cell">Move</span>
+      <span class="shot-hdr-cell">Lens</span>
+      <span class="shot-hdr-cell">Purpose</span>
+    </div>
+    <div class="shot-rows" id="shotRows"></div>
+    <div class="shot-detail" id="shotDetail">
+      <div class="sd-title" id="sdTitle"></div>
+      <div class="sd-text" id="sdText"></div>
+    </div>
+  </div>
+</section>
+
+<section class="glm-section" id="sec2">
+  <p class="s-num">Tool 02 / 05</p>
+  <h2 class="s-title">The Tech Scout</h2>
+  <p class="s-sub">Location Intelligence</p>
+  <p class="s-intro">Go at the same time of day you will shoot. Bring your gaffer. The scout without your gaffer is a walk. Work through every item before camera day.</p>
+  <div id="scoutList"></div>
+  <div class="scout-prog"><div class="scout-bar" id="scoutBar"></div></div>
+  <div class="scout-status" id="scoutStatus">0 / 10 complete</div>
+</section>
+
+<section class="glm-section" id="sec3">
+  <p class="s-num">Tool 03 / 05</p>
+  <h2 class="s-title">Blocking Diagram</h2>
+  <p class="s-sub">The Director's Floor Plan</p>
+  <p class="s-intro">Work out the geometry on paper. Not on set. Not on the clock. Switch between scenes to see how blocking and coverage evolve through a conversation.</p>
+  <div class="block-stage">
+    <div class="block-controls" id="blockControls"></div>
+    <div class="floor-plan" id="floorPlan">
+      <span class="fp-lbl">TOP-DOWN VIEW</span>
+      <svg class="block-svg" id="blockSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="scene-info">
+      <div class="si-title" id="siTitle"></div>
+      <div class="si-text" id="siText"></div>
+    </div>
+  </div>
+</section>
+
+<section class="glm-section" id="sec4">
+  <p class="s-num">Tool 04 / 05</p>
+  <h2 class="s-title">The Prep Timeline</h2>
+  <p class="s-sub">Five weeks to camera day</p>
+  <p class="s-intro">Ask for five weeks on small-to-medium budget projects. Every week has a distinct focus. Let one bleed into the next and you arrive underprepared.</p>
+  <div class="timeline" id="tlContainer"></div>
+  <div class="pquote" style="margin-top:2.5rem">
+    <p class="pq-text">The more you understand your location before you shoot, the easier and more efficient you will be on set. A good plan saves time. Time is money. Prep is not overhead.</p>
+    <p class="pq-attr">Production principle</p>
+  </div>
+</section>
+
+<section class="glm-section" id="sec5">
+  <p class="s-num">Tool 05 / 05</p>
+  <h2 class="s-title">Script Breakdown</h2>
+  <p class="s-sub">Pre-Visualizing the Invisible</p>
+  <p class="s-intro">The breakdown turns a screenplay into a production plan. Test your ability to read a scene description as a DP. Five questions. No retakes on set.</p>
+  <div class="quiz-wrap">
+    <div id="quizContainer"></div>
+    <div class="quiz-done" id="quizDone">
+      <div class="qd-title" id="qdTitle"></div>
+      <p class="qd-sub" id="qdSub"></p>
+      <button class="q-restart" id="restartBtn">Restart</button>
+    </div>
+    <div class="quiz-foot">
+      <span class="qs-lbl">Score</span>
+      <span class="qs-val" id="quizScore">0 / 5</span>
+    </div>
+  </div>
+</section>
+
+<footer class="glm-footer" id="glmFooter">
+  <p class="f-rule">The film is made in pre-production.<br>Everything else is just recording it.</p>
+  <p class="f-lbl">Geared Like A Machine &mdash; Production Intelligence</p>
+</footer>
+
+<script>
+(function() {
+
+/* ── DATA ── */
+var SHOTS = [
+  {num:'1A',size:'WS',move:'Static',lens:'35mm',purpose:'Establish geography',
+   title:'1A — Wide Static / 35mm',
+   detail:'Establishes the room and the power dynamic before dialogue begins. The static frame refuses to editorialize. It simply presents the world. Audiences read stillness as objectivity. Use this to make the viewer feel they are arriving with the character, not ahead of them.'},
+  {num:'1B',size:'MS',move:'Push In',lens:'50mm',purpose:'Decision forming',
+   title:'1B — Medium / Push In / 50mm',
+   detail:'The push-in signals to the audience that something internal is happening. Paired with a 50mm, closest to the human eye, it registers as naturalistic pressure. The world is closing in without distortion. This is the universal signal for this moment matters.'},
+  {num:'1C',size:'CU',move:'Static',lens:'85mm',purpose:'Emotional truth',
+   title:'1C — Close-Up / Static / 85mm',
+   detail:'The close-up is the most intimate shot in cinema. The 85mm compresses slightly, placing the face at center without distortion. Held static, it puts all weight on the performance. The camera refuses to move because the performance is doing all the work. Every breath counts.'},
+  {num:'2A',size:'OTS',move:'Handheld',lens:'35mm',purpose:'Tension / instability',
+   title:'2A — Over the Shoulder / Handheld / 35mm',
+   detail:'Handheld OTS introduces physical unease into what would otherwise be standard coverage. The slight movement tells the audience the scene is not settled. Reserve this for scenes where conflict is active, not resolved.'},
+  {num:'2B',size:'ECU',move:'Static',lens:'100mm',purpose:'Revelation',
+   title:'2B — Extreme Close-Up / Static / 100mm',
+   detail:'The ECU is a punctuation mark. Used once per scene, maximum. The 100mm compression flattens the image into pure texture. Reserve this for the exact moment of revelation. If you use it twice, you dilute both uses. Plan it in the shot list. Never reach for it on impulse.'},
+  {num:'3A',size:'LS',move:'Pull Out',lens:'28mm',purpose:'Isolation / consequence',
+   title:'3A — Long Shot / Pull Out / 28mm',
+   detail:'The closing pull-out on a wide lens creates vastness around the character. As the 28mm field of view expands, the figure shrinks against the environment. This is the grammar of consequence. This shot ends scenes. Plan it as such.'}
+];
+
+var SCOUT = [
+  {label:'Sun direction at shoot time',desc:'Check azimuth at your scheduled hour. Track where the sun crosses the windows.'},
+  {label:'Window assets vs. problems',desc:'Which windows can you use? Which fight you? Can any be controlled with ND film?'},
+  {label:'Power panel access and capacity',desc:'Where are the panels? What amperage? What can they support before you truck in generators?'},
+  {label:'Rigging points',desc:'Ceiling joists, pipe grid, structural beams. What can the overhead hold and where?'},
+  {label:'Camera equipment ingress',desc:'Can the 12x12 frame fit through the service entrance? Where does the truck park?'},
+  {label:'Practical light inventory',desc:'What practicals are present? Can they be re-lamped or color-corrected?'},
+  {label:'Sound hazards',desc:'HVAC, traffic, plumbing, adjacent rooms. Flag every source of uncontrolled noise.'},
+  {label:'Fallback plan',desc:'If weather turns or access is denied, what does the plan become? Write the contingency now.'},
+  {label:'Nearest equipment house',desc:'If something breaks or is forgotten, how far is the nearest rental house?'},
+  {label:'Restrooms and holding',desc:'Where does talent wait? Where is the crew bathroom? Small logistics, real time savings.'}
+];
+
+var SCENES = [
+  {title:'Scene A — Arrival',text:'Camera A at the door, wide. Actor 1 enters from left. Actor 2 holds center. Wide coverage with clean sight lines. Camera stays objective and static. No intimacy yet.',
+   actors:[{cls:'actor-a1',x:12,y:45,lbl:'A1'},{cls:'actor-a2',x:52,y:45,lbl:'A2'}],
+   cams:[{x:8,y:80,lbl:'CAM A'},{x:-999,y:-999,lbl:''}],
+   paths:[{x1:18,y1:45,x2:45,y2:45,color:'#7090d0'}]},
+  {title:'Scene B — Confrontation',text:'Actors close distance. Camera A pushes in on 50mm. Camera B positioned for OTS coverage. Handheld energy introduced. Frames tighten as conflict escalates.',
+   actors:[{cls:'actor-a1',x:36,y:43,lbl:'A1'},{cls:'actor-a2',x:52,y:43,lbl:'A2'}],
+   cams:[{x:18,y:72,lbl:'CAM A'},{x:70,y:30,lbl:'CAM B'}],
+   paths:[]},
+  {title:'Scene C — Resolution',text:'Actor 1 moves to the window. Camera A follows on a track. Actor 2 stays static. Pull out on wide lens for the closing frame. Space between them is the meaning.',
+   actors:[{cls:'actor-a1',x:76,y:30,lbl:'A1'},{cls:'actor-a2',x:48,y:55,lbl:'A2'}],
+   cams:[{x:28,y:70,lbl:'CAM A'},{x:-999,y:-999,lbl:''}],
+   paths:[{x1:28,y1:42,x2:74,y2:30,color:'#7090d0'}]}
+];
+
+var TIMELINE = [
+  {week:'Week 1',title:'Creative Alignment',text:'Meet with the director. Read the script as a DP. Build mood boards. Identify visual references. Define the color palette, lighting philosophy, and emotional temperature of each act.',tags:['Moodboard','Script read','Director meeting']},
+  {week:'Week 2',title:'Location Scouting',text:'Walk every location with the director and production designer. Note light conditions at actual shoot times. Flag problems early. Begin rough lighting concepts for each space.',tags:['Location scout','Sun tracking','Lighting concept']},
+  {week:'Week 3',title:'Shot List and Storyboards',text:'Build the shot list from the script. Storyboard the complex sequences. Write blocking diagrams for key scenes. Lock the gear package. Send camera, lighting, and grip lists to your rentals.',tags:['Shot list','Storyboard','Blocking diagram','Gear list']},
+  {week:'Week 4',title:'Tech Scout and Production Meetings',text:'Walk every location with all department heads. Finalize the lighting plan. Address every technical question before shoot day. Run department meetings. Lock the call sheet template.',tags:['Tech scout','Dept. meetings','Lock gear','Call sheet']},
+  {week:'Week 5',title:'Camera Prep and Load-In',text:'Pick up and test all camera, lens, and support equipment. Load into the first location. Run camera tests. Address any equipment issues before Day One. Confirm all departments are ready.',tags:['Camera prep','Lens test','Load-in','Final checks']}
+];
+
+var QUIZ = [
+  {q:'INT. ABANDONED WAREHOUSE — NIGHT. The space is 80 feet wide with skylights. You are shooting from 8PM to 4AM. What is your first tech scout question?',
+   opts:['What lens will we use for the wide?','What is moonrise time and angle through the skylights?','Will there be craft services on set?','What is the director\'s favorite movie?'],
+   correct:1,
+   fb:'Moonrise time and angle through the skylights. Night exteriors and practicals are controlled by you. But moonlight through 80 feet of skylights is the one source you cannot override. Know it before you commit to a lighting plan.'},
+  {q:'You are boarding a chase sequence with 12 setups. Which shots should be storyboarded versus handled by shot list alone?',
+   opts:['All 12, because coverage requires it','None — storyboards slow the process down','Only the complex action beats where blocking of camera and talent must be choreographed to the frame','Only the close-ups, because they are most important'],
+   correct:2,
+   fb:'Storyboard the shots that could go catastrophically wrong without one. Choreographed action, cranes, multi-camera setups, wire work. Standard coverage is handled by a shot list. Save the boarding time for the shots where spatial miscommunication costs you a company move.'},
+  {q:'A director says "Let\'s see what the space gives us" on the first scout. How do you respond?',
+   opts:['Agree — creative flexibility is valuable','Say nothing. He is the director.','Present your lighting concept and blocking ideas first, then invite refinement. Lead with preparation.','Ask the AD to handle the scout planning instead.'],
+   correct:2,
+   fb:'"Let\'s see what the space gives us" sounds like creative flexibility. It communicates that no one has done the work. The director you want to work with wants to feel safe. Safe means: this person has thought about this more than I have. Lead with a concept. Invite revision.'},
+  {q:'Your shot list has a push-in on an 85mm for the emotional climax. On the day, the 85mm is back-ordered. Your option is a 100mm. What do you do?',
+   opts:['Cancel the shot and get coverage instead','Use the 100mm and adjust your camera distance to match the framing — the compression will add weight','Complain to the rental house and delay the shoot','Shoot handheld to compensate'],
+   correct:1,
+   fb:'Use the 100mm and adjust distance. Good prep means you know your shots well enough to adapt them. The 100mm compresses slightly more, which often adds weight to an emotional climax anyway. Prep gives you the mental model to solve problems fast.'},
+  {q:'Reading a script breakdown, you tag: INT. OFFICE — DAY with floor-to-ceiling windows. What is the most important production design question to answer before camera day?',
+   opts:['What color are the walls?','Can those windows be controlled — ND film, practical covers, or is the exterior actionable?','How many chairs are in the room?','What is the scene number?'],
+   correct:1,
+   fb:'Those windows will determine your entire lighting approach. If they cannot be controlled and the exterior blows out, you are fighting an unwinnable light battle. The answer dictates your lens choice, your lighting package, your schedule, and your ratio. One question. All downstream decisions.'}
+];
+
+/* ── UTILS ── */
+function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+function txt(parent, text) { parent.textContent = text; return parent; }
+
+/* ── SHOT LIST ── */
+var selShot = -1;
+
+function buildShots() {
+  var rows = document.getElementById('shotRows');
+  SHOTS.forEach(function(s, i) {
+    var row = el('div','shot-row');
+    var n = el('div','shot-cell sc-num'); n.textContent = s.num;
+    var sz = el('div','shot-cell sc-size'); sz.textContent = s.size;
+    var mv = el('div','shot-cell'); mv.textContent = s.move;
+    var ln = el('div','shot-cell sc-lens'); ln.textContent = s.lens;
+    var pu = el('div','shot-cell sc-purpose'); pu.textContent = s.purpose;
+    row.appendChild(n); row.appendChild(sz); row.appendChild(mv); row.appendChild(ln); row.appendChild(pu);
+    row.addEventListener('click', function() { openShot(i, row); });
+    rows.appendChild(row);
+  });
+}
+
+function openShot(i, row) {
+  var panel = document.getElementById('shotDetail');
+  var allRows = document.querySelectorAll('.shot-row');
+  if (selShot === i) {
+    panel.classList.remove('open'); row.classList.remove('sel'); selShot = -1; return;
+  }
+  allRows.forEach(function(r) { r.classList.remove('sel'); });
+  row.classList.add('sel'); selShot = i;
+  document.getElementById('sdTitle').textContent = SHOTS[i].title;
+  document.getElementById('sdText').textContent = SHOTS[i].detail;
+  panel.classList.add('open');
+}
+
+/* ── SCOUT ── */
+function buildScout() {
+  var list = document.getElementById('scoutList');
+  SCOUT.forEach(function(item) {
+    var div = el('div','scout-item');
+    var chk = el('div','scout-check');
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns,'svg');
+    svg.setAttribute('width','10'); svg.setAttribute('height','8');
+    svg.setAttribute('viewBox','0 0 10 8'); svg.setAttribute('fill','none');
+    svg.className.baseVal = 'ck-svg';
+    var path = document.createElementNS(ns,'path');
+    path.setAttribute('d','M1 4L3.8 7L9 1'); path.setAttribute('stroke','#5a9070');
+    path.setAttribute('stroke-width','1.5'); path.setAttribute('stroke-linecap','round'); path.setAttribute('stroke-linejoin','round');
+    svg.appendChild(path); chk.appendChild(svg);
+    var info = el('div');
+    var lbl = el('div','scout-lbl'); lbl.textContent = item.label;
+    var desc = el('div','scout-desc'); desc.textContent = item.desc;
+    info.appendChild(lbl); info.appendChild(desc);
+    div.appendChild(chk); div.appendChild(info);
+    div.addEventListener('click', function() { div.classList.toggle('checked'); updateScout(); });
+    list.appendChild(div);
+  });
+}
+
+function updateScout() {
+  var done = document.querySelectorAll('.scout-item.checked').length;
+  var tot = SCOUT.length;
+  document.getElementById('scoutBar').style.width = (done/tot*100)+'%';
+  document.getElementById('scoutStatus').textContent = done+' / '+tot+' complete';
+}
+
+/* ── BLOCKING ── */
+var curScene = 0;
+var actMks = {};
+var camMks = [];
+
+function buildBlocking() {
+  var controls = document.getElementById('blockControls');
+  var sceneNames = ['Scene A: Arrival','Scene B: Confrontation','Scene C: Resolution'];
+  sceneNames.forEach(function(name, i) {
+    var btn = el('button','scene-btn'+(i===0?' active':''));
+    btn.textContent = name;
+    (function(idx){ btn.addEventListener('click', function(){ setScene(idx); }); })(i);
+    controls.appendChild(btn);
+  });
+
+  var fp = document.getElementById('floorPlan');
+  var envData = [
+    {l:'35%',t:'5%',w:'30%',h:'6%',lbl:'WINDOW'},
+    {l:'5%',t:'10%',w:'12%',h:'20%',lbl:'TABLE'},
+    {l:'80%',t:'60%',w:'14%',h:'18%',lbl:'DESK'},
+    {l:'85%',t:'5%',w:'10%',h:'8%',lbl:'DOOR'}
+  ];
+  envData.forEach(function(e) {
+    var div = el('div','env-el');
+    div.style.left=e.l; div.style.top=e.t; div.style.width=e.w; div.style.height=e.h;
+    div.textContent=e.lbl; fp.appendChild(div);
+  });
+
+  ['a1','a2'].forEach(function(id) {
+    var mk = el('div','actor-mk actor-'+id);
+    fp.appendChild(mk); actMks[id] = mk;
+  });
+  for (var c=0;c<2;c++) {
+    var cam = el('div','cam-mk');
+    var body = el('div','cam-body');
+    var lbl = el('span','cam-lbl-text');
+    lbl.textContent = c===0?'CAM A':'CAM B';
+    var lens = el('div','cam-lens');
+    body.appendChild(lbl); body.appendChild(lens); cam.appendChild(body);
+    fp.appendChild(cam); camMks.push(cam);
+  }
+  setScene(0);
+}
+
+function setScene(idx) {
+  curScene = idx;
+  var sc = SCENES[idx];
+  var fp = document.getElementById('floorPlan');
+  var w = fp.offsetWidth||600;
+  var h = fp.offsetHeight||300;
+
+  document.querySelectorAll('.scene-btn').forEach(function(b,i){ b.classList.toggle('active',i===idx); });
+
+  var ids = ['a1','a2'];
+  ids.forEach(function(id,i) {
+    var a = sc.actors[i];
+    var mk = actMks[id];
+    if (!mk) return;
+    if (a) {
+      mk.style.left = (a.x/100*w-14)+'px';
+      mk.style.top = (a.y/100*h-14)+'px';
+      mk.style.display = 'flex';
+      mk.textContent = a.lbl;
+    } else {
+      mk.style.display = 'none';
+    }
+  });
+
+  camMks.forEach(function(cam,i) {
+    var cd = sc.cams[i];
+    if (cd && cd.x >= 0) {
+      cam.style.display='block';
+      cam.style.left=(cd.x/100*w-18)+'px';
+      cam.style.top=(cd.y/100*h-11)+'px';
+    } else {
+      cam.style.display='none';
+    }
+  });
+
+  var svg = document.getElementById('blockSvg');
+  while (svg.firstChild) { svg.removeChild(svg.firstChild); }
+  var ns = 'http://www.w3.org/2000/svg';
+  sc.paths.forEach(function(p,pi) {
+    var mid = 'a'+idx+''+pi;
+    var defs = document.createElementNS(ns,'defs');
+    var marker = document.createElementNS(ns,'marker');
+    marker.setAttribute('id',mid); marker.setAttribute('markerWidth','6'); marker.setAttribute('markerHeight','6');
+    marker.setAttribute('refX','5'); marker.setAttribute('refY','3'); marker.setAttribute('orient','auto');
+    var poly = document.createElementNS(ns,'polygon');
+    poly.setAttribute('points','0 0, 6 3, 0 6'); poly.setAttribute('fill',p.color); poly.setAttribute('opacity','0.45');
+    marker.appendChild(poly); defs.appendChild(marker); svg.appendChild(defs);
+    var line = document.createElementNS(ns,'line');
+    line.setAttribute('x1',p.x1/100*w); line.setAttribute('y1',p.y1/100*h);
+    line.setAttribute('x2',p.x2/100*w); line.setAttribute('y2',p.y2/100*h);
+    line.setAttribute('stroke',p.color); line.setAttribute('stroke-width','1');
+    line.setAttribute('opacity','0.4'); line.setAttribute('stroke-dasharray','5 3');
+    line.setAttribute('marker-end','url(#'+mid+')');
+    line.className.baseVal = 'path-dash';
+    svg.appendChild(line);
+  });
+
+  document.getElementById('siTitle').textContent = sc.title;
+  document.getElementById('siText').textContent = sc.text;
+}
+
+/* ── TIMELINE ── */
+function buildTimeline() {
+  var cont = document.getElementById('tlContainer');
+  TIMELINE.forEach(function(item,i) {
+    var div = el('div','tl-item');
+    div.style.transitionDelay = (i*0.1)+'s';
+    var dot = el('div','tl-dot');
+    var week = el('div','tl-week'); week.textContent = item.week;
+    var title = el('div','tl-title'); title.textContent = item.title;
+    var text = el('div','tl-text'); text.textContent = item.text;
+    var tags = el('div','tl-tags');
+    item.tags.forEach(function(t) { var tag = el('span','tag'); tag.textContent = t; tags.appendChild(tag); });
+    div.appendChild(dot); div.appendChild(week); div.appendChild(title); div.appendChild(text); div.appendChild(tags);
+    cont.appendChild(div);
+  });
+}
+
+/* ── QUIZ ── */
+var qState = {cur:0, score:0, done:[]};
+
+function initQ() { qState = {cur:0, score:0, done:QUIZ.map(function(){return false;})}; }
+
+function buildQuiz() {
+  initQ();
+  var cont = document.getElementById('quizContainer');
+  QUIZ.forEach(function(q,i) {
+    var div = el('div','quiz-q'+(i===0?' active':''));
+    div.id='qq'+i;
+    var num = el('div','q-num'); num.textContent='Question '+(i+1)+' of '+QUIZ.length;
+    var qt = el('div','q-text'); qt.textContent=q.q;
+    var opts = el('div','q-opts'); opts.id='qo'+i;
+    q.opts.forEach(function(opt,j) {
+      var btn = el('button','q-opt');
+      btn.id='qb'+i+''+j;
+      btn.textContent=opt;
+      (function(qi,oi){ btn.addEventListener('click',function(){ answer(qi,oi); }); })(i,j);
+      opts.appendChild(btn);
+    });
+    var fb = el('div','q-fb'); fb.id='qf'+i; fb.textContent=q.fb;
+    var nb = el('button','q-next'); nb.id='qn'+i;
+    if (i<QUIZ.length-1) { nb.textContent='Next question \u2192'; }
+    (function(qi){ nb.addEventListener('click',function(){ nextQ(qi); }); })(i);
+    div.appendChild(num); div.appendChild(qt); div.appendChild(opts); div.appendChild(fb); div.appendChild(nb);
+    cont.appendChild(div);
+  });
+}
+
+function answer(qi,oi) {
+  if (qState.done[qi]) return;
+  qState.done[qi]=true;
+  var q=QUIZ[qi];
+  var opts=document.querySelectorAll('#qo'+qi+' .q-opt');
+  opts.forEach(function(b,i){
+    b.disabled=true;
+    if (i===q.correct) b.classList.add('correct');
+    else if (i===oi&&i!==q.correct) b.classList.add('wrong');
+  });
+  if (oi===q.correct) { qState.score++; document.getElementById('quizScore').textContent=qState.score+' / '+QUIZ.length; }
+  var fb=document.getElementById('qf'+qi); if(fb) fb.classList.add('show');
+  var nb=document.getElementById('qn'+qi);
+  if (qi<QUIZ.length-1) { if(nb) nb.classList.add('show'); }
+  else { if(nb) nb.style.display='none'; setTimeout(doneQuiz,700); }
+}
+
+function nextQ(qi) {
+  var cur=document.getElementById('qq'+qi); if(cur) cur.classList.remove('active');
+  var nxt=document.getElementById('qq'+(qi+1)); if(nxt) nxt.classList.add('active');
+  qState.cur=qi+1;
+}
+
+function doneQuiz() {
+  document.querySelectorAll('.quiz-q').forEach(function(q){q.style.display='none';});
+  var done=document.getElementById('quizDone'); done.classList.add('show');
+  var s=qState.score;
+  var title,sub;
+  if (s===5){title='Prepared. Fully.';sub='Five for five. You read scenes as a DP, not as a viewer. Every shot has a reason. Every question on that tech scout has an answer. That is the work.';}
+  else if (s>=3){title='Good foundation.';sub=s+' of 5 correct. The gaps are where the day falls apart. In pre-production, partial preparation is the same as no preparation. Go back and lock it down.';}
+  else {title='The prep is the job.';sub=s+' of 5 correct. Good cinematography is invisible. Bad prep is visible in every frame. Start with the shot list. Run the tech scout. Write the blocking diagram.';}
+  document.getElementById('qdTitle').textContent=title;
+  document.getElementById('qdSub').textContent=sub;
+}
+
+function restartQuiz() {
+  initQ();
+  document.getElementById('quizScore').textContent='0 / '+QUIZ.length;
+  document.getElementById('quizDone').classList.remove('show');
+  QUIZ.forEach(function(q,i){
+    var div=document.getElementById('qq'+i);
+    if(div){div.style.display='';div.classList.toggle('active',i===0);}
+    var opts=document.querySelectorAll('#qo'+i+' .q-opt');
+    opts.forEach(function(b){b.disabled=false;b.classList.remove('correct','wrong');});
+    var fb=document.getElementById('qf'+i); if(fb) fb.classList.remove('show');
+    var nb=document.getElementById('qn'+i); if(nb){nb.classList.remove('show');nb.style.display='';}
+  });
+}
+
+/* ── OBSERVER ── */
+function initObserver() {
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        if(e.target.id==='sec4'){
+          document.querySelectorAll('.tl-item').forEach(function(item,i){
+            setTimeout(function(){item.classList.add('visible');},i*120);
+          });
+        }
+      }
+    });
+  },{threshold:0.1});
+  document.querySelectorAll('.glm-section,.glm-footer').forEach(function(s){io.observe(s);});
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  buildShots();
+  buildScout();
+  buildBlocking();
+  buildTimeline();
+  buildQuiz();
+  initObserver();
+  document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+});
+
+window.addEventListener('resize', function(){ setScene(curScene); });
+
+})();
+</script>
+</body>
+</html>

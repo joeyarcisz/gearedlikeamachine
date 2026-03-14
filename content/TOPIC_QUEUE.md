@@ -17,27 +17,27 @@ Production-intel agent pulls the next `ready` topic, researches it, and drafts a
 | # | Topic | Category | Target Keywords | Status |
 |---|-------|----------|----------------|--------|
 | 1 | What Does a Director of Photography Actually Do? | Business | dallas DP, cinematographer dallas, director of photography | drafted — `what-does-a-director-of-photography-actually-do.md` |
-| 2 | How Much Does Video Production Cost in Dallas? | Business | video production cost dallas, commercial video pricing texas | ready |
-| 3 | Equipment Rental Guide for Dallas Productions | Business | camera rental dallas, equipment rental dfw, production gear rental | ready |
+| 2 | How Much Does Video Production Cost in Dallas? | Business | video production cost dallas, commercial video pricing texas | drafted — `how-much-does-video-production-cost-in-dallas.md` |
+| 3 | Equipment Rental Guide for Dallas Productions | Business | camera rental dallas, equipment rental dfw, production gear rental | drafted — `equipment-rental-guide-dallas-productions.md` |
 
 ## Cinematography Systems (extending existing content lane)
 
 | # | Topic | Category | Concept | Status |
 |---|-------|----------|---------|--------|
-| 4 | Color Temperature as a Storytelling Tool | Cinematography | Kelvin scale as emotional language, warm/cool contrast, mixed sources as tension | needs-research |
-| 5 | Lens Choice Is a Character Decision | Cinematography | Focal length = emotional distance. Wide = vulnerability, long = compression/isolation. Anamorphic vs spherical psychology | needs-research |
-| 6 | The Grip Truck Is a Lighting Instrument | Cinematography | Negative fill, bounce, diffusion, flags. The subtractive side of lighting most people ignore | needs-research |
-| 7 | Motivated Lighting: Every Source Needs a Reason | Cinematography | Practicals, windows, screens as motivation. Unmotivated light reads as fake | needs-research |
-| 8 | Sound Design Starts on Set | Filmmaking | Production audio as foundation, room tone, wild lines, the DP's role in protecting audio | needs-research |
-| 9 | Pre-Production Is Where You Win or Lose | Filmmaking | Shotlists, tech scouts, storyboards, blocking diagrams. The prep that separates pros from amateurs | needs-research |
-| 10 | The One-Light Interview Setup | Cinematography | Single source + neg fill + background separation. Maximum result from minimum gear. The setup Joey uses most | needs-research |
+| 4 | Color Temperature as a Storytelling Tool | Cinematography | Kelvin scale as emotional language, warm/cool contrast, mixed sources as tension | drafted — `color-temperature-as-storytelling-tool.md` |
+| 5 | Lens Choice Is a Character Decision | Cinematography | Focal length = emotional distance. Wide = vulnerability, long = compression/isolation. Anamorphic vs spherical psychology | drafted — `lens-choice-is-a-character-decision.md` |
+| 6 | The Grip Truck Is a Lighting Instrument | Cinematography | Negative fill, bounce, diffusion, flags. The subtractive side of lighting most people ignore | drafted — `the-grip-truck-is-a-lighting-instrument.md` |
+| 7 | Motivated Lighting: Every Source Needs a Reason | Cinematography | Practicals, windows, screens as motivation. Unmotivated light reads as fake | drafted — `motivated-lighting-every-source-needs-a-reason.md` |
+| 8 | Sound Design Starts on Set | Filmmaking | Production audio as foundation, room tone, wild lines, the DP's role in protecting audio | drafted — `sound-design-starts-on-set.md` |
+| 9 | Pre-Production Is Where You Win or Lose | Filmmaking | Shotlists, tech scouts, storyboards, blocking diagrams. The prep that separates pros from amateurs | drafted — `pre-production-is-where-you-win-or-lose.md` |
+| 10 | The One-Light Interview Setup | Cinematography | Single source + neg fill + background separation. Maximum result from minimum gear. The setup Joey uses most | drafted — `the-one-light-interview-setup.md` |
 
 ## Business & Industry (extending pricing/business lane)
 
 | # | Topic | Category | Concept | Status |
 |---|-------|----------|---------|--------|
-| 11 | Why Your Production Company Needs an Equipment Package | Business | Owner-operator advantage, margin on gear, client perception, the math of owning vs renting | needs-research |
-| 12 | The Producer's Guide to Hiring a DP | Business | What to look for, red flags, how reels lie, questions to ask, day rate vs project rate | needs-research |
+| 11 | Why Your Production Company Needs an Equipment Package | Business | Owner-operator advantage, margin on gear, client perception, the math of owning vs renting | drafted — `why-your-production-company-needs-an-equipment-package.md` |
+| 12 | The Producer's Guide to Hiring a DP | Business | What to look for, red flags, how reels lie, questions to ask, day rate vs project rate | drafted — `the-producers-guide-to-hiring-a-dp.md` |
 | 13 | Retainers Beat Project Work | Business | Monthly content days, predictable revenue, client retention, how to pitch and price them | needs-research |
 | 14 | What Clients Actually Care About (It Is Not Your Camera) | Business | Reliability, communication, problem-solving, delivery speed. The soft skills that win repeat business | needs-research |
 | 15 | Building a Crew You Can Trust | Business | Vetting process, day rate expectations, when to upgrade crew, the gaffer relationship | needs-research |

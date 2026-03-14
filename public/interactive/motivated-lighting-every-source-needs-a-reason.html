@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motivated Lighting: Every Source Needs a Reason</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,700&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0d0d10;
+  --surface2: #121217;
+  --border: #1a1a22;
+  --border2: #222230;
+  --text: #b8b8c4;
+  --text-dim: #52525e;
+  --text-bright: #eaeaf4;
+  --accent: #d4c88a;
+  --accent-dim: #8a7e44;
+  --warm-key: #f5a832;
+  --warm-fill: #c67010;
+  --warm-glow: rgba(245,168,50,0.12);
+  --cool-key: #6ab0e8;
+  --cool-glow: rgba(106,176,232,0.12);
+  --neutral: #d0ccc0;
+  --red-mark: #c04040;
+  --green-mark: #40a060;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Fragment Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.55;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.45s; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 5rem 6vw 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-scene { position: absolute; inset: 0; pointer-events: none; }
+
+.hero-glow-warm {
+  position: absolute;
+  width: 600px; height: 600px;
+  right: 8%; top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,168,50,0.18) 0%, rgba(200,100,20,0.08) 40%, transparent 70%);
+  animation: flicker 3s ease-in-out infinite;
+}
+
+.hero-glow-cool {
+  position: absolute;
+  width: 400px; height: 700px;
+  left: -60px; top: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(106,176,232,0.06) 40%, transparent 100%);
+  animation: coolShift 5s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+  33% { opacity: 0.85; transform: translateY(-50%) scale(1.04); }
+  66% { opacity: 0.92; transform: translateY(-50%) scale(0.97); }
+}
+@keyframes coolShift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.hero-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--accent-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 7.5vw, 7rem);
+  font-weight: 700;
+  line-height: 0.95;
+  color: var(--text-bright);
+  max-width: 16ch;
+  margin-bottom: 1rem;
+  font-optical-sizing: auto;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-subtitle {
+  font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+  color: var(--text-dim);
+  max-width: 52ch;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.hero-rule {
+  width: 60px; height: 1px;
+  background: var(--accent-dim);
+  margin-bottom: 2.5rem;
+  opacity: 0.5;
+}
+
+.hero-scroll {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.hero-scroll::before {
+  content: '';
+  display: block;
+  width: 1px; height: 40px;
+  background: var(--text-dim);
+  opacity: 0.4;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.1; }
+}
+
+/* SECTIONS */
+.section {
+  padding: 6rem 6vw;
+  position: relative;
+  border-top: 1px solid var(--border);
+}
+.section-inner { max-width: 900px; margin: 0 auto; }
+
+.section-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--accent-dim);
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.section-label::after {
+  content: '';
+  flex: 1; max-width: 80px; height: 1px;
+  background: var(--accent-dim);
+  opacity: 0.3;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 600;
+  color: var(--text-bright);
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+  font-optical-sizing: auto;
+}
+
+.section-body {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text);
+  max-width: 62ch;
+  margin-bottom: 2rem;
+}
+
+/* ROOM DEMO */
+.room-demo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.room-canvas {
+  width: 100%;
+  height: 320px;
+  position: relative;
+  background: #080810;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.room-wall {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0e0e16 0%, #090910 100%);
+}
+
+.room-window {
+  position: absolute;
+  top: 15%; left: 10%;
+  width: 70px; height: 100px;
+  border: 2px solid #2a2a40;
+  background: #0c0c18;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+.room-window.active {
+  background: linear-gradient(180deg, rgba(106,176,232,0.8) 0%, rgba(106,176,232,0.4) 100%);
+  box-shadow: 0 0 60px 20px rgba(106,176,232,0.15), inset 0 0 20px rgba(106,176,232,0.4);
+}
+.room-window-pane { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #2a2a40; }
+.room-window-pane2 { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #2a2a40; }
+
+.window-cone {
+  position: absolute;
+  top: 15%; left: 82px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.window-cone.active { opacity: 1; }
+.window-cone-shape {
+  width: 220px; height: 100px;
+  background: linear-gradient(90deg, rgba(106,176,232,0.18) 0%, transparent 100%);
+  clip-path: polygon(0 0, 100% -20%, 100% 120%, 0 100%);
+}
+
+.room-lamp {
+  position: absolute;
+  bottom: 18%; right: 18%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lamp-shade {
+  width: 36px; height: 22px;
+  background: #1a1820;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+  border-top: 2px solid #2a2840;
+  transition: background 0.4s ease;
+}
+.lamp-shade.active {
+  background: #c86010;
+  box-shadow: 0 -10px 30px rgba(245,168,50,0.5);
+}
+
+.lamp-base { width: 4px; height: 40px; background: #1e1c28; }
+.lamp-foot { width: 22px; height: 4px; background: #1e1c28; border-radius: 2px; }
+
+.lamp-glow {
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,168,50,0.22) 0%, transparent 70%);
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.lamp-glow.active { opacity: 1; }
+
+.room-tv {
+  position: absolute;
+  bottom: 25%; left: 18%;
+  width: 80px; height: 54px;
+  background: #06060e;
+  border: 2px solid #1a1a28;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+.room-tv.active {
+  border-color: #3040a0;
+  background: #1c2a6a;
+  box-shadow: 0 0 40px 10px rgba(40,80,200,0.15), inset 0 0 10px rgba(80,120,255,0.3);
+}
+.tv-glow {
+  position: absolute;
+  width: 160px; height: 120px;
+  top: -30px; left: -40px;
+  background: radial-gradient(ellipse, rgba(60,100,240,0.18) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.tv-glow.active { opacity: 1; }
+.tv-stand {
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 30px; height: 8px;
+  background: #1a1a28;
+}
+
+.room-subject {
+  position: absolute;
+  bottom: 10%; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subject-head {
+  width: 28px; height: 34px;
+  background: #1c1818;
+  border-radius: 50% 50% 45% 45%;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+.subject-body {
+  width: 38px; height: 60px;
+  background: #141218;
+  border-radius: 4px 4px 0 0;
+}
+
+.subject-head.window-lit { box-shadow: -8px 0 20px rgba(106,176,232,0.4); background: #242840; }
+.subject-head.lamp-lit { box-shadow: 8px -4px 20px rgba(245,168,50,0.4); background: #302418; }
+.subject-head.tv-lit { box-shadow: -4px 0 14px rgba(60,100,240,0.35); background: #1e2038; }
+.subject-head.mixed-lit { background: #2a2428; box-shadow: -6px 0 16px rgba(106,176,232,0.3), 8px -4px 16px rgba(245,168,50,0.3); }
+
+/* CONTROLS */
+.source-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.source-btn {
+  font-family: 'Fragment Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.55rem 1.1rem;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+.source-btn::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.source-btn:hover { color: var(--text); background: #18181f; }
+.source-btn.active-window { border-color: var(--cool-key); color: var(--cool-key); background: rgba(106,176,232,0.06); }
+.source-btn.active-window::before { background: var(--cool-key); opacity: 1; }
+.source-btn.active-lamp { border-color: var(--warm-key); color: var(--warm-key); background: rgba(245,168,50,0.06); }
+.source-btn.active-lamp::before { background: var(--warm-key); opacity: 1; }
+.source-btn.active-tv { border-color: #5070f0; color: #8090ff; background: rgba(60,100,240,0.06); }
+.source-btn.active-tv::before { background: #5070f0; opacity: 1; }
+
+.motivation-meter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.motivation-meter-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.motivation-meter-track {
+  flex: 1; height: 3px;
+  background: var(--border2);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 200px;
+}
+.motivation-meter-fill {
+  height: 100%; width: 0%;
+  background: var(--green-mark);
+  border-radius: 2px;
+  transition: width 0.5s ease, background 0.5s ease;
+}
+.motivation-score {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  min-width: 4ch;
+  text-align: right;
+  transition: color 0.3s ease;
+}
+
+.motivation-label {
+  margin-top: 1.2rem;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  min-height: 2.4em;
+  transition: color 0.3s ease;
+}
+.motivation-label.has-motivation { color: var(--accent); }
+.motivation-label.is-good { color: var(--green-mark); }
+.motivation-label.is-bad { color: var(--red-mark); }
+
+/* CATEGORIES */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+.category-card {
+  background: var(--surface);
+  padding: 2rem 1.8rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.category-card:hover, .category-card.active { background: var(--surface2); }
+.category-num {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.category-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.6rem;
+  font-optical-sizing: auto;
+}
+.category-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+.category-indicator {
+  width: 40px; height: 3px;
+  border-radius: 2px;
+  transition: background 0.3s ease, width 0.3s ease;
+  background: var(--border2);
+}
+.category-card:nth-child(1).active .category-indicator { background: var(--warm-key); width: 60px; }
+.category-card:nth-child(2).active .category-indicator { background: var(--cool-key); width: 60px; }
+.category-card:nth-child(3).active .category-indicator { background: #a080f0; width: 60px; }
+
+.category-detail {
+  display: none;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--text);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.category-detail.visible { display: block; }
+.category-example {
+  display: block;
+  margin-top: 0.8rem;
+  font-style: italic;
+  color: var(--accent-dim);
+  font-size: 0.72rem;
+}
+
+/* CONFLICT DEMO */
+.conflict-demo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+}
+.conflict-scene {
+  width: 100%; height: 200px;
+  position: relative;
+  background: #06060e;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.conflict-warm {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 30%;
+  background: linear-gradient(90deg, rgba(245,168,50,0.18) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.conflict-cool {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 40%;
+  background: linear-gradient(270deg, rgba(106,176,232,0.15) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.conflict-scene.warm-only .conflict-warm { opacity: 1; }
+.conflict-scene.cool-only .conflict-cool { opacity: 1; }
+.conflict-scene.mixed .conflict-warm, .conflict-scene.mixed .conflict-cool { opacity: 1; }
+
+.conflict-warm-source {
+  position: absolute;
+  left: 16px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  opacity: 0.3; transition: opacity 0.4s ease;
+}
+.conflict-cool-source {
+  position: absolute;
+  right: 16px; top: 30%;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  opacity: 0.3; transition: opacity 0.4s ease;
+}
+.conflict-scene.warm-only .conflict-warm-source { opacity: 1; }
+.conflict-scene.cool-only .conflict-cool-source { opacity: 1; }
+.conflict-scene.mixed .conflict-warm-source, .conflict-scene.mixed .conflict-cool-source { opacity: 1; }
+
+.src-icon { font-size: 1.4rem; filter: grayscale(1) brightness(0.6); transition: filter 0.4s ease; }
+.src-label { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+.conflict-scene.warm-only .conflict-warm-source .src-icon { filter: none; }
+.conflict-scene.cool-only .conflict-cool-source .src-icon { filter: none; }
+.conflict-scene.mixed .conflict-warm-source .src-icon, .conflict-scene.mixed .conflict-cool-source .src-icon { filter: none; }
+
+.conflict-char {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+}
+.conflict-char-head {
+  width: 24px; height: 28px;
+  border-radius: 50% 50% 45% 45%;
+  background: #141414;
+  transition: box-shadow 0.6s ease, background 0.6s ease;
+}
+.conflict-char-body { width: 34px; height: 52px; background: #0e0e0e; border-radius: 4px 4px 0 0; }
+
+.tension-bar-wrap {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1rem;
+}
+.tension-label {
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-dim); white-space: nowrap;
+}
+.tension-track {
+  flex: 1; height: 3px;
+  background: var(--border2); border-radius: 2px; overflow: hidden; max-width: 220px;
+}
+.tension-fill {
+  height: 100%; width: 0%;
+  border-radius: 2px;
+  transition: width 0.6s ease, background 0.6s ease;
+  background: var(--green-mark);
+}
+.tension-score {
+  font-size: 0.65rem; color: var(--text-dim); min-width: 7ch; text-align: right;
+  transition: color 0.3s ease;
+}
+
+.conflict-btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.conflict-btn {
+  font-family: 'Fragment Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.08em;
+  padding: 0.5rem 1rem;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text-dim); cursor: pointer; border-radius: 2px;
+  transition: all 0.25s ease; text-transform: uppercase;
+}
+.conflict-btn:hover { color: var(--text); border-color: #2a2a38; }
+.conflict-btn.selected { border-color: var(--accent-dim); color: var(--accent); }
+
+/* QUIZ */
+.quiz-wrap {
+  margin: 2.5rem 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.quiz-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+.quiz-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem; color: var(--text-bright); margin-bottom: 0.3rem; font-optical-sizing: auto;
+}
+.quiz-instruction { font-size: 0.72rem; color: var(--text-dim); }
+.quiz-scene-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px; background: var(--border);
+}
+.quiz-scene {
+  background: var(--surface); padding: 1.8rem 1.5rem;
+  cursor: pointer; transition: background 0.25s ease; position: relative;
+}
+.quiz-scene:hover { background: var(--surface2); }
+.quiz-scene.correct { background: rgba(64,160,96,0.08); }
+.quiz-scene.wrong { background: rgba(192,64,64,0.08); }
+
+.quiz-scene-name {
+  font-family: 'Fraunces', serif; font-size: 0.95rem;
+  color: var(--text-bright); margin-bottom: 0.4rem; font-optical-sizing: auto;
+}
+.quiz-scene-desc { font-size: 0.7rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 0.8rem; }
+.quiz-source-list { display: flex; flex-direction: column; gap: 0.3rem; }
+.quiz-source-item {
+  font-size: 0.68rem; color: var(--text-dim);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.quiz-source-item::before { content: '\2014'; color: var(--border2); }
+.quiz-source-item.motivated { color: var(--green-mark); }
+.quiz-source-item.motivated::before { color: var(--green-mark); }
+.quiz-source-item.unmotivated { color: var(--red-mark); }
+.quiz-source-item.unmotivated::before { color: var(--red-mark); }
+.quiz-verdict {
+  position: absolute; top: 0.8rem; right: 0.8rem;
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.quiz-scene.correct .quiz-verdict { color: var(--green-mark); opacity: 1; }
+.quiz-scene.wrong .quiz-verdict { color: var(--red-mark); opacity: 1; }
+.quiz-feedback {
+  padding: 1.5rem 2rem; font-size: 0.78rem; line-height: 1.65;
+  color: var(--text-dim); min-height: 60px;
+  border-top: 1px solid var(--border); transition: color 0.3s ease;
+}
+
+/* CLOSING */
+.closing {
+  padding: 6rem 6vw;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.closing-inner { max-width: 600px; margin: 0 auto; }
+.closing-rule {
+  width: 40px; height: 1px;
+  background: var(--accent-dim); opacity: 0.4;
+  margin: 0 auto 2.5rem;
+}
+.closing-quote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  font-weight: 300; font-style: italic;
+  color: var(--text-bright); text-align: center;
+  line-height: 1.4; margin-bottom: 2rem; font-optical-sizing: auto;
+}
+.closing-attr {
+  font-size: 0.62rem; letter-spacing: 0.2em;
+  color: var(--text-dim); text-align: center; text-transform: uppercase;
+}
+
+/* FOOTER */
+.footer-nav {
+  padding: 2rem 6vw;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem; flex-wrap: wrap;
+}
+.footer-brand { font-size: 0.6rem; letter-spacing: 0.25em; color: var(--text-dim); text-transform: uppercase; }
+.footer-link {
+  font-size: 0.65rem; letter-spacing: 0.15em; color: var(--accent-dim);
+  text-decoration: none; text-transform: uppercase; transition: color 0.2s ease;
+}
+.footer-link:hover { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .hero { padding: 4rem 5vw 4rem; }
+  .section { padding: 4rem 5vw; }
+  .room-canvas { height: 240px; }
+  .categories-grid { grid-template-columns: 1fr; }
+  .source-controls { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-scene">
+    <div class="hero-glow-warm"></div>
+    <div class="hero-glow-cool"></div>
+  </div>
+  <div class="reveal">
+    <p class="hero-label">Geared Like A Machine &nbsp;/&nbsp; Cinematography</p>
+  </div>
+  <h1 class="hero-title reveal reveal-delay-1">
+    Every Source<br>Needs <em>a Reason</em>
+  </h1>
+  <div class="hero-rule reveal reveal-delay-2"></div>
+  <p class="hero-subtitle reveal reveal-delay-3">
+    Unmotivated light reads as fake. The audience feels it before they can name it. Toggle the sources below and watch how motivation shapes the image.
+  </p>
+  <div class="hero-scroll reveal reveal-delay-4">Interact to explore</div>
+</section>
+
+<!-- 01 ROOM DEMO -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">01 &nbsp; The Practical Demo</p>
+    <h2 class="section-title reveal">Build the Scene's Lighting Logic</h2>
+    <p class="section-body reveal">
+      Every source below is a practical with a real-world motivation: a window, a table lamp, a television screen. Toggle them. Watch how the subject reads and how motivation score changes.
+    </p>
+
+    <div class="room-demo reveal">
+      <div class="room-canvas" id="roomCanvas">
+        <div class="room-wall"></div>
+        <div class="room-window" id="roomWindow">
+          <div class="room-window-pane"></div>
+          <div class="room-window-pane2"></div>
+        </div>
+        <div class="window-cone" id="windowCone">
+          <div class="window-cone-shape"></div>
+        </div>
+        <div class="room-tv" id="roomTv">
+          <div class="tv-glow" id="tvGlow"></div>
+          <div class="tv-stand"></div>
+        </div>
+        <div class="room-lamp" id="roomLamp">
+          <div class="lamp-glow" id="lampGlow"></div>
+          <div class="lamp-shade" id="lampShade"></div>
+          <div class="lamp-base"></div>
+          <div class="lamp-foot"></div>
+        </div>
+        <div class="room-subject">
+          <div class="subject-head" id="subjectHead"></div>
+          <div class="subject-body"></div>
+        </div>
+      </div>
+
+      <div class="source-controls">
+        <button class="source-btn" id="btnWindow" onclick="toggleSource('window')">Window Light</button>
+        <button class="source-btn" id="btnLamp" onclick="toggleSource('lamp')">Table Lamp</button>
+        <button class="source-btn" id="btnTv" onclick="toggleSource('tv')">Television</button>
+      </div>
+
+      <div class="motivation-meter-wrap">
+        <span class="motivation-meter-label">Motivation</span>
+        <div class="motivation-meter-track">
+          <div class="motivation-meter-fill" id="motivMeter"></div>
+        </div>
+        <span class="motivation-score" id="motivScore">0 / 3</span>
+      </div>
+
+      <p class="motivation-label" id="motivLabel">No sources active. The scene has no lighting logic.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 CATEGORIES -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">02 &nbsp; The Three Categories</p>
+    <h2 class="section-title reveal">Every Source Falls Into One</h2>
+    <p class="section-body reveal">
+      Motivation exists on a spectrum from fully literal to fully abstract. The category determines how much explanatory work the scene must do before you earn the light.
+    </p>
+
+    <div class="categories-grid reveal">
+      <div class="category-card" id="cat1" onclick="selectCategory(1)">
+        <p class="category-num">Category 01</p>
+        <h3 class="category-title">The Practical</h3>
+        <p class="category-subtitle">Source visible in frame. Cause and effect are simultaneous.</p>
+        <div class="category-indicator" id="catInd1"></div>
+        <div class="category-detail" id="catDetail1">
+          The highest form of motivation. The audience sees the lamp, the window, the candle. They see the light that follows. No explanation required. The scene justifies itself.
+          <span class="category-example">Kubrick shot all of Barry Lyndon's candlelit scenes by candlelight alone. The candles in frame were the only source. No supplementation. Complete motivation.</span>
+        </div>
+      </div>
+
+      <div class="category-card" id="cat2" onclick="selectCategory(2)">
+        <p class="category-num">Category 02</p>
+        <h3 class="category-title">Implied Source</h3>
+        <p class="category-subtitle">No practical visible. But geography makes it believable.</p>
+        <div class="category-indicator" id="catInd2"></div>
+        <div class="category-detail" id="catDetail2">
+          The window is off-frame. The streetlight is outside. The audience infers the source because the world has established it. Quality, direction, and color temperature must be consistent.
+          <span class="category-example">Deakins in Blade Runner 2049: holographic advertisements and industrial fixtures are rarely in frame. The light always traces to the established world geography.</span>
+        </div>
+      </div>
+
+      <div class="category-card" id="cat3" onclick="selectCategory(3)">
+        <p class="category-num">Category 03</p>
+        <h3 class="category-title">Atmospheric Source</h3>
+        <p class="category-subtitle">Light traces to emotional state, not physical object.</p>
+        <div class="category-indicator" id="catInd3"></div>
+        <div class="category-detail" id="catDetail3">
+          The most advanced and most dangerous. Light justified by the internal logic of the scene's psychological state. Requires a coherent visual world built first, or it reads as careless.
+          <span class="category-example">Storaro lit Brando in Apocalypse Now from a hard shaft with no traceable practical. He earned the abstraction by establishing the compound's visual chaos first.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 CONFLICT DEMO -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">03 &nbsp; Temperature Conflict</p>
+    <h2 class="section-title reveal">Two Sources. Two Temperatures. One Frame.</h2>
+    <p class="section-body reveal">
+      When warm and cool sources share a frame, both fully motivated, the result is not confusion. It is tension. Toggle between scenarios and watch the tension meter respond.
+    </p>
+
+    <div class="conflict-demo reveal">
+      <div class="conflict-scene" id="conflictScene">
+        <div class="conflict-warm"></div>
+        <div class="conflict-cool"></div>
+
+        <div class="conflict-warm-source">
+          <span class="src-icon">&#127768;</span>
+          <span class="src-label" style="color:#f5a832">3,200K</span>
+        </div>
+        <div class="conflict-cool-source">
+          <span class="src-icon">&#128683;</span>
+          <span class="src-label" style="color:#6ab0e8">5,600K</span>
+        </div>
+
+        <div class="conflict-char">
+          <div class="conflict-char-head" id="conflictHead"></div>
+          <div class="conflict-char-body"></div>
+        </div>
+      </div>
+
+      <div class="tension-bar-wrap">
+        <span class="tension-label">Scene Tension</span>
+        <div class="tension-track">
+          <div class="tension-fill" id="tensionFill"></div>
+        </div>
+        <span class="tension-score" id="tensionScore">Select a scene</span>
+      </div>
+
+      <div class="conflict-btns">
+        <button class="conflict-btn" id="cbtn1" onclick="setConflict('warm-only')">Warm Practical Only</button>
+        <button class="conflict-btn" id="cbtn2" onclick="setConflict('cool-only')">Cool Window Only</button>
+        <button class="conflict-btn" id="cbtn3" onclick="setConflict('mixed')">Mixed Sources (Motivated)</button>
+        <button class="conflict-btn" id="cbtn4" onclick="setConflict('unmotivated')">Unmotivated (Arbitrary)</button>
+      </div>
+
+      <p class="motivation-label" id="conflictLabel" style="margin-top:1rem">Select a scene scenario above.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 QUIZ -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">04 &nbsp; The On-Set Test</p>
+    <h2 class="section-title reveal">Can You Justify Every Source?</h2>
+    <p class="section-body reveal">
+      Walk into a setup and ask: can I point to every source of light in this frame and explain why it exists in the world of the scene? Four setups below. One source in one of them has no justification. Find it.
+    </p>
+
+    <div class="quiz-wrap reveal">
+      <div class="quiz-header">
+        <h3 class="quiz-title">Identify the Unmotivated Source</h3>
+        <p class="quiz-instruction">Click the setup that contains a source with no justification in the scene's world.</p>
+      </div>
+
+      <div class="quiz-scene-grid">
+        <div class="quiz-scene" id="qs1" onclick="selectQuiz(1)">
+          <span class="quiz-verdict" id="qv1"></span>
+          <p class="quiz-scene-name">Night Interior</p>
+          <p class="quiz-scene-desc">Small apartment. 11pm. Rain outside.</p>
+          <div class="quiz-source-list">
+            <span class="quiz-source-item" id="qi1a">Desk lamp (tungsten)</span>
+            <span class="quiz-source-item" id="qi1b">TV glow from off-frame</span>
+            <span class="quiz-source-item" id="qi1c">Softbox from above-right</span>
+          </div>
+        </div>
+
+        <div class="quiz-scene" id="qs2" onclick="selectQuiz(2)">
+          <span class="quiz-verdict" id="qv2"></span>
+          <p class="quiz-scene-name">Day Exterior</p>
+          <p class="quiz-scene-desc">Overcast noon. Alley between buildings.</p>
+          <div class="quiz-source-list">
+            <span class="quiz-source-item" id="qi2a">Overcast sky (diffuse)</span>
+            <span class="quiz-source-item" id="qi2b">Bounce card (shadow side)</span>
+            <span class="quiz-source-item" id="qi2c">Negative fill (duvetyne)</span>
+          </div>
+        </div>
+
+        <div class="quiz-scene" id="qs3" onclick="selectQuiz(3)">
+          <span class="quiz-verdict" id="qv3"></span>
+          <p class="quiz-scene-name">Hospital Room</p>
+          <p class="quiz-scene-desc">Daytime. Fluorescent overhead. Window right.</p>
+          <div class="quiz-source-list">
+            <span class="quiz-source-item" id="qi3a">Fluorescent bank (ceiling)</span>
+            <span class="quiz-source-item" id="qi3b">Window (daylight, right)</span>
+            <span class="quiz-source-item" id="qi3c">Amber backlight (no source)</span>
+          </div>
+        </div>
+
+        <div class="quiz-scene" id="qs4" onclick="selectQuiz(4)">
+          <span class="quiz-verdict" id="qv4"></span>
+          <p class="quiz-scene-name">Bar at Night</p>
+          <p class="quiz-scene-desc">Dive bar. Neon signs. Low ceiling.</p>
+          <div class="quiz-source-list">
+            <span class="quiz-source-item" id="qi4a">Neon signs (warm and cool)</span>
+            <span class="quiz-source-item" id="qi4b">Overhead tungsten practical</span>
+            <span class="quiz-source-item" id="qi4c">Under-table fill (no motivation)</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="quiz-feedback" id="quizFeedback">Four setups. One has a source that cannot be explained by the world of the scene. Find it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="closing-inner reveal">
+    <div class="closing-rule"></div>
+    <p class="closing-quote">
+      When you cannot answer why a light exists, the audience will answer for you. And they will call it fake.
+    </p>
+    <p class="closing-attr">Geared Like A Machine &nbsp;&mdash;&nbsp; Cinematography Series</p>
+  </div>
+</section>
+
+<footer class="footer-nav">
+  <span class="footer-brand">Geared Like A Machine</span>
+  <a href="/blog" class="footer-link">Back to Blog</a>
+</footer>
+
+<script>
+// ── ROOM DEMO ──
+const roomState = { window: false, lamp: false, tv: false };
+
+const roomLabels = {
+  '000': { text: 'No sources active. The scene has no lighting logic.', cls: '' },
+  '100': { text: 'MOTIVATED: Window light. Overcast daylight reads as cool, diffuse, natural. The audience accepts it without question.', cls: 'has-motivation' },
+  '010': { text: 'MOTIVATED: Table lamp. Tungsten warm source. Intimate, domestic, directional. Logic is visible in frame.', cls: 'has-motivation' },
+  '001': { text: 'MOTIVATED: Television. Cool, flickering, directional. Modern shorthand for someone alone at night.', cls: 'has-motivation' },
+  '110': { text: 'MOTIVATED CONFLICT: Window (cool) vs. lamp (warm). Two temperatures fighting. The audience feels the tension before they understand it.', cls: 'has-motivation' },
+  '101': { text: 'MOTIVATED CONFLICT: Window (cool) vs. TV (cool). Similar temperatures, two sources. Reads as a real lived-in space.', cls: 'has-motivation' },
+  '011': { text: 'MOTIVATED CONFLICT: Lamp (warm) vs. TV (cool). Classic night interior. Warm safety vs. cold blue of the screen.', cls: 'has-motivation' },
+  '111': { text: 'FULLY MOTIVATED: All three sources active. Complex, layered, naturalistic. Every photon traces back to a real-world object in the scene.', cls: 'has-motivation' }
+};
+
+function toggleSource(src) {
+  roomState[src] = !roomState[src];
+  updateRoom();
+}
+
+function updateRoom() {
+  const winBtn = document.getElementById('btnWindow');
+  const lampBtn = document.getElementById('btnLamp');
+  const tvBtn = document.getElementById('btnTv');
+  const head = document.getElementById('subjectHead');
+  const windowEl = document.getElementById('roomWindow');
+  const windowCone = document.getElementById('windowCone');
+  const lampShade = document.getElementById('lampShade');
+  const lampGlow = document.getElementById('lampGlow');
+  const tvEl = document.getElementById('roomTv');
+  const tvGlow = document.getElementById('tvGlow');
+  const meter = document.getElementById('motivMeter');
+  const scoreEl = document.getElementById('motivScore');
+  const label = document.getElementById('motivLabel');
+
+  winBtn.className = 'source-btn' + (roomState.window ? ' active-window' : '');
+  lampBtn.className = 'source-btn' + (roomState.lamp ? ' active-lamp' : '');
+  tvBtn.className = 'source-btn' + (roomState.tv ? ' active-tv' : '');
+
+  windowEl.classList.toggle('active', roomState.window);
+  windowCone.classList.toggle('active', roomState.window);
+  lampShade.classList.toggle('active', roomState.lamp);
+  lampGlow.classList.toggle('active', roomState.lamp);
+  tvEl.classList.toggle('active', roomState.tv);
+  tvGlow.classList.toggle('active', roomState.tv);
+
+  head.className = 'subject-head';
+  if (roomState.window && roomState.lamp) {
+    head.classList.add('mixed-lit');
+  } else if (roomState.window && roomState.tv) {
+    head.classList.add('mixed-lit');
+  } else if (roomState.window) {
+    head.classList.add('window-lit');
+  } else if (roomState.lamp) {
+    head.classList.add('lamp-lit');
+  } else if (roomState.tv) {
+    head.classList.add('tv-lit');
+  }
+
+  const active = [roomState.window, roomState.lamp, roomState.tv].filter(Boolean).length;
+  const pct = Math.round((active / 3) * 100);
+  meter.style.width = pct + '%';
+  meter.style.background = active === 0 ? '#3a3a4a' : active === 1 ? '#8a7e44' : active === 2 ? '#a0902a' : '#40a060';
+  scoreEl.textContent = active + ' / 3';
+
+  const key = (roomState.window?'1':'0') + (roomState.lamp?'1':'0') + (roomState.tv?'1':'0');
+  const entry = roomLabels[key];
+  label.className = 'motivation-label' + (entry.cls ? ' ' + entry.cls : '');
+  label.textContent = entry.text;
+}
+
+// ── CATEGORIES ──
+let activeCategory = null;
+
+function selectCategory(n) {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('cat' + i).classList.remove('active');
+    document.getElementById('catDetail' + i).classList.remove('visible');
+  }
+  if (activeCategory === n) { activeCategory = null; return; }
+  activeCategory = n;
+  document.getElementById('cat' + n).classList.add('active');
+  document.getElementById('catDetail' + n).classList.add('visible');
+}
+
+// ── CONFLICT DEMO ──
+const conflictData = {
+  'warm-only': {
+    text: 'RESOLVED: Single warm source. The world is settled. One temperature, one emotional register. Intimate, domestic, safe. No tension.',
+    tension: 10, tensionColor: '#40a060', tensionText: 'Low \u2014 Resolved'
+  },
+  'cool-only': {
+    text: 'RESOLVED: Single cool source. The world is settled. Clinical, exposed, open-sky. Clear and flat. No tension.',
+    tension: 15, tensionColor: '#4080c0', tensionText: 'Low \u2014 Resolved'
+  },
+  'mixed': {
+    text: 'MOTIVATED CONFLICT: Both sources are justified. Warm lamp inside, cool daylight from the window. Two temperatures fighting. The audience feels the pull between two worlds.',
+    tension: 80, tensionColor: '#d08030', tensionText: 'High \u2014 Intentional'
+  },
+  'unmotivated': {
+    text: 'UNMOTIVATED: The source is not traceable to any object in the scene world. The audience cannot locate it. The production hand becomes visible. The dream breaks.',
+    tension: 45, tensionColor: '#c04040', tensionText: 'Medium \u2014 Accidental'
+  }
+};
+
+const conflictBtnMap = { 'warm-only': 'cbtn1', 'cool-only': 'cbtn2', 'mixed': 'cbtn3', 'unmotivated': 'cbtn4' };
+
+function setConflict(mode) {
+  const scene = document.getElementById('conflictScene');
+  const head = document.getElementById('conflictHead');
+  const fill = document.getElementById('tensionFill');
+  const score = document.getElementById('tensionScore');
+  const label = document.getElementById('conflictLabel');
+
+  scene.className = 'conflict-scene ' + mode;
+  head.style.background = '';
+  head.style.boxShadow = '';
+
+  const d = conflictData[mode];
+  fill.style.width = d.tension + '%';
+  fill.style.background = d.tensionColor;
+  score.textContent = d.tensionText;
+  score.style.color = d.tensionColor;
+  label.className = 'motivation-label has-motivation';
+  label.textContent = d.text;
+
+  Object.values(conflictBtnMap).forEach(function(id) {
+    document.getElementById(id).classList.remove('selected');
+  });
+  document.getElementById(conflictBtnMap[mode]).classList.add('selected');
+
+  if (mode === 'unmotivated') {
+    setTimeout(function() {
+      head.style.background = '#2a1c2c';
+      head.style.boxShadow = '0 -20px 30px rgba(180,80,200,0.35)';
+    }, 100);
+  }
+}
+
+// ── QUIZ ──
+// Scene 3, Hospital Room: "Amber backlight (no source)" is unmotivated
+const QUIZ_ANSWER = 3;
+const quizFeedbackText = {
+  1: 'Not quite. The desk lamp and TV glow are both motivated practicals. The softbox is suspicious, but the clearest motivation break is in another scene. Look at the hospital room.',
+  2: 'Not this one. Overcast sky, bounce card, and negative fill are all grip decisions that modify existing light. The sky is the practical. All justified.',
+  3: 'Correct. The amber backlight in a hospital room at day has no motivation. The scene already has fluorescent overheads and window daylight. Amber warmth from behind the subject is a desire for a prettier image, not a justified source.',
+  4: 'Not quite. Neon signs and overhead tungsten are visible practicals. Under-table fill is suspicious in a dive bar, but the most direct motivation break is in the hospital room.'
+};
+
+let quizAnswered = false;
+
+function selectQuiz(n) {
+  if (quizAnswered) return;
+
+  const feedback = document.getElementById('quizFeedback');
+
+  if (n === QUIZ_ANSWER) {
+    document.getElementById('qs' + n).classList.add('correct');
+    document.getElementById('qv' + n).textContent = 'Correct';
+    document.getElementById('qi3a').classList.add('motivated');
+    document.getElementById('qi3b').classList.add('motivated');
+    document.getElementById('qi3c').classList.add('unmotivated');
+    feedback.textContent = quizFeedbackText[n];
+    feedback.style.color = 'var(--green-mark)';
+    quizAnswered = true;
+  } else {
+    const sceneEl = document.getElementById('qs' + n);
+    const verdictEl = document.getElementById('qv' + n);
+    sceneEl.classList.add('wrong');
+    verdictEl.textContent = 'Look Again';
+    feedback.textContent = quizFeedbackText[n];
+    feedback.style.color = 'var(--text)';
+    setTimeout(function() {
+      sceneEl.classList.remove('wrong');
+      verdictEl.textContent = '';
+    }, 1800);
+  }
+}
+
+// ── SCROLL REVEAL ──
+var revealObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+
+setTimeout(function() {
+  document.querySelectorAll('.hero .reveal').forEach(function(el) { el.classList.add('visible'); });
+}, 100);
+</script>
+</body>
+</html>

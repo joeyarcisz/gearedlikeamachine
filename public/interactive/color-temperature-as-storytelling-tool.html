@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Temperature as Storytelling Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #0f0f12;
+  --surface2: #141418;
+  --border: #1c1c22;
+  --border2: #252530;
+  --text: #c0c0cc;
+  --text-dim: #4a4a58;
+  --text-mid: #888898;
+  --accent: #e8e8f0;
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.header {
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+
+.header-eyebrow {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin-bottom: 0.6rem;
+}
+
+.header h1 em {
+  font-style: italic;
+  background: linear-gradient(90deg, #ffa040, #ff6020);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header .subtitle {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 1.2rem;
+  line-height: 1.7;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+section + section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+
+.section-label {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  color: var(--text-dim);
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 400;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.section-desc {
+  font-size: 0.78rem;
+  line-height: 1.85;
+  color: var(--text-mid);
+  max-width: 580px;
+  margin-bottom: 2.5rem;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+.stagger-child {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+}
+.stagger-child.visible { opacity: 1; transform: translateY(0); }
+
+/* KELVIN SCALE */
+.kelvin-scale {
+  position: relative;
+  margin: 2rem 0 3rem;
+}
+
+.kelvin-bar {
+  width: 100%;
+  height: 48px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    #ff6010 0%, #ff8030 8%, #ffa050 16%, #ffbe80 25%,
+    #ffd5b0 35%, #fff0e0 45%, #f0f4ff 55%, #d8e8ff 65%,
+    #b8d0ff 75%, #98b8ff 85%, #7898ee 100%
+  );
+  position: relative;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  overflow: visible;
+}
+
+.kelvin-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--grain);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.kelvin-cursor {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  width: 3px;
+  background: var(--accent);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 10;
+  transition: left 0.08s ease-out;
+}
+
+.kelvin-cursor::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+.kelvin-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.7rem;
+}
+
+.kelvin-label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.kelvin-readout {
+  text-align: center;
+  margin-top: 1.8rem;
+}
+
+.kelvin-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  transition: color 0.3s ease;
+}
+
+.kelvin-unit {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 0.8rem;
+}
+
+.kelvin-name {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  margin-bottom: 0.4rem;
+  transition: color 0.3s ease;
+}
+
+.kelvin-emotion {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-style: italic;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+
+.kelvin-swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 1rem auto 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* SCENE SIMULATOR */
+.scene-simulator {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.scene-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scene-header-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--text-dim);
+}
+
+.scene-mode-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.scene-mode-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scene-mode-btn:hover { border-color: var(--text-mid); color: var(--text); }
+.scene-mode-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(232,232,240,0.04); }
+
+.scene-canvas {
+  width: 100%;
+  height: 340px;
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-room {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.room-bg {
+  position: absolute;
+  inset: 0;
+  transition: background-color 0.8s ease;
+}
+
+.room-wall {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65%;
+  transition: background 0.8s ease;
+}
+
+.room-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 18%;
+  transition: background-color 0.8s ease;
+}
+
+.room-window {
+  position: absolute;
+  top: 20%;
+  right: 12%;
+  width: 90px;
+  height: 120px;
+  transition: background-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+.window-frame {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+
+.window-cross-h {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.15);
+  transform: translateY(-50%);
+}
+
+.window-cross-v {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-50%);
+}
+
+.room-lamp {
+  position: absolute;
+  bottom: 22%;
+  left: 10%;
+}
+
+.lamp-shade {
+  width: 36px;
+  height: 26px;
+  background: #2a2418;
+  clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+  border: 1px solid rgba(255,200,100,0.15);
+  position: relative;
+}
+
+.lamp-glow {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background 0.8s ease;
+  pointer-events: none;
+}
+
+.lamp-post {
+  width: 2px;
+  height: 50px;
+  background: #2a2418;
+  margin: 0 auto;
+  border: 1px solid rgba(255,200,100,0.1);
+}
+
+.lamp-base {
+  width: 28px;
+  height: 6px;
+  background: #2a2418;
+  border-radius: 1px;
+  margin: 0 auto;
+  border: 1px solid rgba(255,200,100,0.1);
+}
+
+.room-figure {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.figure-body {
+  width: 18px;
+  height: 48px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 3px 3px 0 0;
+  margin: 0 auto;
+  transition: background-color 0.8s ease;
+}
+
+.figure-head {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  margin: 0 auto 2px;
+  transition: background-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+.scene-label-overlay {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.25);
+}
+
+.scene-temp-labels {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.temp-tag {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid;
+}
+
+/* THREE MOVES */
+.three-moves {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+@media (max-width: 700px) {
+  .three-moves { grid-template-columns: 1fr; }
+}
+
+.move-card {
+  background: var(--surface);
+  padding: 2rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.move-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.move-card.active { background: var(--surface2); }
+.move-card.active::after { opacity: 1; }
+.move-card:hover:not(.active) { background: rgba(255,255,255,0.02); }
+
+.move-card.warm::after { background: linear-gradient(90deg, #ff6020, #ffaa40); }
+.move-card.cool::after { background: linear-gradient(90deg, #4080d0, #80b0ff); }
+.move-card.mixed::after { background: linear-gradient(90deg, #ff8030, #6090e0); }
+
+.move-num {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+}
+
+.move-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.move-desc {
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+.move-detail {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  min-height: 140px;
+}
+
+.move-detail-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+.move-detail-body {
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--text-mid);
+}
+
+.move-detail-film {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  background: rgba(255,255,255,0.02);
+  border-left: 2px solid var(--border2);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+/* GEL MIXER */
+.gel-mixer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.gel-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 600px) {
+  .gel-controls { grid-template-columns: 1fr; }
+}
+
+.gel-control-group label {
+  display: block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+}
+
+.gel-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.gel-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.gel-slider.key {
+  background: linear-gradient(90deg, #ff5010, #ffaa50, #fff0d0, #c8deff, #7898ff);
+}
+
+.gel-slider.correction {
+  background: linear-gradient(90deg, #4070d0 0%, #808090 50%, #ff8030 100%);
+}
+
+.gel-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.gel-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+.gel-value {
+  font-size: 0.7rem;
+  color: var(--text-mid);
+  min-width: 48px;
+  text-align: right;
+}
+
+.gel-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gel-swatch-block {
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.gel-swatch-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 0.8rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gel-swatch-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.gel-swatch-temp {
+  font-size: 0.72rem;
+  color: var(--text-mid);
+  transition: color 0.3s ease;
+}
+
+.gel-center {
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+  background: var(--surface2);
+}
+
+.gel-center-arrow {
+  font-size: 1.1rem;
+  color: var(--text-mid);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.gel-center-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.gel-center-name {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  display: block;
+}
+
+.gel-read {
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 0.7rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+  min-height: 56px;
+}
+
+/* TENSION ZONE */
+.tension-demo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.tension-slider-wrap {
+  padding: 2rem 2rem 1.5rem;
+}
+
+.tension-slider-wrap label {
+  display: block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.tension-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(90deg,
+    #ff8030 0%, #ffcc80 30%, #fff8f0 50%, #c0d8ff 70%, #7090f0 100%
+  );
+}
+
+.tension-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.tension-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+.tension-readout {
+  padding: 0 2rem 2rem;
+}
+
+.tension-meters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .tension-meters { grid-template-columns: 1fr; }
+}
+
+.tension-meter {
+  padding: 1rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  text-align: center;
+}
+
+.tension-meter-label {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.tension-meter-bar-wrap {
+  height: 4px;
+  background: var(--border2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.tension-meter-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.tension-meter-val {
+  font-size: 0.68rem;
+  color: var(--text-mid);
+  transition: color 0.3s ease;
+}
+
+.tension-statement {
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--text-mid);
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  min-height: 56px;
+  font-style: italic;
+}
+
+/* FILMS GRID */
+.films-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.film-row {
+  background: var(--surface);
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  transition: background 0.2s ease;
+}
+
+.film-row:hover { background: var(--surface2); }
+
+@media (max-width: 700px) {
+  .film-row { grid-template-columns: 1fr; gap: 0.8rem; }
+}
+
+.film-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.film-dp {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+}
+
+.film-desc {
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.film-temp-display {
+  text-align: right;
+}
+
+.film-temp-bar {
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
+
+.film-temp-text {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+
+/* FOOTER */
+.footer {
+  padding: 4rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+.footer-text {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.footer-link {
+  color: var(--text-mid);
+  text-decoration: none;
+}
+
+.footer-link:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Geared Like A Machine / Cinematography</div>
+  <h1>Color Temperature<br>as <em>Storytelling Tool</em></h1>
+  <p class="subtitle">The Kelvin scale is not a technical correction. It is emotional language. Every number means something.</p>
+</div>
+
+<!-- 01: KELVIN EXPLORER -->
+<section>
+<div class="container">
+  <div class="section-label">01 / The Scale</div>
+  <h2 class="section-title reveal">Drag the scale. Read the emotion.</h2>
+  <p class="section-desc reveal">From candlelight to overcast sky, every Kelvin value carries a psychological payload. The audience carries this wiring whether they know it or not.</p>
+
+  <div class="kelvin-scale reveal">
+    <div class="kelvin-bar" id="kelvinBar">
+      <div class="kelvin-cursor" id="kelvinCursor" style="left: 20%"></div>
+    </div>
+    <div class="kelvin-labels">
+      <span class="kelvin-label">1800K</span>
+      <span class="kelvin-label">3200K</span>
+      <span class="kelvin-label">5600K</span>
+      <span class="kelvin-label">10000K</span>
+    </div>
+  </div>
+
+  <div class="kelvin-readout reveal">
+    <div class="kelvin-swatch" id="kelvinSwatch"></div>
+    <div class="kelvin-value" id="kelvinValue">2900</div>
+    <div class="kelvin-unit">Kelvin</div>
+    <div class="kelvin-name" id="kelvinName">Incandescent / domestic</div>
+    <div class="kelvin-emotion" id="kelvinEmotion">home, memory, safety, nostalgia</div>
+  </div>
+</div>
+</section>
+
+<!-- 02: SCENE SIMULATOR -->
+<section>
+<div class="container">
+  <div class="section-label">02 / The Scene</div>
+  <h2 class="section-title reveal">Three worlds, one room.</h2>
+  <p class="section-desc reveal">The same interior reads completely differently depending on which temperature the camera agrees with. White balance is a framing device, not a setting.</p>
+
+  <div class="scene-simulator reveal">
+    <div class="scene-header">
+      <span class="scene-header-label">Interior — Night</span>
+      <div class="scene-mode-btns">
+        <button class="scene-mode-btn active" id="btnWarm" onclick="setSceneMode('warm')">Tungsten</button>
+        <button class="scene-mode-btn" id="btnCool" onclick="setSceneMode('cool')">Daylight</button>
+        <button class="scene-mode-btn" id="btnMixed" onclick="setSceneMode('mixed')">Mixed</button>
+      </div>
+    </div>
+    <div class="scene-canvas" id="sceneCanvas">
+      <div class="scene-room">
+        <div class="room-bg" id="roomBg"></div>
+        <div class="room-wall" id="roomWall"></div>
+        <div class="room-floor" id="roomFloor"></div>
+        <div class="room-window" id="roomWindow">
+          <div class="window-frame"></div>
+          <div class="window-cross-h"></div>
+          <div class="window-cross-v"></div>
+        </div>
+        <div class="room-lamp">
+          <div class="lamp-shade"></div>
+          <div class="lamp-glow" id="lampGlow"></div>
+          <div class="lamp-post"></div>
+          <div class="lamp-base"></div>
+        </div>
+        <div class="room-figure">
+          <div class="figure-head" id="figureHead"></div>
+          <div class="figure-body"></div>
+        </div>
+        <div class="scene-label-overlay" id="sceneLabel"></div>
+        <div class="scene-temp-labels" id="sceneTempLabels">
+          <span class="temp-tag" id="sceneLampTag"></span>
+          <span class="temp-tag" id="sceneWinTag"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 03: THREE MOVES -->
+<section>
+<div class="container">
+  <div class="section-label">03 / The Moves</div>
+  <h2 class="section-title reveal">Three choices. Every film makes them.</h2>
+  <p class="section-desc reveal">Color temperature storytelling reduces to three deliberate decisions. Select each to see the technique and the film that proves it.</p>
+
+  <div class="three-moves reveal">
+    <div class="move-card warm active" onclick="selectMove('unified')" id="moveCard-unified">
+      <div class="move-num">Move 01</div>
+      <div class="move-name">The Unified World</div>
+      <p class="move-desc">Lock the film to one temperature range. Build a coherent emotional container.</p>
+    </div>
+    <div class="move-card cool" onclick="selectMove('contrast')" id="moveCard-contrast">
+      <div class="move-num">Move 02</div>
+      <div class="move-name">The Contrast Cut</div>
+      <p class="move-desc">Warm world vs. cool world. The crossing between them is the story.</p>
+    </div>
+    <div class="move-card mixed" onclick="selectMove('mixed')" id="moveCard-mixed">
+      <div class="move-num">Move 03</div>
+      <div class="move-name">The Mixed Frame</div>
+      <p class="move-desc">Two sources, two temperatures, same shot. Conflict rendered in light.</p>
+    </div>
+  </div>
+
+  <div class="move-detail reveal">
+    <div class="move-detail-title" id="moveDetailTitle">The Unified World</div>
+    <p class="move-detail-body" id="moveDetailBody"></p>
+    <p class="move-detail-film" id="moveDetailFilm"></p>
+  </div>
+</div>
+</section>
+
+<!-- 04: GEL MIXER -->
+<section>
+<div class="container">
+  <div class="section-label">04 / The Grammar</div>
+  <h2 class="section-title reveal">Gels are grammar.</h2>
+  <p class="section-desc reveal">CTO converts daylight toward tungsten. CTB converts tungsten toward daylight. Every shade between is a sentence modifier. Adjust source temperature and correction applied.</p>
+
+  <div class="gel-mixer reveal">
+    <div class="gel-controls">
+      <div class="gel-control-group">
+        <label for="gelSource">Source Temperature</label>
+        <div class="gel-slider-row">
+          <input type="range" class="gel-slider key" id="gelSource" min="1800" max="9000" value="5600" oninput="updateGelMixer()">
+          <span class="gel-value" id="gelSourceVal">5600K</span>
+        </div>
+      </div>
+      <div class="gel-control-group">
+        <label for="gelCorrection">Gel Correction (CTB to CTO)</label>
+        <div class="gel-slider-row">
+          <input type="range" class="gel-slider correction" id="gelCorrection" min="-100" max="100" value="0" oninput="updateGelMixer()">
+          <span class="gel-value" id="gelCorrectionVal">None</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gel-preview">
+      <div class="gel-swatch-block" style="background: var(--surface);">
+        <div class="gel-swatch-circle" id="gelSwatchSource"></div>
+        <div class="gel-swatch-label">Source</div>
+        <div class="gel-swatch-temp" id="gelTempSource">5600K</div>
+      </div>
+      <div class="gel-center gel-swatch-block">
+        <span class="gel-center-label">Gel</span>
+        <span class="gel-center-arrow">&#8594;</span>
+        <span class="gel-center-name" id="gelName">no gel</span>
+      </div>
+      <div class="gel-swatch-block" style="background: var(--surface);">
+        <div class="gel-swatch-circle" id="gelSwatchResult"></div>
+        <div class="gel-swatch-label">Result</div>
+        <div class="gel-swatch-temp" id="gelTempResult">5600K</div>
+      </div>
+    </div>
+
+    <p class="gel-read" id="gelRead">Balanced daylight source, no correction applied. Reads as clinical, clear, neutral. The camera and the source agree.</p>
+  </div>
+</div>
+</section>
+
+<!-- 05: TENSION ZONE -->
+<section>
+<div class="container">
+  <div class="section-label">05 / The Tension Zone</div>
+  <h2 class="section-title reveal">Never settle a frame you want to feel unresolved.</h2>
+  <p class="section-desc reveal">The gap between 3200K and 5600K is where conflict lives. Drag between fully warm and fully cool to feel the emotional temperature of each state.</p>
+
+  <div class="tension-demo reveal">
+    <div class="tension-slider-wrap">
+      <label for="tensionSlider">Frame Temperature Balance: Warm to Cool</label>
+      <input type="range" class="tension-slider" id="tensionSlider" min="0" max="100" value="20" oninput="updateTension()">
+    </div>
+    <div class="tension-readout">
+      <div class="tension-meters">
+        <div class="tension-meter">
+          <div class="tension-meter-label">Warmth</div>
+          <div class="tension-meter-bar-wrap">
+            <div class="tension-meter-bar" id="warmthBar" style="background: linear-gradient(90deg, #ff6020, #ffaa40);"></div>
+          </div>
+          <div class="tension-meter-val" id="warmthVal">high</div>
+        </div>
+        <div class="tension-meter">
+          <div class="tension-meter-label">Tension</div>
+          <div class="tension-meter-bar-wrap">
+            <div class="tension-meter-bar" id="tensionBar" style="background: linear-gradient(90deg, #8040c0, #c080ff);"></div>
+          </div>
+          <div class="tension-meter-val" id="tensionVal">low</div>
+        </div>
+        <div class="tension-meter">
+          <div class="tension-meter-label">Coolness</div>
+          <div class="tension-meter-bar-wrap">
+            <div class="tension-meter-bar" id="coolnessBar" style="background: linear-gradient(90deg, #4080d0, #80b0ff);"></div>
+          </div>
+          <div class="tension-meter-val" id="coolnessVal">low</div>
+        </div>
+      </div>
+      <p class="tension-statement" id="tensionStatement">The frame has settled. Warmth dominates. This is a resolved world. The audience relaxes into it.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 06: FILM REFERENCES -->
+<section>
+<div class="container">
+  <div class="section-label">06 / The Proof</div>
+  <h2 class="section-title reveal">Six films that weaponized Kelvin.</h2>
+
+  <div class="films-grid" id="filmsGrid">
+
+    <div class="film-row stagger-child">
+      <div>
+        <div class="film-title">The Godfather Part II</div>
+        <div class="film-dp">Gordon Willis, ASC</div>
+      </div>
+      <p class="film-desc">Vito's Sicily flashbacks: warm, golden, amber. Michael's present-day storyline: cool, overcast, desaturated. The color temperature charts his descent from humanity. The warmer the frame, the more human he still was.</p>
+      <div class="film-temp-display">
+        <div class="film-temp-bar" style="background: linear-gradient(90deg, #ff8030, #c8deff);"></div>
+        <div class="film-temp-text">2700K arc to 6000K</div>
+      </div>
+    </div>
+
+    <div class="film-row stagger-child">
+      <div>
+        <div class="film-title">Her</div>
+        <div class="film-dp">Hoyte van Hoytema, ASC</div>
+      </div>
+      <p class="film-desc">Entire film locked warm. Simultaneously inviting and suffocating. One scene in the AI server room breaks to cool, clinical light. A single temperature cut signals the story's turning point before any dialogue confirms it.</p>
+      <div class="film-temp-display">
+        <div class="film-temp-bar" style="background: linear-gradient(90deg, #ff9040, #ffb060); width: 80%; margin-left: auto;"></div>
+        <div class="film-temp-text">dominant warm 2900-3500K</div>
+      </div>
+    </div>
+
+    <div class="film-row stagger-child">
+      <div>
+        <div class="film-title">Prisoners</div>
+        <div class="film-dp">Roger Deakins, CBE, ASC</div>
+      </div>
+      <p class="film-desc">Entire film in desaturated blues and cold grays. One flashback breaks to warm, golden, overexposed memory light. The contrast is sharp enough to hurt. The warmth is what was lost. Everything else is the temperature of grief.</p>
+      <div class="film-temp-display">
+        <div class="film-temp-bar" style="background: linear-gradient(90deg, #7090d0, #90a8e0); width: 90%; margin-left: auto;"></div>
+        <div class="film-temp-text">dominant cool 5600-6500K</div>
+      </div>
+    </div>
+
+    <div class="film-row stagger-child">
+      <div>
+        <div class="film-title">Blade Runner</div>
+        <div class="film-dp">Jordan Cronenweth, ASC</div>
+      </div>
+      <p class="film-desc">Street-level neons stay warm, amber, orange. Architecture above is cool, gray, blue-shifted, indifferent. Deckard occupies the space between them. Every frame is a negotiation between warmth and cold. That gap is his entire story.</p>
+      <div class="film-temp-display">
+        <div class="film-temp-bar" style="background: linear-gradient(90deg, #ff7030, #6080c0);"></div>
+        <div class="film-temp-text">mixed 2800K and 6000K</div>
+      </div>
+    </div>
+
+    <div class="film-row stagger-child">
+      <div>
+        <div class="film-title">Sicario</div>
+        <div class="film-dp">Roger Deakins, CBE, ASC</div>
+      </div>
+      <p class="film-desc">Twilight as the dominant palette. Sky cooling rapidly, practicals burning warm. The frame is never settled. Day is not done. Night has not committed. The world is in transition, and so is the moral clarity of everyone in it.</p>
+      <div class="film-temp-display">
+        <div class="film-temp-bar" style="background: linear-gradient(90deg, #ff8040, #8090b0);"></div>
+        <div class="film-temp-text">transitional / regime time</div>
+      </div>
+    </div>
+
+    <div class="film-row stagger-child">
+      <div>
+        <div class="film-title">No Country for Old Men</div>
+        <div class="film-dp">Roger Deakins, CBE, ASC</div>
+      </div>
+      <p class="film-desc">Interior Texas scenes with Llewelyn feel amber, working, real. Chigurh arrives under fluorescent overhead, cold blue motel rooms. Color temperature as threat indicator. Every time the frame shifts cool, danger is close.</p>
+      <div class="film-temp-display">
+        <div class="film-temp-bar" style="background: linear-gradient(90deg, #d09060, #7090c0);"></div>
+        <div class="film-temp-text">warm base / cool danger</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<div class="footer">
+  <p class="footer-text">
+    Geared Like A Machine &mdash; <a class="footer-link" href="/blog/color-temperature-as-storytelling-tool">Read the full post</a>
+  </p>
+</div>
+
+<script>
+// ── KELVIN EXPLORER ──
+const kelvinData = [
+  { k: 1800, name: 'Candlelight', emotion: 'fragility, intimacy, ritual, transience' },
+  { k: 2200, name: 'Firelight / flame', emotion: 'danger, warmth, ancient survival instinct' },
+  { k: 2700, name: 'Incandescent / domestic', emotion: 'home, memory, safety, nostalgia' },
+  { k: 3000, name: 'Warm LED / halogen', emotion: 'comfort, intimacy, golden hour psychology' },
+  { k: 3200, name: 'Tungsten / studio lamp', emotion: 'the working world, warmth under control' },
+  { k: 3500, name: 'Warm white / sunrise', emotion: 'beginning, possibility, soft optimism' },
+  { k: 4000, name: 'Neutral white', emotion: 'balance, transition, unresolved' },
+  { k: 4500, name: 'Warm daylight', emotion: 'golden afternoon, productivity, clarity with warmth' },
+  { k: 5000, name: 'Horizon daylight', emotion: 'neutral clarity, documentary realism' },
+  { k: 5600, name: 'Direct daylight / flash', emotion: 'utility, truth, exposure, nowhere to hide' },
+  { k: 6000, name: 'Bright overcast', emotion: 'diffuse reality, institutional, clinical' },
+  { k: 6500, name: 'Overcast sky / LED', emotion: 'sterility, technology, alienation, surveillance' },
+  { k: 7000, name: 'Shade / open sky', emotion: 'isolation, coldness, the world stripped of warmth' },
+  { k: 8000, name: 'Blue sky shade', emotion: 'dystopia, grief, the absence of comfort' },
+  { k: 10000, name: 'Deep overcast / HMI', emotion: 'hostile clarity, hyperreal coldness' },
+];
+
+function kToColor(k) {
+  const stops = [
+    [1800, 255, 96, 16],
+    [2200, 255, 128, 48],
+    [2700, 255, 160, 80],
+    [3000, 255, 176, 96],
+    [3200, 255, 184, 96],
+    [3500, 255, 200, 128],
+    [4000, 255, 224, 176],
+    [4500, 255, 240, 208],
+    [5000, 255, 250, 240],
+    [5600, 240, 246, 255],
+    [6000, 220, 234, 255],
+    [6500, 200, 218, 255],
+    [7000, 176, 202, 255],
+    [8000, 152, 178, 255],
+    [10000, 120, 148, 238],
+  ];
+  if (k <= stops[0][0]) return 'rgb(' + stops[0][1] + ',' + stops[0][2] + ',' + stops[0][3] + ')';
+  if (k >= stops[stops.length-1][0]) { var last = stops[stops.length-1]; return 'rgb(' + last[1] + ',' + last[2] + ',' + last[3] + ')'; }
+  for (var i = 0; i < stops.length - 1; i++) {
+    if (k >= stops[i][0] && k <= stops[i+1][0]) {
+      var f = (k - stops[i][0]) / (stops[i+1][0] - stops[i][0]);
+      var r = Math.round(stops[i][1] + f * (stops[i+1][1] - stops[i][1]));
+      var g = Math.round(stops[i][2] + f * (stops[i+1][2] - stops[i][2]));
+      var b = Math.round(stops[i][3] + f * (stops[i+1][3] - stops[i][3]));
+      return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+  }
+  return '#ffffff';
+}
+
+function getKelvinInfo(k) {
+  var closest = kelvinData[0];
+  var minDist = Infinity;
+  for (var i = 0; i < kelvinData.length; i++) {
+    var dist = Math.abs(kelvinData[i].k - k);
+    if (dist < minDist) { minDist = dist; closest = kelvinData[i]; }
+  }
+  return closest;
+}
+
+var kelvinBar = document.getElementById('kelvinBar');
+var kelvinCursor = document.getElementById('kelvinCursor');
+var kelvinValue = document.getElementById('kelvinValue');
+var kelvinName = document.getElementById('kelvinName');
+var kelvinEmotion = document.getElementById('kelvinEmotion');
+var kelvinSwatch = document.getElementById('kelvinSwatch');
+
+function updateKelvin(pct) {
+  var k = Math.round(1800 + pct * (10000 - 1800));
+  var rounded = Math.round(k / 100) * 100;
+  var info = getKelvinInfo(rounded);
+  var color = kToColor(k);
+  kelvinValue.textContent = rounded.toLocaleString();
+  kelvinName.textContent = info.name;
+  kelvinEmotion.textContent = info.emotion;
+  kelvinValue.style.color = color;
+  kelvinName.style.color = color;
+  kelvinSwatch.style.backgroundColor = color;
+  kelvinSwatch.style.boxShadow = '0 0 24px ' + color + '40';
+  kelvinCursor.style.left = (pct * 100) + '%';
+}
+
+function kelvinPctFromEvent(e) {
+  var rect = kelvinBar.getBoundingClientRect();
+  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+}
+
+var draggingKelvin = false;
+kelvinBar.addEventListener('mousedown', function(e) { draggingKelvin = true; updateKelvin(kelvinPctFromEvent(e)); });
+document.addEventListener('mousemove', function(e) { if (draggingKelvin) updateKelvin(kelvinPctFromEvent(e)); });
+document.addEventListener('mouseup', function() { draggingKelvin = false; });
+kelvinBar.addEventListener('touchstart', function(e) { draggingKelvin = true; updateKelvin(kelvinPctFromEvent(e)); });
+document.addEventListener('touchmove', function(e) { if (draggingKelvin) updateKelvin(kelvinPctFromEvent(e)); });
+document.addEventListener('touchend', function() { draggingKelvin = false; });
+updateKelvin(0.14);
+
+// ── SCENE SIMULATOR ──
+var sceneModes = {
+  warm: {
+    bg: '#1a0e06', wall: '#120a04', floor: '#0a0603',
+    winBg: 'rgba(50,80,180,0.38)', winShadow: '0 0 40px 20px rgba(50,80,180,0.15) inset',
+    lamp: 'radial-gradient(ellipse, rgba(255,160,40,0.65) 0%, transparent 70%)',
+    headBg: '#c06020', headShadow: '0 0 12px rgba(255,140,40,0.5)',
+    label: 'Balanced for tungsten — window reads cool',
+    lampTag: { text: '3200K lamp', color: '#ff8030' },
+    winTag: { text: '5600K window (cool)', color: '#7090e0' },
+  },
+  cool: {
+    bg: '#060a12', wall: '#040810', floor: '#030508',
+    winBg: 'rgba(100,150,255,0.55)', winShadow: '0 0 60px 30px rgba(100,150,255,0.28) inset',
+    lamp: 'radial-gradient(ellipse, rgba(255,160,40,0.15) 0%, transparent 60%)',
+    headBg: '#4d6a94', headShadow: '0 0 8px rgba(80,120,200,0.4)',
+    label: 'Balanced for daylight — lamp reads warm, diminished',
+    lampTag: { text: '3200K lamp (warm)', color: '#ff6020' },
+    winTag: { text: '5600K balanced', color: '#a0c0ff' },
+  },
+  mixed: {
+    bg: '#0d0a0c', wall: '#0a0808', floor: '#060405',
+    winBg: 'rgba(80,120,220,0.48)', winShadow: '0 0 50px 25px rgba(80,120,220,0.2) inset',
+    lamp: 'radial-gradient(ellipse, rgba(255,150,30,0.52) 0%, transparent 65%)',
+    headBg: '#7a5c38', headShadow: '0 0 10px rgba(180,100,40,0.3)',
+    label: 'Mixed — unresolved. Two temperatures fighting.',
+    lampTag: { text: '3200K lamp', color: '#ff8030' },
+    winTag: { text: '5600K window', color: '#8099e0' },
+  },
+};
+
+function setSceneMode(mode) {
+  var s = sceneModes[mode];
+  document.getElementById('roomBg').style.backgroundColor = s.bg;
+  document.getElementById('roomWall').style.backgroundColor = s.wall;
+  document.getElementById('roomFloor').style.backgroundColor = s.floor;
+  document.getElementById('roomWindow').style.backgroundColor = s.winBg;
+  document.getElementById('roomWindow').style.boxShadow = s.winShadow;
+  document.getElementById('lampGlow').style.background = s.lamp;
+  document.getElementById('figureHead').style.backgroundColor = s.headBg;
+  document.getElementById('figureHead').style.boxShadow = s.headShadow;
+  document.getElementById('sceneLabel').textContent = s.label;
+
+  var lampTag = document.getElementById('sceneLampTag');
+  lampTag.textContent = s.lampTag.text;
+  lampTag.style.color = s.lampTag.color;
+  lampTag.style.borderColor = s.lampTag.color + '44';
+  lampTag.style.backgroundColor = s.lampTag.color + '12';
+
+  var winTag = document.getElementById('sceneWinTag');
+  winTag.textContent = s.winTag.text;
+  winTag.style.color = s.winTag.color;
+  winTag.style.borderColor = s.winTag.color + '44';
+  winTag.style.backgroundColor = s.winTag.color + '12';
+
+  document.getElementById('btnWarm').classList.toggle('active', mode === 'warm');
+  document.getElementById('btnCool').classList.toggle('active', mode === 'cool');
+  document.getElementById('btnMixed').classList.toggle('active', mode === 'mixed');
+}
+setSceneMode('warm');
+
+// ── THREE MOVES ──
+var moveData = {
+  unified: {
+    title: 'The Unified World',
+    body: 'Lock the entire film to a single temperature range. Every location, every scene, every source pushed toward one end of the spectrum. The audience inhabits the emotional world without knowing why. When one scene breaks the pattern, it is a seismic event.',
+    film: 'Her (2013, DP Hoyte van Hoytema) — Nearly every frame is warm. Reds, golds, ambers. The warmth is not safety. It is a sealed bubble. The AI server room breaks to cool, clinical 6000K: a single scene that signals the story\'s turning point before any dialogue confirms it.',
+  },
+  contrast: {
+    title: 'The Contrast Cut',
+    body: 'Build two distinct temperature worlds and use the crossing between them as the story beat. The cut itself becomes the moment of transformation. No dialogue required. The audience reads the shift in light before they process the meaning.',
+    film: 'No Country for Old Men (Deakins, 2007) — Interior Texas scenes with Llewelyn read amber, tungsten, real. Chigurh arrives under fluorescent overhead, cold blue motel rooms at night. Color temperature as threat indicator. Every time the frame shifts cool, danger has entered.',
+  },
+  mixed: {
+    title: 'The Mixed Frame',
+    body: 'Two sources at different temperatures in the same shot. The most advanced technique and the most powerful. A character between a tungsten practical and a daylight window exists in two emotional states simultaneously. The frame cannot resolve. Neither can the audience.',
+    film: 'Blade Runner (Jordan Cronenweth, 1982) — Street neons burn amber and orange, human-scale survival commerce. Architecture above is cool, gray, blue-shifted, indifferent. Every frame is a negotiation. Deckard occupies the gap between warm humanity and cold futurity. That gap is his entire story.',
+  },
+};
+
+function selectMove(id) {
+  document.querySelectorAll('.move-card').forEach(function(c) { c.classList.remove('active'); });
+  document.getElementById('moveCard-' + id).classList.add('active');
+  var d = moveData[id];
+  document.getElementById('moveDetailTitle').textContent = d.title;
+  document.getElementById('moveDetailBody').textContent = d.body;
+  document.getElementById('moveDetailFilm').textContent = d.film;
+}
+selectMove('unified');
+
+// ── GEL MIXER ──
+function applyGelCorrection(k, correction) {
+  if (correction < 0) {
+    var target = 6500;
+    return k + (target - k) * (-correction / 100);
+  } else {
+    var target = 3200;
+    return k - (k - target) * (correction / 100);
+  }
+}
+
+function updateGelMixer() {
+  var source = parseInt(document.getElementById('gelSource').value);
+  var correction = parseInt(document.getElementById('gelCorrection').value);
+  var resultK = Math.round(applyGelCorrection(source, correction));
+
+  document.getElementById('gelSourceVal').textContent = source + 'K';
+  document.getElementById('gelTempSource').textContent = source + 'K';
+  document.getElementById('gelTempResult').textContent = resultK + 'K';
+
+  var sourceColor = kToColor(source);
+  var resultColor = kToColor(resultK);
+
+  document.getElementById('gelSwatchSource').style.backgroundColor = sourceColor;
+  document.getElementById('gelSwatchSource').style.boxShadow = '0 0 20px ' + sourceColor + '50';
+  document.getElementById('gelSwatchResult').style.backgroundColor = resultColor;
+  document.getElementById('gelSwatchResult').style.boxShadow = '0 0 20px ' + resultColor + '50';
+
+  var gelName = 'no gel';
+  if (correction < -70) gelName = 'full CTB';
+  else if (correction < -40) gelName = '1/2 CTB';
+  else if (correction < -10) gelName = '1/4 CTB';
+  else if (correction > 70) gelName = 'full CTO';
+  else if (correction > 40) gelName = '1/2 CTO';
+  else if (correction > 10) gelName = '1/4 CTO';
+
+  document.getElementById('gelCorrectionVal').textContent = gelName === 'no gel' ? 'None' : gelName;
+  document.getElementById('gelName').textContent = gelName;
+
+  var reads = {
+    'no gel': 'No correction applied. Source reads true at ' + source + 'K. ' + (source < 3500 ? 'Warm, amber, intimate. The camera and the lamp agree.' : source > 5200 ? 'Clean daylight. Utility, clarity, nowhere to hide.' : 'Transitional. Neither fully resolved. The tension zone.'),
+    '1/4 CTB': 'Light push blue. Subtle cooling shifts the source toward clarity. Still warm enough to read as organic.',
+    '1/2 CTB': 'Half-correction toward daylight. Mix a tungsten source into a daylight-balanced scene without going cold.',
+    'full CTB': 'Full daylight conversion. The warm source now reads neutral. The amber has been taken away. What was intimate is now institutional.',
+    '1/4 CTO': 'Light push warm. A subtle amber coating on a daylight source. Adds humanity without going full tungsten.',
+    '1/2 CTO': 'Half-correction toward tungsten. A morning window through half-CTO reads as golden hour. Warmth without dishonesty.',
+    'full CTO': 'Full tungsten conversion. A daylight source now reads as firelight. The cold has been replaced with intimacy. Or deception, depending on the scene.',
+  };
+
+  document.getElementById('gelRead').textContent = reads[gelName] || reads['no gel'];
+}
+updateGelMixer();
+
+// ── TENSION ZONE ──
+function updateTension() {
+  var val = parseInt(document.getElementById('tensionSlider').value);
+  var warmth = Math.max(0, Math.min(100, 100 - val * 1.2));
+  var coolness = Math.max(0, Math.min(100, val * 1.1));
+  var tension = Math.min(100, 100 - Math.abs(val - 50) * 2);
+
+  document.getElementById('warmthBar').style.width = warmth + '%';
+  document.getElementById('coolnessBar').style.width = coolness + '%';
+  document.getElementById('tensionBar').style.width = tension + '%';
+
+  function level(v) {
+    if (v > 70) return 'dominant';
+    if (v > 40) return 'present';
+    if (v > 15) return 'receding';
+    return 'absent';
+  }
+  function tensionLevel(v) {
+    if (v > 70) return 'maximum';
+    if (v > 45) return 'high';
+    if (v > 25) return 'building';
+    return 'low';
+  }
+
+  document.getElementById('warmthVal').textContent = level(warmth);
+  document.getElementById('coolnessVal').textContent = level(coolness);
+  document.getElementById('tensionVal').textContent = tensionLevel(tension);
+
+  var stmt = 'The frame has settled. Warmth dominates. This is a resolved world. The audience relaxes into it.';
+  if (val >= 16 && val <= 35) stmt = 'Warmth leads but cool is present. A morning window in an amber room. Not fully resolved. Something is about to enter.';
+  if (val >= 36 && val <= 50) stmt = 'The tension zone. Two temperatures fighting for the frame. The camera cannot commit. The audience feels the split without knowing why.';
+  if (val >= 51 && val <= 65) stmt = 'Cool gains. Warmth is losing. The world is shifting. The amber practicals are outnumbered. Something familiar is ending.';
+  if (val >= 66 && val <= 84) stmt = 'Cool dominates. Warmth visible but retreating. The cold world is taking over. What was intimate is becoming institutional.';
+  if (val >= 85) stmt = 'The frame has settled. Cold dominates. Clarity without comfort. The world stripped of warmth. This is the temperature of grief.';
+
+  document.getElementById('tensionStatement').textContent = stmt;
+}
+updateTension();
+
+// ── SCROLL REVEAL ──
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+var staggerObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      var children = entry.target.querySelectorAll('.stagger-child');
+      children.forEach(function(child, i) {
+        setTimeout(function() { child.classList.add('visible'); }, i * 130);
+      });
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.films-grid').forEach(function(el) { staggerObs.observe(el); });
+</script>
+</body>
+</html>

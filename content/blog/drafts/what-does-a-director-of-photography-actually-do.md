@@ -6,7 +6,7 @@ category: "Business"
 tags: ["director of photography", "dp", "cinematography", "commercial production", "dallas dp"]
 interactive: "/interactive/what-does-a-dp-do.html"
 featured: false
-draft: true
+draft: false
 ---
 
 The title is misleading. "Director of Photography" sounds like someone who takes pictures. The real job is closer to visual architect. A DP designs the image, controls the light, chooses the lens, moves the camera, and makes every decision that determines whether a frame looks like cinema or a corporate webcam recording.
