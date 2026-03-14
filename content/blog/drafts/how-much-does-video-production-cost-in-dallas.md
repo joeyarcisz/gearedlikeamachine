@@ -5,7 +5,7 @@ excerpt: "The honest answer isn't a single number. It's a system. Here is how vi
 category: "Business"
 tags: ["video production cost", "dallas production", "commercial video pricing", "dfW", "texas production", "budget"]
 interactive: "/interactive/video-production-cost-dallas.html"
-featured: false
+featured: true
 draft: false
 ---
 

@@ -4,7 +4,7 @@ date: "2026-03-06"
 excerpt: "Most DPs in the DFW market are leaving $500 to $1,000 on the table every shoot day. Here is why your rate is too low and how to fix it without losing clients."
 category: "Business"
 tags: ["pricing", "day rates", "DP", "business"]
-featured: true
+featured: flase
 ---
 
 Most cinematographers set their day rate once, early in their career, and never revisit it. They pick a number that feels safe, one that won't scare off the next inquiry, and they ride it for years. Meanwhile, their skills compound, their gear inventory grows, their client list gets stronger, and their rate stays frozen.
