@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import chromium from "@sparticuz/chromium";
-import puppeteerCore from "puppeteer-core";
 
 export const maxDuration = 30;
 
@@ -16,13 +14,17 @@ export async function GET(
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "https://www.gearedlikeamachine.com";
+      : "https://www.gearedlikeamachine.com");
 
   const targetUrl = `${siteUrl}/interactive/${slug}.html`;
 
   try {
+    // Dynamic imports to avoid bundling issues
+    const chromium = (await import("@sparticuz/chromium")).default;
+    const puppeteerCore = (await import("puppeteer-core")).default;
+
     const browser = await puppeteerCore.launch({
       args: chromium.args,
       defaultViewport: { width: 1080, height: 1080 },
