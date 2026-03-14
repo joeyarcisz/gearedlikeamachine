@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { inventory, categories } from "@/lib/inventory";
 import ProjectDetailClient from "./ProjectDetailClient";
 
 export default async function ProjectDetailPage({
@@ -59,6 +60,8 @@ export default async function ProjectDetailPage({
     <ProjectDetailClient
       project={serialize(project)}
       crewMembers={crewMembers.map(serialize)}
+      inventory={inventory}
+      inventoryCategories={categories}
     />
   );
 }

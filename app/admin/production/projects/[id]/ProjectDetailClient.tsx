@@ -16,6 +16,8 @@ import type {
   ProjectCrewMember,
   ProjectEquipmentItem,
 } from "@/lib/production-types";
+import type { InventoryItem } from "@/lib/inventory";
+import EquipmentSelector from "@/components/admin/production/EquipmentSelector";
 
 interface CrewMemberOption {
   id: string;
@@ -28,6 +30,8 @@ interface CrewMemberOption {
 interface ProjectDetailClientProps {
   project: ProjectDetail;
   crewMembers: CrewMemberOption[];
+  inventory: InventoryItem[];
+  inventoryCategories: readonly string[];
 }
 
 type Tab = "overview" | "crew" | "equipment" | "callsheets" | "shotlists" | "schedule" | "documents";
@@ -69,6 +73,8 @@ function formatBudget(low: number | null, high: number | null) {
 export default function ProjectDetailClient({
   project: initialProject,
   crewMembers,
+  inventory,
+  inventoryCategories,
 }: ProjectDetailClientProps) {
   const router = useRouter();
   const [project, setProject] = useState(initialProject);
@@ -374,6 +380,8 @@ export default function ProjectDetailClient({
         <EquipmentTab
           projectId={project.id}
           equipment={project.projectEquipment}
+          inventory={inventory}
+          inventoryCategories={inventoryCategories}
           onUpdate={() => router.refresh()}
         />
       )}
@@ -911,14 +919,19 @@ function CrewTab({
 function EquipmentTab({
   projectId,
   equipment,
+  inventory,
+  inventoryCategories,
   onUpdate,
 }: {
   projectId: string;
   equipment: ProjectEquipmentItem[];
+  inventory: InventoryItem[];
+  inventoryCategories: readonly string[];
   onUpdate: () => void;
 }) {
   const [localEquipment, setLocalEquipment] = useState(equipment);
   const [showAdd, setShowAdd] = useState(false);
+  const [showSelector, setShowSelector] = useState(false);
   const [addItemName, setAddItemName] = useState("");
   const [addCategory, setAddCategory] = useState("");
   const [addDailyRate, setAddDailyRate] = useState("");
@@ -986,12 +999,20 @@ function EquipmentTab({
           <h2 className="text-xs uppercase tracking-widest text-white font-[family-name:var(--font-heading)]">
             Project Equipment
           </h2>
-          <button
-            onClick={() => setShowAdd(!showAdd)}
-            className="ml-auto text-[10px] uppercase tracking-widest text-steel hover:text-white transition-colors font-[family-name:var(--font-heading)]"
-          >
-            {showAdd ? "Cancel" : "+ Add Equipment"}
-          </button>
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              onClick={() => setShowSelector(true)}
+              className="text-[10px] uppercase tracking-widest text-steel hover:text-white transition-colors font-[family-name:var(--font-heading)]"
+            >
+              Browse Inventory
+            </button>
+            <button
+              onClick={() => setShowAdd(!showAdd)}
+              className="text-[10px] uppercase tracking-widest text-steel hover:text-white transition-colors font-[family-name:var(--font-heading)]"
+            >
+              {showAdd ? "Cancel" : "+ Custom Item"}
+            </button>
+          </div>
         </div>
         <div className="dashboard-card-body">
           {showAdd && (
@@ -1128,6 +1149,40 @@ function EquipmentTab({
           )}
         </div>
       </div>
+
+      {showSelector && (
+        <EquipmentSelector
+          inventory={inventory}
+          categories={inventoryCategories}
+          onSelect={async (item) => {
+            setSubmitting(true);
+            try {
+              const res = await fetch(`/api/production/projects/${projectId}/equipment`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                  itemName: item.itemName,
+                  category: item.category,
+                  dailyRate: item.dailyRate,
+                  quantity: 1,
+                  notes: null,
+                }),
+              });
+              if (res.ok) {
+                const newItem = await res.json();
+                setLocalEquipment((prev) => [...prev, newItem]);
+                onUpdate();
+              }
+            } catch {
+              // silently fail
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+          onClose={() => setShowSelector(false)}
+        />
+      )}
     </div>
   );
 }
