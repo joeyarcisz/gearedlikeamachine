@@ -198,8 +198,8 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
     setLineItems((prev) => prev.filter((_, i) => i !== index));
   }
 
-  async function handleSave() {
-    if (!title.trim()) return;
+  async function handleSave(): Promise<string | null> {
+    if (!title.trim()) return null;
     setSaving(true);
 
     try {
@@ -264,22 +264,20 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
       if (!id && savedEstimateId) {
         router.push(`/admin/estimates/${savedEstimateId}`);
       }
+
+      return savedEstimateId || null;
     } catch {
-      // Error saving
+      return null;
     } finally {
       setSaving(false);
     }
   }
 
   async function handleGeneratePDF() {
-    if (!estimateId) {
-      await handleSave();
-    }
-    const targetId = estimateId;
+    // Save first to ensure latest data, and get the ID back
+    const savedId = await handleSave();
+    const targetId = savedId || estimateId;
     if (!targetId) return;
-
-    // Save first
-    await handleSave();
 
     const res = await fetch(`/api/estimates/${targetId}/pdf`, { method: "POST" });
     if (!res.ok) return;

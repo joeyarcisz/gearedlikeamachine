@@ -48,6 +48,7 @@ export async function PUT(
         markupPercent,
         billRate,
         isOwnerLabor,
+        active: body.active !== undefined ? body.active : existing.active,
         sortOrder: body.sortOrder ?? existing.sortOrder,
       },
     });
