@@ -24,6 +24,11 @@ const productionNav = [
   { label: "Schedule", href: "/admin/production/schedule", icon: ScheduleIcon },
 ];
 
+const estimatesNav = [
+  { label: "All Estimates", href: "/admin/estimates", icon: EstimatesIcon, exact: true },
+  { label: "Rate Catalog", href: "/admin/estimates/catalog", icon: CatalogIcon },
+];
+
 const documentsNav = [
   { label: "All Documents", href: "/admin/documents", icon: DocumentsIcon, exact: true },
   { label: "New Document", href: "/admin/documents/new", icon: NewDocIcon },
@@ -129,6 +134,18 @@ function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => void })
         {/* Production Nav Links */}
         <nav className="py-4 px-2 space-y-1">
           {renderNavItems(productionNav)}
+        </nav>
+
+        {/* Estimates section label */}
+        <div className="px-4 py-2 border-b border-card-border border-t border-card-border">
+          <span className="sidebar-label text-[10px] uppercase tracking-widest text-steel font-[family-name:var(--font-heading)]">
+            Estimates
+          </span>
+        </div>
+
+        {/* Estimates Nav Links */}
+        <nav className="py-4 px-2 space-y-1">
+          {renderNavItems(estimatesNav)}
         </nav>
 
         {/* Documents section label */}
@@ -251,6 +268,23 @@ function TemplatesIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
       <path d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H6m7.5-3.75c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function EstimatesIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+      <path d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CatalogIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+      <path d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 6h.008v.008H6V6z" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
