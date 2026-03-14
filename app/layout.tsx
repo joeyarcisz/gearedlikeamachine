@@ -72,7 +72,7 @@ export default function RootLayout({
               description:
                 "Video production company and equipment rental house specializing in brand films, commercials, and social media content. Based in Dallas-Fort Worth, Texas. Working globally.",
               telephone: "(682) 229-7699",
-              email: "hello@gearedlikeamachine.com",
+              email: "joey@gearedlikeamachine.com",
               url: "https://gearedlikeamachine.com",
               address: {
                 "@type": "PostalAddress",
@@ -98,7 +98,7 @@ export default function RootLayout({
               description:
                 "Commercial video production and equipment rentals based in Dallas, Texas. Available worldwide.",
               telephone: "(682) 229-7699",
-              email: "hello@gearedlikeamachine.com",
+              email: "joey@gearedlikeamachine.com",
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "Dallas",

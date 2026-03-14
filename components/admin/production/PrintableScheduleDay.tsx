@@ -252,7 +252,7 @@ export default function PrintableScheduleDay({
             Geared Like A Machine
           </div>
           <div style={{ textAlign: "right", fontSize: 10, color: "#444", lineHeight: 1.5 }}>
-            hello@gearedlikeamachine.com<br />
+            joey@gearedlikeamachine.com<br />
             (682) 229-7699
           </div>
         </div>
@@ -374,7 +374,7 @@ export default function PrintableScheduleDay({
 
         {/* ── FOOTER ── */}
         <div className="doc-footer">
-          Geared Like A Machine &nbsp;|&nbsp; hello@gearedlikeamachine.com &nbsp;|&nbsp; (682) 229-7699
+          Geared Like A Machine &nbsp;|&nbsp; joey@gearedlikeamachine.com &nbsp;|&nbsp; (682) 229-7699
         </div>
       </div>
     </>

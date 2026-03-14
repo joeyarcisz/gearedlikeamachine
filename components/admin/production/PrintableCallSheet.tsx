@@ -270,7 +270,7 @@ export default function PrintableCallSheet({ callSheet }: PrintableCallSheetProp
             Geared Like A Machine
           </div>
           <div style={{ textAlign: "right", fontSize: 10, color: "#444", lineHeight: 1.5 }}>
-            hello@gearedlikeamachine.com<br />
+            joey@gearedlikeamachine.com<br />
             (682) 229-7699<br />
             gearedlikeamachine.com
           </div>
@@ -345,7 +345,7 @@ export default function PrintableCallSheet({ callSheet }: PrintableCallSheetProp
               <td>DP</td>
               <td>Joey Arcisz</td>
               <td>(682) 229-7699</td>
-              <td>hello@gearedlikeamachine.com</td>
+              <td>joey@gearedlikeamachine.com</td>
             </tr>
             {callSheet.crewCalls
               .filter((c) => /director|producer|1st ad|coordinator/i.test(c.role))
@@ -543,7 +543,7 @@ export default function PrintableCallSheet({ callSheet }: PrintableCallSheetProp
 
         {/* ── FOOTER ── */}
         <div className="doc-footer">
-          Geared Like A Machine &nbsp;|&nbsp; hello@gearedlikeamachine.com &nbsp;|&nbsp; (682) 229-7699
+          Geared Like A Machine &nbsp;|&nbsp; joey@gearedlikeamachine.com &nbsp;|&nbsp; (682) 229-7699
         </div>
       </div>
     </>

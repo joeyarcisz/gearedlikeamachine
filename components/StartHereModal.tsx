@@ -76,14 +76,14 @@ export default function StartHereModal({ open, onClose }: StartHereModalProps) {
     },
     {
       title: "Send an Email",
-      description: "Drop us a line directly at hello@gearedlikeamachine.com.",
+      description: "Drop us a line directly at joey@gearedlikeamachine.com.",
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
           <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       ),
       onClick: () => {
-        window.location.href = "mailto:hello@gearedlikeamachine.com";
+        window.location.href = "mailto:joey@gearedlikeamachine.com";
       },
     },
   ];

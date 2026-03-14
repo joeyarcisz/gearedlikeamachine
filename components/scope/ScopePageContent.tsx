@@ -308,7 +308,7 @@ export default function ScopePageContent() {
               Discovery Form
             </a>
             <a
-              href="mailto:hello@gearedlikeamachine.com"
+              href="mailto:joey@gearedlikeamachine.com"
               className="w-full sm:w-auto text-center border border-chrome/30 text-white px-8 py-3.5 text-sm uppercase tracking-widest font-semibold hover:border-steel hover:text-steel transition-colors"
             >
               Email Us Direct

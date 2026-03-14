@@ -8,7 +8,7 @@
 
 The estimator tool is feature-complete (schema, API, admin UI, PDF generation, duplication, project conversion, bulk save). The one missing capability is sending estimates to clients via email. Currently the workflow is: generate PDF, download, manually attach to an email. This feature closes that gap.
 
-Resend is already integrated in the codebase with 4+ working email implementations. The estimate system already has contact linking with email addresses, PDF generation via `@react-pdf/renderer`, and a SENT status in the EstimateStatus enum.
+Resend is already integrated in the codebase with 4+ working email implementations. The estimate system already has contact linking with email addresses, PDF generation via `@react-pdf/renderer`, and a SENT status in the EstimateStatus enum. All outbound email site-wide now uses `joey@gearedlikeamachine.com` (the `hello@` address has been retired).
 
 ## Decisions
 

@@ -23,7 +23,7 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
           <p className="text-sm text-gray-800 mt-1">Video Production & Equipment Rentals</p>
         </div>
         <div className="text-right text-sm text-gray-800">
-          <p>hello@gearedlikeamachine.com</p>
+          <p>joey@gearedlikeamachine.com</p>
           <p>gearedlikeamachine.com</p>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function PrintableEstimate({ summary, estimate }: Props) {
       <div className="mt-8 pt-4 border-t border-gray-400 text-xs text-gray-700">
         <p>
           This is an automated estimate. Actual costs may vary based on specific requirements.
-          Valid for 30 days. Contact hello@gearedlikeamachine.com with questions.
+          Valid for 30 days. Contact joey@gearedlikeamachine.com with questions.
         </p>
         <p className="mt-2">
           &copy; {new Date().getFullYear()} Geared Like A Machine. All rights reserved.

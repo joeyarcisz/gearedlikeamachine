@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         // Notify owner
         await resend.emails.send({
           from: "Discovery Form <noreply@gearedlikeamachine.com>",
-          to: "hello@gearedlikeamachine.com",
+          to: "joey@gearedlikeamachine.com",
           subject: `New Discovery: ${escapeHtml(name)}${company ? `, ${escapeHtml(company)}` : ""}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px;">
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
         // Auto-reply to the user
         await resend.emails.send({
-          from: "Geared Like A Machine <hello@gearedlikeamachine.com>",
+          from: "Joey Arcisz | GLM <joey@gearedlikeamachine.com>",
           to: email,
           subject:
             "We Got Your Message | Geared Like A Machine",
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
 
               <div style="border-top: 1px solid #ddd; margin-top: 32px; padding-top: 16px; font-size: 12px; color: #999;">
                 <p>Geared Like A Machine | Video Production & Equipment Rentals</p>
-                <p>hello@gearedlikeamachine.com &bull; gearedlikeamachine.com</p>
+                <p>joey@gearedlikeamachine.com &bull; gearedlikeamachine.com</p>
               </div>
             </div>
           `,

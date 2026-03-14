@@ -5,7 +5,7 @@ export const siteConfig = {
     "For more than two decades, brands and organizations of every scale have trusted us to create high-impact still and motion content. Based in Texas, working globally.",
   location: "Based in Texas",
   availability: "Available Worldwide",
-  email: "hello@gearedlikeamachine.com",
+  email: "joey@gearedlikeamachine.com",
   phone: "(682) 229-7699",
 };
 

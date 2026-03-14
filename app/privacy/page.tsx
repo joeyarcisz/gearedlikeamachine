@@ -143,10 +143,10 @@ export default function PrivacyPolicy() {
               <p>
                 For privacy-related questions or data requests, contact us at{" "}
                 <a
-                  href="mailto:hello@gearedlikeamachine.com"
+                  href="mailto:joey@gearedlikeamachine.com"
                   className="text-white underline hover:text-steel transition-colors"
                 >
-                  hello@gearedlikeamachine.com
+                  joey@gearedlikeamachine.com
                 </a>
               </p>
             </section>

@@ -56,7 +56,7 @@ export async function POST(
     const resend = new Resend(resendApiKey);
 
     await resend.emails.send({
-      from: "Geared Like A Machine <hello@gearedlikeamachine.com>",
+      from: "Joey Arcisz | GLM <joey@gearedlikeamachine.com>",
       to: contact.email,
       subject: subject.trim(),
       html: `
@@ -66,7 +66,7 @@ ${escapeHtml(message.trim())}
           </div>
           <div style="border-top: 1px solid #ddd; margin-top: 32px; padding-top: 16px; font-size: 12px; color: #999;">
             <p>Geared Like A Machine</p>
-            <p>hello@gearedlikeamachine.com</p>
+            <p>joey@gearedlikeamachine.com</p>
           </div>
         </div>
       `,

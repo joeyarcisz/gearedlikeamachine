@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       if (!sub.email) continue;
       try {
         await resend.emails.send({
-          from: "Geared Like A Machine <hello@gearedlikeamachine.com>",
+          from: "Joey Arcisz | GLM <joey@gearedlikeamachine.com>",
           to: sub.email,
           subject: `New post: ${post.title}`,
           html: `

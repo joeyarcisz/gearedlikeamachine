@@ -71,7 +71,7 @@ const jsonLd = {
       name: "Geared Like A Machine",
       url: "https://gearedlikeamachine.com/dallas-video-production",
       telephone: "(682) 229-7699",
-      email: "hello@gearedlikeamachine.com",
+      email: "joey@gearedlikeamachine.com",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Dallas",

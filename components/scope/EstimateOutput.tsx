@@ -150,7 +150,7 @@ export default function EstimateOutput({ summary, estimate, onStartOver }: Props
           Start Over
         </button>
         <a
-          href="mailto:hello@gearedlikeamachine.com?subject=Scope%20Estimate%20Question"
+          href="mailto:joey@gearedlikeamachine.com?subject=Scope%20Estimate%20Question"
           className="px-6 py-2.5 text-sm uppercase tracking-widest text-steel border border-steel hover:bg-steel hover:text-black transition-colors text-center cursor-pointer"
         >
           Questions? Reach Out

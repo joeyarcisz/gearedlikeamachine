@@ -110,7 +110,7 @@ export default function RentalInventory() {
     }
     const subject = encodeURIComponent("Equipment Rental Inquiry");
     const body = encodeURIComponent(lines.join("\n"));
-    return `mailto:hello@gearedlikeamachine.com?subject=${subject}&body=${body}`;
+    return `mailto:joey@gearedlikeamachine.com?subject=${subject}&body=${body}`;
   }
 
   if (showQuote) {

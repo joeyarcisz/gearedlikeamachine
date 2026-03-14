@@ -220,7 +220,7 @@ export default function PrintableShotList({ shotList, shots }: PrintableShotList
         <div className="header">
           <div className="header-company">Geared Like A Machine</div>
           <div className="header-contact">
-            hello@gearedlikeamachine.com<br />
+            joey@gearedlikeamachine.com<br />
             (682) 229-7699
           </div>
         </div>
@@ -326,7 +326,7 @@ export default function PrintableShotList({ shotList, shots }: PrintableShotList
 
         {/* ── FOOTER ── */}
         <div className="doc-footer">
-          Geared Like A Machine &nbsp;|&nbsp; hello@gearedlikeamachine.com &nbsp;|&nbsp; (682) 229-7699
+          Geared Like A Machine &nbsp;|&nbsp; joey@gearedlikeamachine.com &nbsp;|&nbsp; (682) 229-7699
         </div>
       </div>
     </>
