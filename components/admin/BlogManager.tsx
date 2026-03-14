@@ -54,12 +54,24 @@ export default function BlogManager({
     }
   }
 
-  async function postToSocial(slug: string, platform: string) {
+  function getInstagramImageUrl(post: BlogPost): string | undefined {
+    // If the post has an interactive, use the auto-screenshot endpoint
+    if (post.interactive) {
+      const interactiveSlug = post.interactive
+        .replace(/^\/interactive\//, "")
+        .replace(/\.html$/, "");
+      return `${window.location.origin}/api/screenshot/${interactiveSlug}`;
+    }
+    // Otherwise fall back to manually entered URL
+    return igImageUrls[post.slug]?.trim() || undefined;
+  }
+
+  async function postToSocial(slug: string, platform: string, post?: BlogPost) {
     const key = `${platform}-${slug}`;
 
     // Instagram requires an image URL
-    if (platform === "instagram") {
-      const imageUrl = igImageUrls[slug]?.trim();
+    if (platform === "instagram" && post) {
+      const imageUrl = getInstagramImageUrl(post);
       if (!imageUrl) {
         setStatus(key, "error", "Paste an image URL first");
         return;
@@ -69,8 +81,9 @@ export default function BlogManager({
     setStatus(key, "sending", "Posting...");
     try {
       const body: Record<string, string> = { slug };
-      if (platform === "instagram" && igImageUrls[slug]?.trim()) {
-        body.imageUrl = igImageUrls[slug].trim();
+      if (platform === "instagram" && post) {
+        const imageUrl = getInstagramImageUrl(post);
+        if (imageUrl) body.imageUrl = imageUrl;
       }
       const res = await fetch(`/api/blog/social/${platform}`, {
         method: "POST",
@@ -290,32 +303,34 @@ export default function BlogManager({
                     <ActionButton
                       actionKey={`twitter-${post.slug}`}
                       label="Post to X"
-                      onClick={() => postToSocial(post.slug, "twitter")}
+                      onClick={() => postToSocial(post.slug, "twitter", post)}
                       disabled={!socialConfig.twitter}
                     />
                     <ActionButton
                       actionKey={`linkedin-${post.slug}`}
                       label="Post to LinkedIn"
-                      onClick={() => postToSocial(post.slug, "linkedin")}
+                      onClick={() => postToSocial(post.slug, "linkedin", post)}
                       disabled={!socialConfig.linkedin}
                     />
                     <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        placeholder="Image URL for Instagram"
-                        value={igImageUrls[post.slug] || ""}
-                        onChange={(e) =>
-                          setIgImageUrls((prev) => ({
-                            ...prev,
-                            [post.slug]: e.target.value,
-                          }))
-                        }
-                        className="text-[10px] px-2 py-1.5 bg-black border border-card-border text-steel placeholder:text-muted/50 w-48 focus:outline-none focus:border-steel/40"
-                      />
+                      {!post.interactive && (
+                        <input
+                          type="text"
+                          placeholder="Image URL for Instagram"
+                          value={igImageUrls[post.slug] || ""}
+                          onChange={(e) =>
+                            setIgImageUrls((prev) => ({
+                              ...prev,
+                              [post.slug]: e.target.value,
+                            }))
+                          }
+                          className="text-[10px] px-2 py-1.5 bg-black border border-card-border text-steel placeholder:text-muted/50 w-48 focus:outline-none focus:border-steel/40"
+                        />
+                      )}
                       <ActionButton
                         actionKey={`instagram-${post.slug}`}
-                        label="Post to Instagram"
-                        onClick={() => postToSocial(post.slug, "instagram")}
+                        label={post.interactive ? "Post to Instagram (auto)" : "Post to Instagram"}
+                        onClick={() => postToSocial(post.slug, "instagram", post)}
                         disabled={!socialConfig.instagram}
                       />
                     </div>
