@@ -4,6 +4,8 @@ import { validateAdminSession } from "@/lib/admin-auth";
 import { getDistributionKit } from "@/lib/blog";
 import { parseDistributionKit, postToInstagramWithImage } from "@/lib/social";
 
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   const cookieStore = await cookies();
   const token = cookieStore.get("glm_admin_token")?.value;
@@ -44,7 +46,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await postToInstagramWithImage(kit.instagram, imageUrl.trim());
+    // Pre-warm the screenshot URL if it's our own screenshot endpoint
+    // so Vercel CDN caches it before Instagram tries to fetch
+    const trimmedUrl = imageUrl.trim();
+    if (trimmedUrl.includes("/api/screenshot/")) {
+      const warmRes = await fetch(trimmedUrl, { method: "GET" });
+      if (!warmRes.ok) {
+        const err = await warmRes.text();
+        return NextResponse.json(
+          { error: `Screenshot failed: ${err}` },
+          { status: 500 }
+        );
+      }
+    }
+
+    const result = await postToInstagramWithImage(kit.instagram, trimmedUrl);
 
     return NextResponse.json({
       success: true,
