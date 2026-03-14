@@ -74,6 +74,9 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
   const [loaded, setLoaded] = useState(!id);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [convertSuccess, setConvertSuccess] = useState<{ projectId: string; projectTitle: string } | null>(null);
+  const [sending, setSending] = useState(false);
+  const [sendSuccess, setSendSuccess] = useState<string | null>(null);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   // Load existing estimate
   useEffect(() => {
@@ -328,6 +331,44 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
     setSaving(false);
   }
 
+  async function handleSendToClient() {
+    if (!estimateId) return;
+    const contactEmail = selectedContact?.email;
+    if (!contactEmail) return;
+    if (!confirm(`Send estimate to ${contactEmail}?`)) return;
+
+    setSending(true);
+    setSendSuccess(null);
+    setSendError(null);
+
+    try {
+      const savedId = await handleSave();
+      const targetId = savedId || estimateId;
+      if (!targetId) {
+        setSendError("Save the estimate first");
+        setSending(false);
+        return;
+      }
+
+      const res = await fetch(`/api/estimates/${targetId}/send`, { method: "POST" });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setSendError(data.error || "Failed to send");
+        setSending(false);
+        return;
+      }
+
+      setSendSuccess(data.sentTo);
+      if (status === "DRAFT") {
+        setStatus("SENT");
+      }
+    } catch {
+      setSendError("Failed to send email");
+    }
+    setSending(false);
+  }
+
   // Group line items by category for display
   const grouped = CATEGORY_ORDER.map((cat) => ({
     category: cat,
@@ -389,6 +430,21 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
           </button>
           {estimateId && (
             <button
+              onClick={handleSendToClient}
+              disabled={saving || sending || !selectedContact || !selectedContact.email}
+              className="text-[10px] uppercase tracking-widest bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1.5 rounded hover:bg-blue-500/30 transition-colors disabled:opacity-50"
+            >
+              {sending
+                ? "Sending..."
+                : !selectedContact
+                  ? "Link Contact to Send"
+                  : !selectedContact.email
+                    ? "No Client Email"
+                    : "Send to Client"}
+            </button>
+          )}
+          {estimateId && (
+            <button
               onClick={handleDuplicate}
               disabled={saving}
               className="text-[10px] uppercase tracking-widest bg-card border border-card-border text-white px-3 py-1.5 rounded hover:bg-white/10 transition-colors disabled:opacity-50"
@@ -427,6 +483,34 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
           >
             View Projects
           </a>
+        </div>
+      )}
+
+      {/* Send success/error banners */}
+      {sendSuccess && (
+        <div className="bg-blue-500/10 border border-blue-500/30 rounded px-4 py-2 flex items-center justify-between">
+          <span className="text-xs text-blue-400">
+            Estimate sent to {sendSuccess}
+          </span>
+          <button
+            onClick={() => setSendSuccess(null)}
+            className="text-blue-400 hover:text-blue-300 text-sm"
+          >
+            &times;
+          </button>
+        </div>
+      )}
+      {sendError && (
+        <div className="bg-red-500/10 border border-red-500/30 rounded px-4 py-2 flex items-center justify-between">
+          <span className="text-xs text-red-400">
+            {sendError}
+          </span>
+          <button
+            onClick={() => setSendError(null)}
+            className="text-red-400 hover:text-red-300 text-sm"
+          >
+            &times;
+          </button>
         </div>
       )}
 
