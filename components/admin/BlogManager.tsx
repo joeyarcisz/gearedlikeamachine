@@ -31,6 +31,7 @@ export default function BlogManager({
   const [actionStatus, setActionStatus] = useState<
     Record<string, { status: string; message: string }>
   >({});
+  const [igImageUrls, setIgImageUrls] = useState<Record<string, string>>({});
 
   function setStatus(key: string, status: string, message: string) {
     setActionStatus((prev) => ({ ...prev, [key]: { status, message } }));
@@ -55,12 +56,26 @@ export default function BlogManager({
 
   async function postToSocial(slug: string, platform: string) {
     const key = `${platform}-${slug}`;
+
+    // Instagram requires an image URL
+    if (platform === "instagram") {
+      const imageUrl = igImageUrls[slug]?.trim();
+      if (!imageUrl) {
+        setStatus(key, "error", "Paste an image URL first");
+        return;
+      }
+    }
+
     setStatus(key, "sending", "Posting...");
     try {
+      const body: Record<string, string> = { slug };
+      if (platform === "instagram" && igImageUrls[slug]?.trim()) {
+        body.imageUrl = igImageUrls[slug].trim();
+      }
       const res = await fetch(`/api/blog/social/${platform}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -284,12 +299,26 @@ export default function BlogManager({
                       onClick={() => postToSocial(post.slug, "linkedin")}
                       disabled={!socialConfig.linkedin}
                     />
-                    <ActionButton
-                      actionKey={`instagram-${post.slug}`}
-                      label="Post to Instagram"
-                      onClick={() => postToSocial(post.slug, "instagram")}
-                      disabled={!socialConfig.instagram}
-                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Image URL for Instagram"
+                        value={igImageUrls[post.slug] || ""}
+                        onChange={(e) =>
+                          setIgImageUrls((prev) => ({
+                            ...prev,
+                            [post.slug]: e.target.value,
+                          }))
+                        }
+                        className="text-[10px] px-2 py-1.5 bg-black border border-card-border text-steel placeholder:text-muted/50 w-48 focus:outline-none focus:border-steel/40"
+                      />
+                      <ActionButton
+                        actionKey={`instagram-${post.slug}`}
+                        label="Post to Instagram"
+                        onClick={() => postToSocial(post.slug, "instagram")}
+                        disabled={!socialConfig.instagram}
+                      />
+                    </div>
                   </>
                 )}
 
