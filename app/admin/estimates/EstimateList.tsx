@@ -29,6 +29,7 @@ export default function EstimateList() {
   const [estimates, setEstimates] = useState<EstimateRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("All");
+  const [duplicating, setDuplicating] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/estimates")
@@ -59,6 +60,21 @@ export default function EstimateList() {
       day: "numeric",
       year: "numeric",
     });
+  }
+
+  async function handleDuplicate(e: React.MouseEvent, estId: string) {
+    e.stopPropagation();
+    setDuplicating(estId);
+    try {
+      const res = await fetch(`/api/estimates/${estId}/duplicate`, { method: "POST" });
+      if (res.ok) {
+        const refreshed = await fetch("/api/estimates").then((r) => r.json());
+        setEstimates(refreshed);
+      }
+    } catch {
+      // silent
+    }
+    setDuplicating(null);
   }
 
   return (
@@ -121,6 +137,7 @@ export default function EstimateList() {
                 <th className="py-2 px-3 font-normal text-right">Total</th>
                 <th className="py-2 px-3 font-normal">Status</th>
                 <th className="py-2 px-3 font-normal text-right">Date</th>
+                <th className="py-2 px-1 w-8 font-normal"></th>
               </tr>
             </thead>
             <tbody>
@@ -156,6 +173,18 @@ export default function EstimateList() {
                   </td>
                   <td className="py-3 px-3 text-[10px] text-muted text-right">
                     {formatDate(est.updatedAt)}
+                  </td>
+                  <td className="py-3 px-1">
+                    <button
+                      onClick={(e) => handleDuplicate(e, est.id)}
+                      disabled={duplicating === est.id}
+                      title="Duplicate estimate"
+                      className="text-muted hover:text-white transition-colors disabled:opacity-50 p-1"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3.5 h-3.5">
+                        <path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m0 0a2.625 2.625 0 115.25 0H8.25z" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
                   </td>
                 </tr>
               ))}

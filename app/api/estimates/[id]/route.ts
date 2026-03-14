@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { validateAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { logActivity } from "@/lib/activity";
+import { computeLineTotal } from "@/lib/estimate-utils";
 
 async function authorize() {
   const cookieStore = await cookies();
@@ -68,19 +69,101 @@ export async function PUT(
       return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
     }
 
-    const updated = await prisma.estimate.update({
-      where: { id },
-      data: {
-        title: body.title?.trim() ?? existing.title,
-        status: body.status ?? existing.status,
-        contactId: body.contactId !== undefined ? (body.contactId || null) : existing.contactId,
-        opportunityId: body.opportunityId !== undefined ? (body.opportunityId || null) : existing.opportunityId,
-        projectId: body.projectId !== undefined ? (body.projectId || null) : existing.projectId,
-        shootDays: body.shootDays !== undefined ? (body.shootDays != null ? Number(body.shootDays) : null) : existing.shootDays,
-        validUntil: body.validUntil !== undefined ? (body.validUntil ? new Date(body.validUntil) : null) : existing.validUntil,
-        notes: body.notes !== undefined ? (body.notes?.trim() || null) : existing.notes,
-        clientNotes: body.clientNotes !== undefined ? (body.clientNotes?.trim() || null) : existing.clientNotes,
-      },
+    // Update estimate metadata + optionally sync line items in a single transaction
+    const result = await prisma.$transaction(async (tx) => {
+      const updated = await tx.estimate.update({
+        where: { id },
+        data: {
+          title: body.title?.trim() ?? existing.title,
+          status: body.status ?? existing.status,
+          contactId: body.contactId !== undefined ? (body.contactId || null) : existing.contactId,
+          opportunityId: body.opportunityId !== undefined ? (body.opportunityId || null) : existing.opportunityId,
+          projectId: body.projectId !== undefined ? (body.projectId || null) : existing.projectId,
+          shootDays: body.shootDays !== undefined ? (body.shootDays != null ? Number(body.shootDays) : null) : existing.shootDays,
+          validUntil: body.validUntil !== undefined ? (body.validUntil ? new Date(body.validUntil) : null) : existing.validUntil,
+          notes: body.notes !== undefined ? (body.notes?.trim() || null) : existing.notes,
+          clientNotes: body.clientNotes !== undefined ? (body.clientNotes?.trim() || null) : existing.clientNotes,
+        },
+      });
+
+      // Bulk line item sync: if lineItems array is provided, diff against existing
+      if (Array.isArray(body.lineItems)) {
+        const existingItems = await tx.estimateLineItem.findMany({
+          where: { estimateId: id },
+          select: { id: true },
+        });
+        const existingIds = new Set(existingItems.map((i) => i.id));
+        const incomingIds = new Set(
+          body.lineItems.filter((li: { id?: string }) => li.id && existingIds.has(li.id)).map((li: { id: string }) => li.id)
+        );
+
+        // Delete items not in incoming array
+        const toDelete = [...existingIds].filter((eid) => !incomingIds.has(eid));
+        if (toDelete.length > 0) {
+          await tx.estimateLineItem.deleteMany({
+            where: { id: { in: toDelete } },
+          });
+        }
+
+        // Update existing items + create new items
+        let newTotal = 0;
+        for (let i = 0; i < body.lineItems.length; i++) {
+          const li = body.lineItems[i];
+          const lineTotal = computeLineTotal(
+            li.unitRate,
+            li.quantity ?? 1,
+            li.days ?? 1,
+            li.rateType || "DAY"
+          );
+          newTotal += lineTotal;
+
+          if (li.id && existingIds.has(li.id)) {
+            // Update existing
+            await tx.estimateLineItem.update({
+              where: { id: li.id },
+              data: {
+                name: li.name,
+                category: li.category,
+                department: li.department || null,
+                rateType: li.rateType || "DAY",
+                unitRate: li.unitRate,
+                quantity: li.quantity ?? 1,
+                days: li.days ?? 1,
+                lineTotal,
+                sortOrder: i,
+                notes: li.notes || null,
+                catalogItemId: li.catalogItemId || null,
+              },
+            });
+          } else {
+            // Create new
+            await tx.estimateLineItem.create({
+              data: {
+                estimateId: id,
+                name: li.name,
+                category: li.category,
+                department: li.department || null,
+                rateType: li.rateType || "DAY",
+                unitRate: li.unitRate,
+                quantity: li.quantity ?? 1,
+                days: li.days ?? 1,
+                lineTotal,
+                sortOrder: i,
+                notes: li.notes || null,
+                catalogItemId: li.catalogItemId || null,
+              },
+            });
+          }
+        }
+
+        // Update estimate total
+        await tx.estimate.update({
+          where: { id },
+          data: { total: newTotal },
+        });
+      }
+
+      return updated;
     });
 
     if (body.status && body.status !== existing.status) {
@@ -88,12 +171,12 @@ export async function PUT(
       await logActivity({
         type: "note",
         description: `Estimate ${existing.estimateNumber} marked as ${statusLabel}`,
-        contactId: updated.contactId ?? undefined,
-        opportunityId: updated.opportunityId ?? undefined,
+        contactId: result.contactId ?? undefined,
+        opportunityId: result.opportunityId ?? undefined,
       });
     }
 
-    return NextResponse.json(updated);
+    return NextResponse.json(result);
   } catch {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

@@ -72,6 +72,8 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(!id);
+  const [projectId, setProjectId] = useState<string | null>(null);
+  const [convertSuccess, setConvertSuccess] = useState<{ projectId: string; projectTitle: string } | null>(null);
 
   // Load existing estimate
   useEffect(() => {
@@ -87,6 +89,7 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
         setOpportunityId(data.opportunityId);
         setShootDays(data.shootDays ?? "");
         setValidUntil(data.validUntil ? data.validUntil.split("T")[0] : "");
+        setProjectId(data.projectId || null);
         setNotes(data.notes || "");
         setClientNotes(data.clientNotes || "");
         setLineItems(
@@ -216,13 +219,30 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
 
       let savedEstimateId = estimateId;
 
+      // Prepare line items payload for bulk sync
+      const lineItemsPayload = lineItems.map((li, i) => ({
+        id: li.id || undefined,
+        catalogItemId: li.catalogItemId || null,
+        name: li.name,
+        category: li.category,
+        department: li.department,
+        rateType: li.rateType,
+        unitRate: li.unitRate,
+        quantity: li.quantity,
+        days: li.days,
+        sortOrder: i,
+        notes: li.notes,
+      }));
+
       if (estimateId) {
+        // Single PUT with metadata + line items
         await fetch(`/api/estimates/${estimateId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify({ ...body, lineItems: lineItemsPayload }),
         });
       } else {
+        // Create the estimate first
         const res = await fetch("/api/estimates", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -232,31 +252,13 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
         savedEstimateId = data.id;
         setEstimateId(data.id);
         setEstimateNumber(data.estimateNumber);
-      }
 
-      // Sync line items: delete existing, recreate all
-      if (savedEstimateId) {
-        const existing = await fetch(`/api/estimates/${savedEstimateId}`).then((r) => r.json());
-        for (const li of existing.lineItems || []) {
-          await fetch(`/api/estimates/${savedEstimateId}/items/${li.id}`, { method: "DELETE" });
-        }
-        for (let i = 0; i < lineItems.length; i++) {
-          const li = lineItems[i];
-          await fetch(`/api/estimates/${savedEstimateId}/items`, {
-            method: "POST",
+        // Then sync line items via PUT
+        if (savedEstimateId && lineItemsPayload.length > 0) {
+          await fetch(`/api/estimates/${savedEstimateId}`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              catalogItemId: li.catalogItemId || null,
-              name: li.name,
-              category: li.category,
-              department: li.department,
-              rateType: li.rateType,
-              unitRate: li.unitRate,
-              quantity: li.quantity,
-              days: li.days,
-              sortOrder: i,
-              notes: li.notes,
-            }),
+            body: JSON.stringify({ lineItems: lineItemsPayload }),
           });
         }
       }
@@ -291,6 +293,39 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  async function handleDuplicate() {
+    if (!estimateId) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/estimates/${estimateId}/duplicate`, { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        router.push(`/admin/estimates/${data.id}`);
+      }
+    } catch {
+      // silent
+    }
+    setSaving(false);
+  }
+
+  async function handleConvertToProject() {
+    if (!estimateId) return;
+    if (!confirm("Convert this estimate to a project? This will mark the estimate as Accepted and create a new project.")) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/estimates/${estimateId}/convert`, { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        setStatus("ACCEPTED");
+        setProjectId(data.project.id);
+        setConvertSuccess({ projectId: data.project.id, projectTitle: data.project.title });
+      }
+    } catch {
+      // silent
+    }
+    setSaving(false);
   }
 
   // Group line items by category for display
@@ -328,6 +363,24 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
           >
             {saving ? "Saving..." : "Save Draft"}
           </button>
+          {estimateId && (
+            <button
+              onClick={handleDuplicate}
+              disabled={saving}
+              className="text-[10px] uppercase tracking-widest bg-card border border-card-border text-white px-3 py-1.5 rounded hover:bg-white/10 transition-colors disabled:opacity-50"
+            >
+              Duplicate
+            </button>
+          )}
+          {estimateId && (status === "SENT" || status === "ACCEPTED") && !projectId && (
+            <button
+              onClick={handleConvertToProject}
+              disabled={saving}
+              className="text-[10px] uppercase tracking-widest bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1.5 rounded hover:bg-green-500/30 transition-colors disabled:opacity-50"
+            >
+              Convert to Project
+            </button>
+          )}
           <button
             onClick={handleGeneratePDF}
             disabled={!estimateId && !title.trim()}
@@ -337,6 +390,21 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
           </button>
         </div>
       </div>
+
+      {/* Convert success banner */}
+      {convertSuccess && (
+        <div className="bg-green-500/10 border border-green-500/30 rounded px-4 py-2 flex items-center justify-between">
+          <span className="text-xs text-green-400">
+            Project created: {convertSuccess.projectTitle}
+          </span>
+          <a
+            href={`/admin/production`}
+            className="text-[10px] uppercase tracking-widest text-green-400 hover:text-green-300 transition-colors"
+          >
+            View Projects
+          </a>
+        </div>
+      )}
 
       {/* Title */}
       <input
