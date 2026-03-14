@@ -349,10 +349,34 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
           <h1 className="text-xs uppercase tracking-widest text-white font-[family-name:var(--font-heading)]">
             {estimateNumber || "New Estimate"}
           </h1>
-          {estimateNumber && (
-            <span className="text-[10px] uppercase tracking-widest text-muted font-mono">
-              {estimateNumber}
-            </span>
+          {estimateId && (
+            <select
+              value={status}
+              onChange={async (e) => {
+                const newStatus = e.target.value;
+                setStatus(newStatus);
+                if (estimateId) {
+                  await fetch(`/api/estimates/${estimateId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus }),
+                  });
+                }
+              }}
+              className={`text-[10px] uppercase tracking-widest px-2 py-1 rounded border focus:outline-none cursor-pointer ${
+                status === "DRAFT" ? "bg-white/10 text-white border-card-border" :
+                status === "SENT" ? "bg-blue-500/20 text-blue-400 border-blue-500/30" :
+                status === "ACCEPTED" ? "bg-green-500/20 text-green-400 border-green-500/30" :
+                status === "DECLINED" ? "bg-red-500/20 text-red-400 border-red-500/30" :
+                "bg-amber-500/20 text-amber-400 border-amber-500/30"
+              }`}
+            >
+              <option value="DRAFT">Draft</option>
+              <option value="SENT">Sent</option>
+              <option value="ACCEPTED">Accepted</option>
+              <option value="DECLINED">Declined</option>
+              <option value="EXPIRED">Expired</option>
+            </select>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -361,7 +385,7 @@ export default function EstimateBuilder({ id }: EstimateBuilderProps) {
             disabled={saving || !title.trim()}
             className="text-[10px] uppercase tracking-widest bg-card border border-card-border text-white px-3 py-1.5 rounded hover:bg-white/10 transition-colors disabled:opacity-50"
           >
-            {saving ? "Saving..." : "Save Draft"}
+            {saving ? "Saving..." : "Save"}
           </button>
           {estimateId && (
             <button
