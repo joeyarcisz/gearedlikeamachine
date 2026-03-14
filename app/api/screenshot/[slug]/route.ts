@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 
 export const maxDuration = 30;
 
+const CHROMIUM_PACK =
+  "https://github.com/nichochar/chromium-brotli-lambda/releases/download/chromium-pack-v143.0.0/chromium-v143.0.0-pack.tar";
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -21,20 +24,18 @@ export async function GET(
   const targetUrl = `${siteUrl}/interactive/${slug}.html`;
 
   try {
-    // Dynamic imports to avoid bundling issues
-    const chromium = (await import("@sparticuz/chromium")).default;
+    const chromium = (await import("@sparticuz/chromium-min")).default;
     const puppeteerCore = (await import("puppeteer-core")).default;
 
     const browser = await puppeteerCore.launch({
       args: chromium.args,
       defaultViewport: { width: 1080, height: 1080 },
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath(CHROMIUM_PACK),
       headless: true,
     });
 
     const page = await browser.newPage();
-    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 15000 });
-    // Let fonts and animations settle
+    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 20000 });
     await new Promise((r) => setTimeout(r, 1500));
 
     const screenshot = await page.screenshot({ type: "png" });
