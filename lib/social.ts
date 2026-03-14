@@ -234,7 +234,20 @@ export async function postToInstagramWithImage(
 
   const { id: containerId } = await containerRes.json();
 
-  // Step 2: Publish
+  // Step 2: Wait for media to be ready
+  for (let i = 0; i < 10; i++) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const statusRes = await fetch(
+      `https://graph.facebook.com/v19.0/${containerId}?fields=status_code&access_token=${accessToken}`
+    );
+    if (statusRes.ok) {
+      const { status_code } = await statusRes.json();
+      if (status_code === "FINISHED") break;
+      if (status_code === "ERROR") throw new Error("Instagram media processing failed");
+    }
+  }
+
+  // Step 3: Publish
   const publishRes = await fetch(
     `https://graph.facebook.com/v19.0/${accountId}/media_publish`,
     {
