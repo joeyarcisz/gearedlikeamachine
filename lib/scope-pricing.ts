@@ -108,19 +108,32 @@ export const CREW_PACKAGES: Record<CrewPackage, { label: string; roles: CrewRole
 };
 
 export const CREW_DAY_RATES: Record<CrewRole, number> = {
-  director: 2000,
-  dp: 1500,
-  "camera-op": 750,
-  "first-ac": 650,
-  gaffer: 850,
-  "key-grip": 800,
-  "ge-swing": 450,
-  "sound-mixer": 850,
-  "makeup-hair": 650,
-  pa: 250,
-  producer: 1200,
-  "teleprompter-op": 450,
-  "drone-op": 1500,
+  // director: 2000,
+  director: 2500, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // dp: 1500,
+  dp: 1600, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "camera-op": 750,
+  "camera-op": 900, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "first-ac": 650,
+  "first-ac": 750, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // gaffer: 850,
+  gaffer: 1050, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "key-grip": 800,
+  "key-grip": 950, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "ge-swing": 450,
+  "ge-swing": 550, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "sound-mixer": 850,
+  "sound-mixer": 1000, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "makeup-hair": 650,
+  "makeup-hair": 750, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // pa: 250,
+  pa: 300, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // producer: 1200,
+  producer: 1400, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "teleprompter-op": 450,
+  "teleprompter-op": 550, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
+  // "drone-op": 1500,
+  "drone-op": 2100, // UPDATED 2026-03-14 — aligned with estimator catalog bill rates
 };
 
 /* ── Gear ── */
