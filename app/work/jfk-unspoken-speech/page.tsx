@@ -60,7 +60,7 @@ export default function JFKPage() {
                 itself. If we are weak, words will be of no help.&rdquo;
               </p>
               <cite className="text-muted text-xs uppercase tracking-widest not-italic">
-                — President John F. Kennedy
+                President John F. Kennedy
               </cite>
             </blockquote>
 

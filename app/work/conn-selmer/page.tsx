@@ -77,7 +77,7 @@ export default function ConnSelmerPage() {
                 what I demand from the crews I work with&rdquo;
               </p>
               <cite className="text-muted text-xs uppercase tracking-widest not-italic">
-                — Elisa Janson Jones, Senior Product Manager - Digital,
+                Elisa Janson Jones, Senior Product Manager, Digital,
                 Conn-Selmer
               </cite>
             </blockquote>
