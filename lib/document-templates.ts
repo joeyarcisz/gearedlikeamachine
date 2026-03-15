@@ -817,4 +817,78 @@ export const documentTemplates: DocumentTemplateData[] = [
       ],
     },
   },
+
+  // ═══════════════════════════════════════════════════════
+  // REFERENCE — Client-facing, no signature
+  // ═══════════════════════════════════════════════════════
+
+  {
+    name: "Rate Card",
+    slug: "rate-card",
+    category: "FINANCIAL",
+    description: "DFW market production rate card with crew, post-production, and pre-production ranges",
+    requiresSignature: false,
+    isExternal: true,
+    fieldSchema: {
+      sections: [
+        {
+          title: "Rate Card Details",
+          fields: [
+            { name: "preparedFor", type: "text", label: "Prepared For", required: false, prefilledByAdmin: true },
+            { name: "preparedDate", type: "date", label: "Date", required: true, prefilledByAdmin: true },
+            { name: "validThrough", type: "text", label: "Valid Through", required: false, prefilledByAdmin: true, defaultValue: "2026" },
+          ],
+        },
+        {
+          title: "Production Crew — 10-Hour Day Rates",
+          description: "DFW market rates. Ranges reflect experience level and project scope.",
+          fields: [
+            { name: "rateDirector", type: "text", label: "Director", required: false, prefilledByAdmin: true, defaultValue: "$1,500 – $2,500/day" },
+            { name: "rateDP", type: "text", label: "Director of Photography", required: false, prefilledByAdmin: true, defaultValue: "$900 – $1,600/day" },
+            { name: "rateProducer", type: "text", label: "Producer", required: false, prefilledByAdmin: true, defaultValue: "$750 – $1,400/day" },
+            { name: "rateCameraOp", type: "text", label: "Camera Operator", required: false, prefilledByAdmin: true, defaultValue: "$500 – $750/day" },
+            { name: "rate1stAC", type: "text", label: "1st AC", required: false, prefilledByAdmin: true, defaultValue: "$450 – $650/day" },
+            { name: "rateDronePilot", type: "text", label: "Drone Pilot (Part 107)", required: false, prefilledByAdmin: true, defaultValue: "$800 – $1,800/day" },
+            { name: "rateGimbalOp", type: "text", label: "Gimbal Operator", required: false, prefilledByAdmin: true, defaultValue: "$500 – $800/day" },
+            { name: "rateGaffer", type: "text", label: "Gaffer", required: false, prefilledByAdmin: true, defaultValue: "$500 – $900/day" },
+            { name: "rateGrip", type: "text", label: "Grip", required: false, prefilledByAdmin: true, defaultValue: "$350 – $550/day" },
+            { name: "rateHMU", type: "text", label: "Hair & Makeup", required: false, prefilledByAdmin: true, defaultValue: "$450 – $900/day" },
+            { name: "ratePA", type: "text", label: "Production Assistant", required: false, prefilledByAdmin: true, defaultValue: "$150 – $250/day" },
+          ],
+        },
+        {
+          title: "Post-Production — Day Rates",
+          fields: [
+            { name: "rateEditing", type: "text", label: "Editing", required: false, prefilledByAdmin: true, defaultValue: "$600 – $1,400/day" },
+            { name: "rateColorGrading", type: "text", label: "Color Grading", required: false, prefilledByAdmin: true, defaultValue: "$600 – $1,000/day" },
+            { name: "rateMotionGraphics", type: "text", label: "Motion Graphics", required: false, prefilledByAdmin: true, defaultValue: "$500 – $800/day" },
+            { name: "rateSoundDesign", type: "text", label: "Sound Design / Mix", required: false, prefilledByAdmin: true, defaultValue: "$500 – $800/day" },
+            { name: "rateSameDayEdit", type: "text", label: "Same Day Edit", required: false, prefilledByAdmin: true, defaultValue: "$1,200 – $1,800/day" },
+          ],
+        },
+        {
+          title: "Pre-Production — Hourly Rates",
+          fields: [
+            { name: "rateConceptDev", type: "text", label: "Concept Development", required: false, prefilledByAdmin: true, defaultValue: "$100 – $150/hr" },
+            { name: "ratePrePro", type: "text", label: "Pre-Production & Scheduling", required: false, prefilledByAdmin: true, defaultValue: "$100 – $150/hr" },
+            { name: "rateStoryboarding", type: "text", label: "Storyboarding / Shot Listing", required: false, prefilledByAdmin: true, defaultValue: "$100 – $150/hr" },
+          ],
+        },
+        {
+          title: "Travel",
+          fields: [
+            { name: "ratePerDiem", type: "text", label: "Per Diem", required: false, prefilledByAdmin: true, defaultValue: "$75/day" },
+            { name: "rateMileage", type: "text", label: "Mileage", required: false, prefilledByAdmin: true, defaultValue: "$0.67/mile" },
+          ],
+        },
+        {
+          title: "Notes",
+          fields: [
+            { name: "equipmentNote", type: "textarea", label: "Equipment", required: false, prefilledByAdmin: true, defaultValue: "Kit fees and equipment rentals are always separate from labor. Full rental catalog available at gearedlikeamachine.com/rentals." },
+            { name: "rateNotes", type: "textarea", label: "Additional Notes", required: false, prefilledByAdmin: true, defaultValue: "Rates vary by project scope, duration, and complexity. Contact us for a custom quote tailored to your production." },
+          ],
+        },
+      ],
+    },
+  },
 ];
