@@ -6,7 +6,7 @@ category: "Filmmaking"
 tags: ["pre-production", "shot list", "tech scout", "storyboard", "blocking", "cinematography"]
 interactive: "/interactive/pre-production-is-where-you-win-or-lose.html"
 featured: false
-draft: true
+draft: false
 ---
 
 The best DPs are not the best camera operators. They are the best planners.

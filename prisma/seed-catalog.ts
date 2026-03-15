@@ -46,7 +46,7 @@ const preProItems: SeedItem[] = [
 ];
 
 // ─── CREW (~60 items) ───
-// Base rate = high end DFW non-union from CREW_RATE_REFERENCE_2025_2026.md
+// Base rate = high end DFW non-union from docs/reference/rates/crew-rate-reference-2025-2026.md
 // Markup = 15% (hired crew), rounded up to $50
 // Owner labor items get 0% markup
 

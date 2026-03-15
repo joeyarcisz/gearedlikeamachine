@@ -15,7 +15,7 @@ An internal estimator tool in the GLM admin panel that replaces BlinkBid as the 
 ## Pricing Rules
 
 ### Rate Foundation
-- **Base rate** = high end of DFW non-union range from `CREW_RATE_REFERENCE_2025_2026.md`
+- **Base rate** = high end of DFW non-union range from `docs/reference/rates/crew-rate-reference-2025-2026.md`
 - **Bill rate** = base rate × markup, rounded up to nearest $50
 - All client-facing rates must land on $50 increments — no odd numbers
 
@@ -276,7 +276,7 @@ The core tool. Single-page "use client" component.
 ## Catalog Seed Data
 
 ### Source
-`CREW_RATE_REFERENCE_2025_2026.md` for crew rates. `inventory.ts` for gear base rates.
+`docs/reference/rates/crew-rate-reference-2025-2026.md` for crew rates. `inventory.ts` for gear base rates.
 
 ### Seed Script
 `prisma/seed-catalog.ts` — standalone script, run independently with `npx tsx prisma/seed-catalog.ts`. Does not modify the existing `prisma/seed.ts` or affect its `prisma.seed` config.
