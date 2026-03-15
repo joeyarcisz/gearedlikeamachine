@@ -60,6 +60,7 @@ export default function ContactsPageClient({
       >
         {selectedContact && (
           <ContactQuickPanel
+            key={selectedContact.id}
             contact={selectedContact}
             onStageChange={handleStageChange}
             onClose={() => setSelectedContact(null)}

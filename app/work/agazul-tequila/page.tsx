@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AgazulGallery from "./AgazulGallery";
@@ -37,12 +38,12 @@ export default function AgazulTequilaPage() {
               Agazul Tequila. Planned, captured, and delivered brand content
               built for screens of all sizes and library archive.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Gallery */}

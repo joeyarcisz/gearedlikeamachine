@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChevroletGallery from "./ChevroletGallery";
@@ -40,12 +41,12 @@ export default function ChevroletPage() {
               capturing vehicles, lifestyle, and brand moments built for
               broadcast and digital distribution.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               ← Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Tight grid gallery */}

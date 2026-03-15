@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import USPAGallery from "./USPAGallery";
@@ -26,12 +27,12 @@ export default function USPAPage() {
             <p className="text-muted text-sm sm:text-base max-w-2xl mx-auto mb-4 leading-relaxed">
               Since 2018, we&apos;ve worked with U.S. Polo Assn. and Genius House Media, capturing high-impact global motion assets for the brand&apos;s seasonal campaigns. The official brand of the United States Polo Association has a presence in over 190 countries and USPA distributes these assets to all of them.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               ← Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Gallery */}

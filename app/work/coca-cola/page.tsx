@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CocaColaGallery from "./CocaColaGallery";
@@ -40,12 +41,12 @@ export default function CocaColaPage() {
               photography on a 40&apos;x17&apos; LED wall stage with dual RED
               Komodo cameras and a full Aputure lighting rig.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Gallery */}

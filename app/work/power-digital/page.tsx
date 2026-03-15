@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PowerDigitalGallery from "./PowerDigitalGallery";
@@ -41,12 +42,12 @@ export default function PowerDigitalPage() {
               James Furniture, produced for Power Digital. Producer and Director
               of Photography on a full-scale furniture brand campaign.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Gallery */}

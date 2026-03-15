@@ -62,10 +62,10 @@ export default function KanbanBoard({ opportunities: initialOpps }: KanbanBoardP
 
   // Detect mobile for disabling drag
   useEffect(() => {
-    setIsMobile(window.innerWidth < 1024);
     function handleResize() {
       setIsMobile(window.innerWidth < 1024);
     }
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -287,6 +287,7 @@ export default function KanbanBoard({ opportunities: initialOpps }: KanbanBoardP
       >
         {selectedOpp && (
           <OpportunityQuickPanel
+            key={selectedOpp.id}
             opportunity={selectedOpp}
             onStageChange={handleStageChange}
             onClose={() => setSelectedOpp(null)}

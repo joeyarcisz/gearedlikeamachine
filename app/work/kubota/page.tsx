@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import KubotaGallery from "./KubotaGallery";
@@ -29,12 +30,12 @@ export default function KubotaPage() {
             <p className="text-muted text-xs uppercase tracking-widest mb-4">
               Grapevine, TX · Murfreesboro, TN · Abilene, KS · Jefferson, GA
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Work
-            </a>
+            </Link>
           </div>
 
           {/* Video Grid */}

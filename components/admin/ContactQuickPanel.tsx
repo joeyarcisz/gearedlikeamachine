@@ -46,28 +46,21 @@ export default function ContactQuickPanel({
   const [toast, setToast] = useState<string | null>(null);
   const [stage, setStage] = useState(contact.stage);
 
-  const fetchActivities = useCallback(async () => {
-    const res = await fetch(
-      `/api/crm/activities?contactId=${contact.id}&limit=5`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      setActivities(data);
-    }
-    setLoading(false);
+  const fetchActivities = useCallback(() => {
+    fetch(`/api/crm/activities?contactId=${contact.id}&limit=5`)
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          setActivities(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [contact.id]);
 
   useEffect(() => {
     fetchActivities();
   }, [fetchActivities]);
-
-  // Reset state when contact changes
-  useEffect(() => {
-    setNextAction(contact.nextAction || "");
-    setStage(contact.stage);
-    setLoading(true);
-    fetchActivities();
-  }, [contact.id, contact.nextAction, contact.stage, fetchActivities]);
 
   async function saveNextAction() {
     const res = await fetch(`/api/crm/contacts/${contact.id}`, {

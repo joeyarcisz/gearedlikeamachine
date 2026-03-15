@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ConnSelmerGallery from "./ConnSelmerGallery";
@@ -60,12 +61,12 @@ export default function ConnSelmerPage() {
               </div>
             </div>
 
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Work
-            </a>
+            </Link>
           </div>
 
           {/* Testimonial Card */}

@@ -38,25 +38,21 @@ export default function CrewQuickPanel({ crew, onClose }: CrewQuickPanelProps) {
   const [logging, setLogging] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  const fetchActivities = useCallback(async () => {
-    const res = await fetch(
-      `/api/crm/activities?crewMemberId=${crew.id}&limit=5`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      setActivities(data);
-    }
-    setLoading(false);
+  const fetchActivities = useCallback(() => {
+    fetch(`/api/crm/activities?crewMemberId=${crew.id}&limit=5`)
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          setActivities(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [crew.id]);
 
   useEffect(() => {
     fetchActivities();
   }, [fetchActivities]);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchActivities();
-  }, [crew.id, fetchActivities]);
 
   async function logActivity() {
     if (!activityDesc.trim()) return;

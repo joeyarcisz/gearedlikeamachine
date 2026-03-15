@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarlinkGallery from "./StarlinkGallery";
@@ -37,12 +38,12 @@ export default function SpaceXStarlinkPage() {
               hired by Starlink, leading production, gear, crew, logistics, and
               coordination across multiple locations in Austin, Texas.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Hero Video */}

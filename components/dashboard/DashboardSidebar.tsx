@@ -18,7 +18,7 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
     if (target.startsWith("/")) return; // Let Link handle routing
     // Scroll to section on homepage
     if (pathname !== "/") {
-      window.location.href = "/" + target;
+      window.location.assign("/" + target);
       return;
     }
     const el = document.querySelector(target);

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -27,12 +28,12 @@ export default function TroyAikmanPage() {
               Cowboys Hall of Famer Troy Aikman. High-visibility commercial
               content built for the biggest stage in broadcast media.
             </p>
-            <a
+            <Link
               href="/#portfolio"
               className="text-muted text-xs uppercase tracking-widest hover:text-steel transition-colors"
             >
               &larr; Back to Portfolio
-            </a>
+            </Link>
           </div>
 
           {/* Placeholder — awaiting production stills */}

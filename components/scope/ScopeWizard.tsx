@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type {
   LeadInfo,
   ScopeInput,
@@ -86,8 +86,14 @@ function getDefaultTimeline(): StepTimelineData {
 }
 
 export default function ScopeWizard() {
-  const [hasLead, setHasLead] = useState(false);
-  const [leadChecked, setLeadChecked] = useState(false);
+  const [hasLead, setHasLead] = useState(() => {
+    try {
+      return !!localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return false;
+    }
+  });
+  const [leadChecked] = useState(true);
   const [step, setStep] = useState(1);
   const [showEstimate, setShowEstimate] = useState(false);
 
@@ -116,19 +122,6 @@ export default function ScopeWizard() {
       return null;
     }
   }, [projectType, deliverables, production, postProduction, timeline]);
-
-  // Check localStorage for returning visitors
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setHasLead(true);
-      }
-    } catch {
-      // localStorage unavailable
-    }
-    setLeadChecked(true);
-  }, []);
 
   const handleLeadSubmit = useCallback((lead: LeadInfo) => {
     try {

@@ -66,28 +66,21 @@ export default function OpportunityQuickPanel({
   const [stage, setStage] = useState(opportunity.stage);
   const priorityRef = useRef<HTMLDivElement>(null);
 
-  const fetchActivities = useCallback(async () => {
-    const res = await fetch(
-      `/api/crm/activities?opportunityId=${opportunity.id}&limit=5`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      setActivities(data);
-    }
-    setLoading(false);
+  const fetchActivities = useCallback(() => {
+    fetch(`/api/crm/activities?opportunityId=${opportunity.id}&limit=5`)
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          setActivities(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [opportunity.id]);
 
   useEffect(() => {
     fetchActivities();
   }, [fetchActivities]);
-
-  useEffect(() => {
-    setNextAction(opportunity.nextAction || "");
-    setPriority(opportunity.priority || "");
-    setStage(opportunity.stage);
-    setLoading(true);
-    fetchActivities();
-  }, [opportunity.id, opportunity.nextAction, opportunity.priority, opportunity.stage, fetchActivities]);
 
   // Click-outside handler for priority dropdown
   useEffect(() => {

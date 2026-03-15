@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CREW_ROLES } from "@/lib/crm-types";
 import type { CRMCrewMember } from "@/lib/crm-types";
 
@@ -356,12 +357,12 @@ export default function CrewMemberForm({ crew }: CrewMemberFormProps) {
               {submitting ? "Saving..." : isEdit ? "Update Crew Member" : "Create Crew Member"}
             </button>
 
-            <a
+            <Link
               href="/admin/crew"
               className="text-muted hover:text-white text-xs uppercase tracking-widest font-[family-name:var(--font-heading)] transition-colors px-4 py-3"
             >
               Cancel
-            </a>
+            </Link>
           </div>
         </form>
       </div>

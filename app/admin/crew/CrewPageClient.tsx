@@ -65,6 +65,7 @@ export default function CrewPageClient({ crew: initialCrew }: CrewPageClientProp
       >
         {selectedCrew && (
           <CrewQuickPanel
+            key={selectedCrew.id}
             crew={selectedCrew}
             onClose={() => setSelectedCrew(null)}
           />

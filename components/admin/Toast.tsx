@@ -11,7 +11,10 @@ interface ToastProps {
 export default function Toast({ message, duration = 1500, onDone }: ToastProps) {
   const [visible, setVisible] = useState(true);
   const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
 
   useEffect(() => {
     const fadeTimer = setTimeout(() => setVisible(false), duration);
