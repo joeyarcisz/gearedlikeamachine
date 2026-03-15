@@ -17,9 +17,30 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "OfferCatalog",
+  name: "GLM Equipment Rental Catalog",
+  description: "Professional production equipment available for daily rental. 150+ items across cameras, lighting, lenses, drones, grip, and more.",
+  url: "https://www.gearedlikeamachine.com/rentals",
+  provider: {
+    "@type": "Organization",
+    name: "Geared Like A Machine",
+    url: "https://www.gearedlikeamachine.com",
+  },
+  itemListElement: [
+    { "@type": "OfferCatalog", name: "Camera / Drone" },
+    { "@type": "OfferCatalog", name: "Lenses" },
+    { "@type": "OfferCatalog", name: "Lighting" },
+    { "@type": "OfferCatalog", name: "Audio" },
+    { "@type": "OfferCatalog", name: "Support / Grip / Power / Monitoring" },
+  ],
+};
+
 export default function RentalsPage() {
   return (
     <DashboardShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="p-4">
         {/* Page header card */}
         <div className="dashboard-card mb-4" style={{ "--card-delay": "0ms" } as React.CSSProperties}>

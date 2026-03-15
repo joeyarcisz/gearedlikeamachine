@@ -10,9 +10,20 @@ export const metadata: Metadata = {
     "Since 2018, Geared Like A Machine has captured high-impact global motion assets for U.S. Polo Assn. seasonal campaigns distributed across 190+ countries.",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "U.S. Polo Assn. Seasonal Campaigns",
+  description: "High-impact global motion assets for U.S. Polo Assn. seasonal campaigns distributed across 190+ countries. Production partner since 2018.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/uspa/uspa-hero.jpg",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function USPAPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

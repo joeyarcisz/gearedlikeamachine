@@ -10,9 +10,20 @@ export const metadata: Metadata = {
     "Brand films, behind-the-scenes coverage, and lifestyle content for Tige Boats by Geared Like A Machine.",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Tige Boats Brand Films",
+  description: "Brand films, behind-the-scenes coverage, and lifestyle content for Tige Boats.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/tige/tige-hero.jpg",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function TigeBoatsPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

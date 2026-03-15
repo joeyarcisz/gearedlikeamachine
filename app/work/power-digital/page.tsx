@@ -23,9 +23,20 @@ const images = [
   { src: "/power-digital/frame-9.jpg", alt: "Final commercial frame" },
 ];
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "James + James Furniture Commercial",
+  description: "Made For Life furniture commercial production for James + James, produced for Power Digital. Full-scale furniture brand campaign.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/power-digital/furniture-hero.jpg",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function PowerDigitalPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

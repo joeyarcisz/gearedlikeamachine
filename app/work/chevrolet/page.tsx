@@ -22,9 +22,20 @@ const gifs = [
   "/chevrolet/chevy10.gif",
 ];
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Chevrolet Commercial Production",
+  description: "Chevrolet commercial production capturing vehicles, lifestyle, and brand moments for broadcast and digital distribution.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/chevrolet/chevy1.gif",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function ChevroletPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

@@ -21,9 +21,20 @@ const images = [
   { src: "/coca-cola/santa-8.jpg", alt: "Coca-Cola Santa commercial production frame" },
 ];
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Coca-Cola Santa Commercial",
+  description: "Coca-Cola Santa Claus commercial production on LED wall stage with dual RED Komodo cameras and full Aputure lighting rig.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/coca-cola/santa-1.jpg",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function CocaColaPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

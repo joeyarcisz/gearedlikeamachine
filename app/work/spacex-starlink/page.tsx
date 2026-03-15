@@ -18,9 +18,20 @@ const images = [
   { src: "/starlink/setup-3.jpg", alt: "Starlink on location" },
 ];
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "SpaceX Starlink Product Demonstration",
+  description: "Product demonstration content for SpaceX Starlink. First freelance DP hired by Starlink for multi-location production in Austin, Texas.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/starlink/demo.gif",
+  uploadDate: "2023-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function SpaceXStarlinkPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

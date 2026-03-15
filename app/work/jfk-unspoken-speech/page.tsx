@@ -10,9 +10,21 @@ export const metadata: Metadata = {
     "ADDY Best of Show winning documentary. Winner of Gold ADDY in Public Service Audio/visual.",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "JFK: The Unspoken Speech",
+  description: "ADDY Best of Show winning documentary. Winner of Gold ADDY in Public Service Audio/visual.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/jfk/hero.webp",
+  uploadDate: "2023-01-01",
+  award: ["ADDY Best of Show", "Gold ADDY, Public Service Audio/Visual"],
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function JFKPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

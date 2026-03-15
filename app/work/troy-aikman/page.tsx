@@ -9,9 +9,19 @@ export const metadata: Metadata = {
     "Super Bowl commercial production featuring NFL legend Troy Aikman by Geared Like A Machine.",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Troy Aikman Super Bowl Commercial",
+  description: "Super Bowl commercial production featuring NFL legend and Cowboys Hall of Famer Troy Aikman. High-visibility content for broadcast.",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function TroyAikmanPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

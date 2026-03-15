@@ -10,9 +10,20 @@ export const metadata: Metadata = {
     "Producer and DP for Conn-Selmer and MusicProfessor.com. 4 production days, 8 musicians, 150+ video lessons.",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Conn-Selmer Music Education Series",
+  description: "Producer and DP for Conn-Selmer and MusicProfessor.com. 4 production days, 8 musicians, 150+ video lessons.",
+  thumbnailUrl: "https://www.gearedlikeamachine.com/conn-selmer/conn-selmer-hero.jpg",
+  uploadDate: "2024-01-01",
+  productionCompany: { "@type": "Organization", name: "Geared Like A Machine", url: "https://www.gearedlikeamachine.com" },
+};
+
 export default function ConnSelmerPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
       <main className="pt-20 pb-16 bg-black min-h-screen">
         <div className="max-w-7xl mx-auto px-2 sm:px-4">

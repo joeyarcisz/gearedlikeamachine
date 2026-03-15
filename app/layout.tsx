@@ -61,52 +61,49 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* PREVIOUS JSON-LD — commented out, replaced below */}
-        {/* <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              name: "Geared Like A Machine",
-              description:
-                "Video production company and equipment rental house specializing in brand films, commercials, and social media content. Based in Dallas-Fort Worth, Texas. Working globally.",
-              telephone: "(682) 229-7699",
-              email: "joey@gearedlikeamachine.com",
-              url: "https://gearedlikeamachine.com",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Dallas-Fort Worth",
-                addressRegion: "TX",
-                addressCountry: "US",
-              },
-              areaServed: "United States",
-              priceRange: "$$",
-            }),
-          }}
-        /> */}
-        {/* UPDATED JSON-LD */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              additionalType: "VideoProductionService",
-              name: "Geared Like A Machine",
-              url: "https://gearedlikeamachine.com",
-              description:
-                "Commercial video production and equipment rentals based in Dallas, Texas. Available worldwide.",
-              telephone: "(682) 229-7699",
-              email: "joey@gearedlikeamachine.com",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Dallas",
-                addressRegion: "TX",
-                addressCountry: "US",
-              },
-              areaServed: "Worldwide",
-              priceRange: "$$",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://www.gearedlikeamachine.com/#organization",
+                  name: "Geared Like A Machine",
+                  legalName: "Geared Like A Machine LLC",
+                  url: "https://www.gearedlikeamachine.com",
+                  logo: "https://www.gearedlikeamachine.com/logo-white.svg",
+                  description:
+                    "Commercial video production and equipment rentals based in Dallas, Texas. Available worldwide.",
+                  telephone: "(682) 229-7699",
+                  email: "hello@gearedlikeamachine.com",
+                  sameAs: [
+                    "https://www.instagram.com/geared.like.a.machine",
+                    "https://vimeo.com/gearedlikeamachine",
+                  ],
+                },
+                {
+                  "@type": "LocalBusiness",
+                  "@id": "https://www.gearedlikeamachine.com/#localbusiness",
+                  additionalType: "https://schema.org/ProfessionalService",
+                  name: "Geared Like A Machine",
+                  url: "https://www.gearedlikeamachine.com",
+                  telephone: "(682) 229-7699",
+                  email: "hello@gearedlikeamachine.com",
+                  address: {
+                    "@type": "PostalAddress",
+                    addressLocality: "Dallas",
+                    addressRegion: "TX",
+                    addressCountry: "US",
+                  },
+                  areaServed: "Worldwide",
+                  priceRange: "$$",
+                  parentOrganization: {
+                    "@id": "https://www.gearedlikeamachine.com/#organization",
+                  },
+                },
+              ],
             }),
           }}
         />
