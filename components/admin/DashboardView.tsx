@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CONTACT_STAGE_LABELS, OPPORTUNITY_STAGE_LABELS, ACTIVITY_TYPE_LABELS } from "@/lib/crm-types";
+import { OPPORTUNITY_STAGE_LABELS, ACTIVITY_TYPE_LABELS } from "@/lib/crm-types";
 import type { CRMContact, CRMOpportunity, CRMActivity } from "@/lib/crm-types";
 
 interface PipelineStageSummary {

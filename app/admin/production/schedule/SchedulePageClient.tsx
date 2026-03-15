@@ -24,15 +24,6 @@ interface SchedulePageClientProps {
   projects: { id: string; title: string }[];
 }
 
-function formatDate(dateStr: string) {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 function formatDateFull(dateStr: string) {
   const d = new Date(dateStr);

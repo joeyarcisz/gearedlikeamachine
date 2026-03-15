@@ -1,4 +1,4 @@
-import type { StepDeliverablesData, VideoDuration, Platform, AspectRatio } from "@/lib/scope-types";
+import type { StepDeliverablesData, Platform, AspectRatio } from "@/lib/scope-types";
 import { DURATIONS, PLATFORMS, ASPECT_RATIOS } from "@/lib/scope-pricing";
 
 interface Props {

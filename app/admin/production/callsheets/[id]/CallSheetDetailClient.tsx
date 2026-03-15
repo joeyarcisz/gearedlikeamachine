@@ -136,9 +136,6 @@ export default function CallSheetDetailClient({
   const [editingCrewId, setEditingCrewId] = useState<string | null>(null);
   const [editCrewCallTime, setEditCrewCallTime] = useState("");
 
-  // Status cycling
-  const statusOrder: CallSheetStatus[] = ["draft", "sent", "confirmed"];
-
   // Load crew options
   useEffect(() => {
     async function loadCrew() {
@@ -174,6 +171,7 @@ export default function CallSheetDetailClient({
   // ── Status Change ──
 
   const cycleStatus = useCallback(async () => {
+    const statusOrder: CallSheetStatus[] = ["draft", "sent", "confirmed"];
     const currentIdx = statusOrder.indexOf(callSheet.status);
     const nextStatus = statusOrder[(currentIdx + 1) % statusOrder.length];
 
@@ -190,7 +188,7 @@ export default function CallSheetDetailClient({
     } catch {
       // Silently fail
     }
-  }, [callSheet.id, callSheet.status, statusOrder]);
+  }, [callSheet.id, callSheet.status]);
 
   // ── Edit Call Sheet ──
 

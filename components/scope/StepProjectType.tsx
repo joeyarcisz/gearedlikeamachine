@@ -1,4 +1,4 @@
-import type { StepProjectTypeData, ProjectType, ScopeFormat } from "@/lib/scope-types";
+import type { StepProjectTypeData } from "@/lib/scope-types";
 import { PROJECT_TYPES, SCOPE_FORMATS } from "@/lib/scope-pricing";
 
 interface Props {

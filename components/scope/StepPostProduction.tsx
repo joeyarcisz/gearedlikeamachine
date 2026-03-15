@@ -1,10 +1,5 @@
 import type {
   StepPostProductionData,
-  EditingComplexity,
-  ColorGradeTier,
-  SoundDesignTier,
-  MotionGraphicsTier,
-  MusicLicenseTier,
 } from "@/lib/scope-types";
 import {
   EDITING_TIERS,

@@ -181,6 +181,7 @@ export async function postToLinkedIn(text: string): Promise<{ id: string }> {
 
 // --- Instagram API (Meta Graph API) ---
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function postToInstagram(caption: string): Promise<{ id: string }> {
   const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
   const accountId = process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;

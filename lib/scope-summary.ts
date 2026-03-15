@@ -18,7 +18,6 @@ import {
   SOUND_TIERS,
   MOTION_TIERS,
   MUSIC_TIERS,
-  URGENCY_TIERS,
 } from "./scope-pricing";
 
 function listJoin(items: string[]): string {

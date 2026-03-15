@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { validateAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-import { logActivity } from "@/lib/activity";
 
 async function authorize() {
   const cookieStore = await cookies();

@@ -12,7 +12,6 @@ import {
 import type {
   ProjectDetail,
   ProjectStatus,
-  CallSheetStatus,
   ProjectCrewMember,
   ProjectEquipmentItem,
 } from "@/lib/production-types";

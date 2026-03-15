@@ -21,7 +21,6 @@ interface CrewDoc {
 }
 
 export default function CrewDocumentsSection({
-  crewMemberId,
   crewMemberName,
 }: {
   crewMemberId: string;

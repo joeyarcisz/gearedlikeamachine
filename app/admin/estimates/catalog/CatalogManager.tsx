@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 type CatalogItem = {
   id: string;
@@ -72,11 +72,7 @@ export default function CatalogManager() {
   const [newItem, setNewItem] = useState<NewItem | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchCatalog();
-  }, []);
-
-  function fetchCatalog() {
+  const fetchCatalog = useCallback(() => {
     fetch("/api/estimates/catalog")
       .then((r) => r.json())
       .then((data) => {
@@ -84,7 +80,11 @@ export default function CatalogManager() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchCatalog();
+  }, [fetchCatalog]);
 
   // Group items by department within each category
   function getGroupedItems() {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import StageTag from "./StageTag";
 import InlineStageDropdown from "./InlineStageDropdown";
 import { CONTACT_STAGES, CONTACT_STAGE_LABELS } from "@/lib/crm-types";
 import type { CRMContact } from "@/lib/crm-types";

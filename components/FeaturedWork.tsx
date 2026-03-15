@@ -26,7 +26,7 @@ export default function FeaturedWork() {
       <ScrollFadeIn delay={200}>
         <div className="overflow-x-auto scrollbar-hide">
           <div className="flex gap-4 px-4 sm:px-6 pb-4" style={{ paddingLeft: "max(1rem, calc((100vw - 72rem) / 2 + 1.5rem))" }}>
-            {featuredWork.map((item, i) => (
+            {featuredWork.map((item) => (
               <a
                 key={item.number}
                 href={item.href}

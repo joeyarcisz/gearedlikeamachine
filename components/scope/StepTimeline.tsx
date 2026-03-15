@@ -1,4 +1,4 @@
-import type { StepTimelineData, UrgencyTier } from "@/lib/scope-types";
+import type { StepTimelineData } from "@/lib/scope-types";
 import { URGENCY_TIERS } from "@/lib/scope-pricing";
 
 interface Props {
