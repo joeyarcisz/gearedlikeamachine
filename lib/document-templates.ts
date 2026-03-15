@@ -819,6 +819,120 @@ export const documentTemplates: DocumentTemplateData[] = [
   },
 
   // ═══════════════════════════════════════════════════════
+  // PRODUCTION — Client-facing, no signature
+  // ═══════════════════════════════════════════════════════
+
+  {
+    name: "Production Timeline",
+    slug: "production-timeline",
+    category: "PRODUCTION",
+    description: "Master project timeline with phases, milestones, approval windows, payment schedule, and deliverables",
+    requiresSignature: false,
+    isExternal: true,
+    fieldSchema: {
+      sections: [
+        {
+          title: "Project Information",
+          fields: [
+            { name: "projectName", type: "text", label: "Project Name", required: true, prefilledByAdmin: true },
+            { name: "clientName", type: "text", label: "Client", required: true, prefilledByAdmin: true },
+            { name: "clientContact", type: "text", label: "Client Contact (Name / Title)", required: true, prefilledByAdmin: true },
+            { name: "glmProducer", type: "text", label: "GLM Producer", required: false, prefilledByAdmin: true },
+            { name: "projectSize", type: "select", label: "Project Size", required: true, prefilledByAdmin: true, options: [
+              { label: "Small (1 day, 1-2 weeks pre-pro)", value: "small" },
+              { label: "Medium (2-3 days, 3-4 weeks pre-pro)", value: "medium" },
+              { label: "Large (4+ days, 4-8 weeks pre-pro)", value: "large" },
+              { label: "Campaign (multi-spot, 6-12 weeks pre-pro)", value: "campaign" },
+            ]},
+          ],
+        },
+        {
+          title: "Key Dates",
+          fields: [
+            { name: "sowSignedDate", type: "date", label: "SOW Signed", required: true, prefilledByAdmin: true },
+            { name: "depositReceivedDate", type: "date", label: "Deposit Received", required: true, prefilledByAdmin: true },
+            { name: "shootStartDate", type: "date", label: "First Shoot Day", required: true, prefilledByAdmin: true },
+            { name: "shootEndDate", type: "date", label: "Last Shoot Day", required: false, prefilledByAdmin: true },
+            { name: "deliveryDate", type: "date", label: "Final Delivery Date", required: true, prefilledByAdmin: true },
+          ],
+        },
+        {
+          title: "Pre-Production Phases",
+          description: "Dates for each phase. Rule of thumb: 5 working days of pre-pro per shoot day.",
+          fields: [
+            { name: "phaseKickoff", type: "text", label: "1. Project Kickoff", required: false, prefilledByAdmin: true, placeholder: "e.g. Mar 15 – Mar 17" },
+            { name: "phaseCreative", type: "text", label: "2. Creative Development", required: false, prefilledByAdmin: true, placeholder: "e.g. Mar 17 – Mar 24" },
+            { name: "phaseBudget", type: "text", label: "3. Budgeting & Scoping", required: false, prefilledByAdmin: true, placeholder: "Parallel to Phase 2" },
+            { name: "phaseLocations", type: "text", label: "4. Location Scouting & Permits", required: false, prefilledByAdmin: true, placeholder: "Permits need 10+ business days" },
+            { name: "phaseCasting", type: "text", label: "5. Casting & Talent", required: false, prefilledByAdmin: true, placeholder: "Parallel to Phase 4" },
+            { name: "phaseCrew", type: "text", label: "6. Crew Booking", required: false, prefilledByAdmin: true, placeholder: "Dept heads first, then teams" },
+            { name: "phaseEquipment", type: "text", label: "7. Equipment & Logistics", required: false, prefilledByAdmin: true, placeholder: "Gear, catering, transport" },
+            { name: "phaseShotList", type: "text", label: "8. Shot List & Schedule Build", required: false, prefilledByAdmin: true, placeholder: "Parallel to Phase 7" },
+            { name: "phaseTechScout", type: "text", label: "9. Tech Scout", required: false, prefilledByAdmin: true, placeholder: "1-3 days before shoot" },
+            { name: "phasePrepDays", type: "text", label: "10. Prep Days", required: false, prefilledByAdmin: true, placeholder: "Day(s) before shoot" },
+          ],
+        },
+        {
+          title: "Post-Production Phases",
+          fields: [
+            { name: "phaseEdit", type: "text", label: "Editing (Rough Cut)", required: false, prefilledByAdmin: true, placeholder: "e.g. Apr 10 – Apr 18" },
+            { name: "phaseClientReview1", type: "text", label: "Client Review — Rough Cut", required: false, prefilledByAdmin: true, placeholder: "3-5 business days" },
+            { name: "phaseFineCut", type: "text", label: "Fine Cut + Color + Sound", required: false, prefilledByAdmin: true, placeholder: "e.g. Apr 25 – May 2" },
+            { name: "phaseClientReview2", type: "text", label: "Client Review — Fine Cut", required: false, prefilledByAdmin: true, placeholder: "3-5 business days" },
+            { name: "phaseFinalDelivery", type: "text", label: "Final Delivery", required: false, prefilledByAdmin: true, placeholder: "All formats per SOW" },
+          ],
+        },
+        {
+          title: "Key Milestones",
+          description: "Critical dates that drive the project. Missing a milestone shifts everything downstream.",
+          fields: [
+            { name: "milestoneCreativeDelivered", type: "date", label: "Creative Deck Delivered to Client", required: false, prefilledByAdmin: true },
+            { name: "milestoneCreativeApproved", type: "date", label: "Client Approves Creative", required: false, prefilledByAdmin: true },
+            { name: "milestoneBudgetApproved", type: "date", label: "Final Budget Approved", required: false, prefilledByAdmin: true },
+            { name: "milestoneLocationsConfirmed", type: "date", label: "Locations Confirmed & Permitted", required: false, prefilledByAdmin: true },
+            { name: "milestoneCrewConfirmed", type: "date", label: "Full Crew Confirmed", required: false, prefilledByAdmin: true },
+            { name: "milestoneCallSheetsOut", type: "date", label: "Call Sheets Distributed", required: false, prefilledByAdmin: true },
+            { name: "milestoneWrap", type: "date", label: "Principal Photography Complete", required: false, prefilledByAdmin: true },
+            { name: "milestoneRoughCut", type: "date", label: "Rough Cut Delivered", required: false, prefilledByAdmin: true },
+            { name: "milestoneFinalDelivery", type: "date", label: "Final Deliverables Delivered", required: false, prefilledByAdmin: true },
+            { name: "milestoneFinalSignoff", type: "date", label: "Client Final Sign-Off", required: false, prefilledByAdmin: true },
+          ],
+        },
+        {
+          title: "Payment Schedule",
+          description: "Standard: 50% deposit / 25% wrap / 25% delivery.",
+          fields: [
+            { name: "totalFee", type: "currency", label: "Total Project Fee", required: false, prefilledByAdmin: true },
+            { name: "depositAmount", type: "text", label: "Deposit (50%)", required: false, prefilledByAdmin: true },
+            { name: "depositDue", type: "date", label: "Deposit Due Date", required: false, prefilledByAdmin: true },
+            { name: "wrapAmount", type: "text", label: "Production Wrap (25%)", required: false, prefilledByAdmin: true },
+            { name: "wrapDue", type: "date", label: "Wrap Payment Due Date", required: false, prefilledByAdmin: true },
+            { name: "finalAmount", type: "text", label: "Final Delivery (25%)", required: false, prefilledByAdmin: true },
+            { name: "finalDue", type: "date", label: "Final Payment Due Date", required: false, prefilledByAdmin: true },
+          ],
+        },
+        {
+          title: "Deliverables",
+          fields: [
+            { name: "deliverable1", type: "text", label: "Deliverable 1", required: false, prefilledByAdmin: true, placeholder: "e.g. :60 Hero Spot — 16:9 — ProRes 4444" },
+            { name: "deliverable2", type: "text", label: "Deliverable 2", required: false, prefilledByAdmin: true, placeholder: "e.g. :30 Cutdown — 16:9 — H.264" },
+            { name: "deliverable3", type: "text", label: "Deliverable 3", required: false, prefilledByAdmin: true, placeholder: "e.g. :15 Social — 9:16 — H.264" },
+            { name: "deliverable4", type: "text", label: "Deliverable 4", required: false, prefilledByAdmin: true },
+            { name: "deliverable5", type: "text", label: "Deliverable 5", required: false, prefilledByAdmin: true },
+          ],
+        },
+        {
+          title: "Notes",
+          fields: [
+            { name: "approvalNote", type: "textarea", label: "Client Approval Policy", required: false, prefilledByAdmin: true, defaultValue: "Delays in client feedback shift all subsequent milestones by an equivalent number of business days. 2 rounds of revisions included per deliverable. Additional rounds billed separately." },
+            { name: "additionalNotes", type: "textarea", label: "Additional Notes", required: false, prefilledByAdmin: true, placeholder: "Dependencies, risks, contingencies, or project-specific notes" },
+          ],
+        },
+      ],
+    },
+  },
+
+  // ═══════════════════════════════════════════════════════
   // REFERENCE — Client-facing, no signature
   // ═══════════════════════════════════════════════════════
 
